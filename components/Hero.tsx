@@ -97,6 +97,81 @@ function SWLGauge({ active }: { active: boolean }) {
   );
 }
 
+// -------- Blueprint-style bag illustration — fills the right side --------
+// Pure SVG line-art, no raster image, negligible weight even on mobile.
+function BagBlueprint({ active }: { active: boolean }) {
+  return (
+    <motion.div
+      className="pointer-events-none absolute right-6 top-1/2 hidden w-[280px] -translate-y-1/2 lg:block xl:right-16 xl:w-[340px]"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: active ? 1 : 0, x: active ? 0 : 20 }}
+      transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <svg
+        viewBox="0 0 340 420"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full"
+      >
+        {/* top face (parallelogram) */}
+        <path
+          d="M70 90 L200 60 L270 90 L140 120 Z"
+          stroke="#6E8CAE"
+          strokeOpacity="0.35"
+          strokeWidth="1"
+        />
+        {/* front face */}
+        <path
+          d="M70 90 L140 120 L140 330 L70 300 Z"
+          stroke="#6E8CAE"
+          strokeOpacity="0.5"
+          strokeWidth="1"
+        />
+        {/* side face */}
+        <path
+          d="M140 120 L270 90 L270 300 L140 330 Z"
+          stroke="#6E8CAE"
+          strokeOpacity="0.25"
+          strokeWidth="1"
+        />
+
+        {/* lifting loops, top corners */}
+        <circle cx="70" cy="90" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
+        <circle cx="200" cy="60" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
+        <circle cx="270" cy="90" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
+        <circle cx="140" cy="120" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
+
+        {/* bottom dimension line */}
+        <line x1="70" y1="345" x2="140" y2="365" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
+        <line x1="140" y1="365" x2="270" y2="335" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
+        <text x="90" y="390" fill="white" fillOpacity="0.35" fontSize="10" fontFamily="monospace">
+          1000 MM
+        </text>
+
+        {/* vertical dimension line */}
+        <line x1="45" y1="90" x2="45" y2="300" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
+        <text
+          x="10"
+          y="200"
+          fill="white"
+          fillOpacity="0.35"
+          fontSize="10"
+          fontFamily="monospace"
+          transform="rotate(-90 20 200)"
+        >
+          1200 MM
+        </text>
+
+        {/* spec tag */}
+        <rect x="150" y="200" width="70" height="26" rx="2" stroke="#C9A227" strokeOpacity="0.4" strokeWidth="1" />
+        <text x="160" y="217" fill="#C9A227" fillOpacity="0.7" fontSize="10" fontFamily="monospace">
+          TYPE C
+        </text>
+      </svg>
+    </motion.div>
+  );
+}
+
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const gaugeRef = useRef<HTMLDivElement>(null);
@@ -159,10 +234,11 @@ export default function Hero() {
           alt="FIBC bulk bags stacked in a warehouse, ready for dispatch"
           fill
           sizes="100vw"
-          quality={80}
+          quality={90}
           className="object-cover"
           priority
           fetchPriority="high"
+          placeholder="empty"
         />
 
         {/* Restrained overlay — one gradient, no stacked color washes */}
@@ -176,6 +252,9 @@ export default function Hero() {
       <div ref={gaugeRef}>
         <SWLGauge active={isGaugeInView && !prefersReducedMotion} />
       </div>
+
+      {/* Blueprint graphic — fills the right side, reinforces the spec/technical theme */}
+      <BagBlueprint active={isGaugeInView && !prefersReducedMotion} />
 
       {/* ---- Content ---- */}
       <motion.div
