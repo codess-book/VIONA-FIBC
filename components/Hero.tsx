@@ -9,7 +9,6 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { Roboto_Condensed, IBM_Plex_Mono } from "next/font/google";
@@ -174,8 +173,15 @@ function BagBlueprint({ active }: { active: boolean }) {
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const gaugeRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+
+  // Hero is always above the fold on load, so trigger the signature
+  // animations on mount rather than relying on scroll-into-view —
+  // that avoided the earlier bug where a zero-size ref never fired.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -217,7 +223,7 @@ export default function Hero() {
     shouldAnimate ? [0, 30] : [0, 0],
   );
 
-  const isGaugeInView = useInView(gaugeRef, { once: true, margin: "-10%" });
+  const signatureActive = mounted && !prefersReducedMotion;
 
   return (
     <section
@@ -249,12 +255,10 @@ export default function Hero() {
       </motion.div>
 
       {/* SWL gauge — the one signature motion moment */}
-      <div ref={gaugeRef}>
-        <SWLGauge active={isGaugeInView && !prefersReducedMotion} />
-      </div>
+      <SWLGauge active={signatureActive} />
 
       {/* Blueprint graphic — fills the right side, reinforces the spec/technical theme */}
-      <BagBlueprint active={isGaugeInView && !prefersReducedMotion} />
+      <BagBlueprint active={signatureActive} />
 
       {/* ---- Content ---- */}
       <motion.div
