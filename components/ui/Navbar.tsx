@@ -88,7 +88,7 @@ export default function Navbar() {
                 >
                   {link.name}
                   <span
-                    className={`absolute -bottom-1.5 left-0 h-px bg-[#C9A227] transition-all duration-300 ${
+                    className={`absolute -bottom-1.5 left-0 h-px bg-[#6E8CAE] transition-all duration-300 ${
                       isActive ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />

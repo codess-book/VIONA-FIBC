@@ -1,14 +1,10 @@
-"use client"
-import { Metadata } from "next";
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Award, Mail, ShieldCheck } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Our Team | VIONA-FIBC Private Limited",
-  description:
-    "Meet the leadership team at VIONA-FIBC, and the quality certifications that back every bag we manufacture.",
-};
+import { motion, useInView, useAnimation, useReducedMotion } from "framer-motion";
 
 // ---------- Team Data ----------
 const teamMembers = [
@@ -42,50 +38,232 @@ const certificates = [
   { name: "BIS Certified", logo: "/Images/certs/bis.png" },
 ];
 
-// ---------- Team Card ----------
-function TeamCard({ member }: { member: typeof teamMembers[0] }) {
+// ---------- Animated Team Card ----------
+function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const controls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  // Left side se aayega (index 0), Center se (index 1), Right side se (index 2)
+  const getInitialX = () => {
+    if (prefersReducedMotion) return 0;
+    if (index === 0) return -80;
+    if (index === 2) return 80;
+    return 0;
+  };
+
+  const getInitialY = () => {
+    if (prefersReducedMotion) return 0;
+    if (index === 1) return 60;
+    return 0;
+  };
+
   return (
-    <div
-      className={`team-card group relative overflow-hidden rounded-2xl border p-6 text-center backdrop-blur-sm transition-all duration-300 ${
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { 
+          opacity: 0, 
+          x: getInitialX(),
+          y: getInitialY(),
+          scale: 0.9,
+        },
+        visible: {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          transition: {
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+            delay: index * 0.15,
+          },
+        },
+      }}
+      className={`team-card group relative overflow-hidden rounded-2xl border p-6 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-2xl ${
         member.isDirector
-          ? "border-blue-200/50 bg-blue-50/40 hover:border-blue-400 hover:shadow-[0_0_30px_rgba(96,165,250,0.18)]"
+          ? "border-blue-200/50 bg-blue-50/40 hover:border-blue-400 hover:shadow-[0_0_40px_rgba(96,165,250,0.2)]"
           : "border-slate-200 bg-white/85 hover:border-blue-300 hover:shadow-lg"
       }`}
     >
-      {/* faint woven texture inside the card */}
+      {/* Woven texture */}
       <div className="card-weave pointer-events-none absolute inset-0 opacity-[0.04]" />
 
       {member.isDirector && (
-        <div className="absolute top-4 right-4 rounded-full bg-blue-900/10 px-2 py-1 text-[10px] font-bold text-blue-700 border border-blue-500/30">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 + index * 0.15 }}
+          className="absolute top-4 right-4 rounded-full bg-blue-900/10 px-2 py-1 text-[10px] font-bold text-blue-700 border border-blue-500/30"
+        >
           Leadership
-        </div>
+        </motion.div>
       )}
 
       <div className="relative z-10">
-        <div className="relative mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-blue-200/60 mb-4 ring-4 ring-white">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 + index * 0.15, duration: 0.6 }}
+          className="relative mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-blue-200/60 mb-4 ring-4 ring-white"
+        >
           <Image src={member.image} alt={member.name} fill className="object-cover" />
-        </div>
-        <h3 className="text-xl font-bold text-slate-900">{member.name}</h3>
-        <p className="text-sm font-medium text-blue-700">{member.role}</p>
-        <p className="mt-2 text-xs leading-relaxed text-slate-600 min-h-[60px]">
+        </motion.div>
+        
+        <motion.h3
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 + index * 0.15 }}
+          className="text-xl font-bold text-slate-900"
+        >
+          {member.name}
+        </motion.h3>
+        
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 + index * 0.15 }}
+          className="text-sm font-medium text-blue-700"
+        >
+          {member.role}
+        </motion.p>
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 + index * 0.15 }}
+          className="mt-2 text-xs leading-relaxed text-slate-600 min-h-[60px]"
+        >
           {member.bio}
-        </p>
-        <div className="mt-4 flex justify-center gap-3">
+        </motion.p>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 + index * 0.15 }}
+          className="mt-4 flex justify-center gap-3"
+        >
           <Link href="#" className="text-slate-400 hover:text-blue-600 transition-colors">
             <Mail className="h-4 w-4" />
           </Link>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
+  );
+}
+
+// ---------- Animated Certificate Card ----------
+function CertificateCard({ cert, index }: { cert: typeof certificates[0]; index: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const controls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: {
+          opacity: 0,
+          x: prefersReducedMotion ? 0 : index % 2 === 0 ? -60 : 60,
+          y: 20,
+          scale: 0.9,
+        },
+        visible: {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          transition: {
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
+            delay: index * 0.12,
+          },
+        },
+      }}
+      className="cert-card group relative flex w-40 flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white/85 px-6 py-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+    >
+      <motion.div
+        initial={{ opacity: 0, rotate: -30 }}
+        animate={{ opacity: 1, rotate: 0 }}
+        transition={{ delay: 0.2 + index * 0.12 }}
+        className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-dashed border-blue-200 transition-colors duration-300 group-hover:border-blue-400"
+      >
+        <div className="relative h-14 w-14 grayscale transition-all duration-500 group-hover:grayscale-0">
+          <Image src={cert.logo} alt={cert.name} fill className="object-contain" />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 + index * 0.12 }}
+        >
+          <ShieldCheck className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white p-0.5 text-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        </motion.div>
+      </motion.div>
+      
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 + index * 0.12 }}
+        className="text-center text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors"
+      >
+        {cert.name}
+      </motion.p>
+    </motion.div>
   );
 }
 
 // ---------- Stitched Seam Divider ----------
 function StitchDivider() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const controls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
   return (
-    <div className="relative w-full h-6" aria-hidden="true">
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, scaleX: 0.8 },
+        visible: {
+          opacity: 1,
+          scaleX: 1,
+          transition: {
+            duration: 1.2,
+            ease: [0.22, 1, 0.36, 1],
+          },
+        },
+      }}
+      className="relative w-full h-6"
+      aria-hidden="true"
+    >
       <svg viewBox="0 0 1200 24" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-        <line
+        <motion.line
           x1="0"
           y1="12"
           x2="1200"
@@ -94,21 +272,87 @@ function StitchDivider() {
           strokeWidth="2"
           strokeDasharray="14 10"
           strokeLinecap="round"
-          className="stitch-line"
+          initial={{ strokeDashoffset: 600 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
         />
       </svg>
-    </div>
+    </motion.div>
+  );
+}
+
+// ---------- Section Title Animation ----------
+function SectionTitle({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const controls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
+          },
+        },
+      }}
+      className="text-center mb-12"
+    >
+      {subtitle && (
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-700"
+        >
+          {subtitle}
+        </motion.span>
+      )}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mt-2 text-3xl md:text-4xl font-bold text-slate-900"
+      >
+        {children}
+      </motion.h2>
+    </motion.div>
   );
 }
 
 export default function TeamAndCertificatesPage() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="relative min-h-screen bg-white overflow-hidden">
-      {/* ---- Shared background system ---- */}
+      {/* ---- Background System ---- */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="weave-layer absolute inset-0 opacity-[0.05]" />
-        <div
-          className="absolute inset-0 opacity-[0.05]"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.05 }}
+          transition={{ duration: 1.5 }}
+          className="weave-layer absolute inset-0"
+        />
+        
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.05 }}
+          transition={{ duration: 1.8 }}
+          className="absolute inset-0"
           style={{
             backgroundImage: `
               linear-gradient(rgba(30, 64, 175, 0.5) 1px, transparent 1px),
@@ -117,25 +361,32 @@ export default function TeamAndCertificatesPage() {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="glow-drift-1 absolute top-[-10%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-blue-500/[0.07] blur-3xl" />
-        <div className="glow-drift-2 absolute bottom-[8%] right-[6%] h-[380px] w-[520px] rounded-full bg-cyan-400/[0.06] blur-3xl" />
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5 }}
+          className="glow-drift-1 absolute top-[-10%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-blue-500/[0.07] blur-3xl"
+        />
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, delay: 0.3 }}
+          className="glow-drift-2 absolute bottom-[8%] right-[6%] h-[380px] w-[520px] rounded-full bg-cyan-400/[0.06] blur-3xl"
+        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8 pt-8 pb-12 md:pt-12 md:pb-20">
         {/* ---- 1. TEAM ---- */}
         <div className="py-12 md:py-16">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-700">
-              Leadership & Team
-            </span>
-            <h2 className="mt-2 text-3xl md:text-4xl font-bold text-slate-900">
-              The Minds Behind <span className="text-blue-700">VIONA</span>
-            </h2>
-          </div>
+          <SectionTitle subtitle="Leadership & Team">
+            The Minds Behind <span className="text-blue-700">VIONA</span>
+          </SectionTitle>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {teamMembers.map((member, idx) => (
-              <TeamCard key={idx} member={member} />
+              <TeamCard key={idx} member={member} index={idx} />
             ))}
           </div>
         </div>
@@ -145,32 +396,28 @@ export default function TeamAndCertificatesPage() {
         {/* ---- 2. CERTIFICATES ---- */}
         <div className="py-12 md:py-16">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500"
+            >
               <Award className="h-4 w-4" />
               Our Certifications & Standards
-            </div>
-            <p className="mx-auto mt-3 max-w-md text-xs text-slate-500">
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mx-auto mt-3 max-w-md text-xs text-slate-500"
+            >
               Every batch we ship carries the mark of these standards, the same way it carries our name.
-            </p>
+            </motion.p>
           </div>
 
           <div className="flex flex-wrap items-stretch justify-center gap-6 md:gap-8">
             {certificates.map((cert, idx) => (
-              <div
-                key={idx}
-                className="cert-card group relative flex w-40 flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white/85 px-6 py-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"
-              >
-                {/* seal ring behind the logo, like an official stamp */}
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-dashed border-blue-200 transition-colors duration-300 group-hover:border-blue-400">
-                  <div className="relative h-14 w-14 grayscale transition-all duration-500 group-hover:grayscale-0">
-                    <Image src={cert.logo} alt={cert.name} fill className="object-contain" />
-                  </div>
-                  <ShieldCheck className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white p-0.5 text-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                </div>
-                <p className="text-center text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors">
-                  {cert.name}
-                </p>
-              </div>
+              <CertificateCard key={idx} cert={cert} index={idx} />
             ))}
           </div>
         </div>
@@ -207,21 +454,11 @@ export default function TeamAndCertificatesPage() {
           50%      { transform: translate(-20px, -25px) scale(1.05); }
         }
 
-        .stitch-line {
-          stroke-dasharray: 14 10;
-          stroke-dashoffset: 600;
-          animation: stitch-in 2.4s ease-out forwards;
-        }
-        @keyframes stitch-in {
-          to { stroke-dashoffset: 0; }
-        }
-
         @media (prefers-reduced-motion: reduce) {
           .weave-layer,
           .card-weave,
           .glow-drift-1,
-          .glow-drift-2,
-          .stitch-line {
+          .glow-drift-2 {
             animation: none !important;
           }
         }
