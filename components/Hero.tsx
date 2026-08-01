@@ -68,77 +68,73 @@ function useCountUp(target: number, durationMs: number, start: boolean) {
 
   return value;
 }
-// -------- Blueprint-style bag illustration — fills the right side --------
-// Pure SVG line-art, no raster image, negligible weight even on mobile.
-function BagBlueprint({ active }: { active: boolean }) {
+
+// -------- Safe Working Load gauge — left-side signature element --------
+function SWLGauge({ active }: { active: boolean }) {
+  const value = useCountUp(2000, 1400, active);
+
+  return (
+    <div className="pointer-events-none absolute left-8 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-3 xl:flex">
+      <span
+        className={`${plexMono.className} text-[0.6rem] tracking-[0.2em] text-white/40`}
+      >
+        SWL
+      </span>
+      <div className="relative h-40 w-px bg-white/10">
+        <motion.div
+          className="absolute bottom-0 left-0 w-px bg-[#C9A227]"
+          initial={{ height: "0%" }}
+          animate={{ height: active ? "100%" : "0%" }}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </div>
+      <span className={`${plexMono.className} text-xs text-[#C9A227]`}>
+        {value.toLocaleString()}
+        <span className="text-white/40"> KG</span>
+      </span>
+    </div>
+  );
+}
+
+// -------- Spec card — fills the right side with real product facts --------
+// Replaces the earlier literal bag illustration with something that reads
+// as premium/informational rather than decorative.
+const specRows = [
+  { label: "Fabric", value: "Woven PP, 90–220 GSM" },
+  { label: "UV Rating", value: "12-month stabilized" },
+  { label: "Capacity Range", value: "500 – 2,000 KG" },
+];
+
+function SpecCard({ active }: { active: boolean }) {
   return (
     <motion.div
-      className="pointer-events-none absolute right-6 top-1/2 hidden w-[280px] -translate-y-1/2 lg:block xl:right-16 xl:w-[340px]"
+      className="pointer-events-none absolute right-8 top-1/2 hidden w-[300px] -translate-y-1/2 rounded-lg border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm lg:block xl:right-16 xl:w-[320px]"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: active ? 1 : 0, x: active ? 0 : 20 }}
       transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <svg
-        viewBox="0 0 340 420"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full"
-      >
-        {/* top face (parallelogram) */}
-        <path
-          d="M70 90 L200 60 L270 90 L140 120 Z"
-          stroke="#6E8CAE"
-          strokeOpacity="0.35"
-          strokeWidth="1"
-        />
-        {/* front face */}
-        <path
-          d="M70 90 L140 120 L140 330 L70 300 Z"
-          stroke="#6E8CAE"
-          strokeOpacity="0.5"
-          strokeWidth="1"
-        />
-        {/* side face */}
-        <path
-          d="M140 120 L270 90 L270 300 L140 330 Z"
-          stroke="#6E8CAE"
-          strokeOpacity="0.25"
-          strokeWidth="1"
-        />
-
-        {/* lifting loops, top corners */}
-        <circle cx="70" cy="90" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
-        <circle cx="200" cy="60" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
-        <circle cx="270" cy="90" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
-        <circle cx="140" cy="120" r="7" stroke="#C9A227" strokeOpacity="0.6" strokeWidth="1" />
-
-        {/* bottom dimension line */}
-        <line x1="70" y1="345" x2="140" y2="365" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
-        <line x1="140" y1="365" x2="270" y2="335" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
-        <text x="90" y="390" fill="white" fillOpacity="0.35" fontSize="10" fontFamily="monospace">
-          1000 MM
-        </text>
-
-        {/* vertical dimension line */}
-        <line x1="45" y1="90" x2="45" y2="300" stroke="white" strokeOpacity="0.15" strokeWidth="1" />
-        <text
-          x="10"
-          y="200"
-          fill="white"
-          fillOpacity="0.35"
-          fontSize="10"
-          fontFamily="monospace"
-          transform="rotate(-90 20 200)"
+      <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#C9A227]" />
+        <span
+          className={`${plexMono.className} text-[0.6rem] uppercase tracking-[0.25em] text-white/50`}
         >
-          1200 MM
-        </text>
-
-        {/* spec tag */}
-        <rect x="150" y="200" width="70" height="26" rx="2" stroke="#C9A227" strokeOpacity="0.4" strokeWidth="1" />
-        <text x="160" y="217" fill="#C9A227" fillOpacity="0.7" fontSize="10" fontFamily="monospace">
-          TYPE C
-        </text>
-      </svg>
+          Specification
+        </span>
+      </div>
+      <dl className="mt-4 flex flex-col gap-4">
+        {specRows.map((row) => (
+          <div key={row.label} className="flex flex-col gap-0.5">
+            <dt
+              className={`${plexMono.className} text-[0.6rem] uppercase tracking-[0.15em] text-white/35`}
+            >
+              {row.label}
+            </dt>
+            <dd className={`${plexMono.className} text-sm text-white/80`}>
+              {row.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </motion.div>
   );
 }
@@ -148,8 +144,7 @@ export default function Hero() {
   const prefersReducedMotion = useReducedMotion();
 
   // Hero is always above the fold on load, so trigger the signature
-  // animations on mount rather than relying on scroll-into-view —
-  // that avoided the earlier bug where a zero-size ref never fired.
+  // animations on mount rather than relying on scroll-into-view.
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -219,18 +214,33 @@ export default function Hero() {
           placeholder="empty"
         />
 
-        {/* Restrained overlay — one gradient, no stacked color washes */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/70 to-[#0A0A0B]/20" />
+        {/* Base overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/70 to-[#0A0A0B]/25" />
 
-        {/* Single vignette accent, desktop only — replaces the old multi-blob glow */}
-        <div className="absolute bottom-0 right-0 hidden h-[50%] w-[40%] rounded-full bg-[#6E8CAE]/[0.06] blur-[100px] md:block" />
+        {/* Woven-fabric texture — echoes the actual FIBC material, not a
+            random grain. Pure CSS gradients: static, no filter, cheap on
+            every device including mobile. */}
+        <div
+          className="absolute inset-0 opacity-[0.5] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 7px),
+              repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 7px)
+            `,
+          }}
+        />
+
+        {/* Depth accents — two soft glows, desktop only, lighter blur than
+            before so they stay cheap while adding richness back in. */}
+        <div className="absolute bottom-0 right-0 hidden h-[55%] w-[45%] rounded-full bg-[#6E8CAE]/[0.08] blur-[90px] md:block" />
+        <div className="absolute left-0 top-0 hidden h-[35%] w-[35%] rounded-full bg-[#C9A227]/[0.04] blur-[80px] md:block" />
       </motion.div>
 
-      {/* SWL gauge — the one signature motion moment */}
+      {/* SWL gauge — signature motion moment, left side */}
       <SWLGauge active={signatureActive} />
 
-      {/* Blueprint graphic — fills the right side, reinforces the spec/technical theme */}
-      <BagBlueprint active={signatureActive} />
+      {/* Spec card — fills the right side with real product facts */}
+      <SpecCard active={signatureActive} />
 
       {/* ---- Content ---- */}
       <motion.div
@@ -240,7 +250,7 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
       >
-        {/* Eyebrow — mono, technical, restrained */}
+        {/* Eyebrow */}
         <motion.div variants={itemVariants} className="flex items-center gap-3">
           <span className="h-px w-8 bg-[#6E8CAE]/50" />
           <span
@@ -250,7 +260,7 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline — weight contrast does the work, no highlight gimmicks */}
+        {/* Headline */}
         <motion.h1
           variants={itemVariants}
           className="mt-8 max-w-3xl text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-white sm:text-6xl lg:text-7xl"
@@ -274,7 +284,7 @@ export default function Hero() {
           support demanding industrial applications worldwide.
         </motion.p>
 
-        {/* CTA — one primary, one quiet secondary */}
+        {/* CTA */}
         <motion.div
           variants={itemVariants}
           className="mt-10 flex flex-wrap items-center gap-8"
@@ -294,7 +304,7 @@ export default function Hero() {
           </Link>
         </motion.div>
 
-        {/* Spec strip — replaces the old bouncing scroll indicator */}
+        {/* Spec strip */}
         <motion.div
           variants={itemVariants}
           className={`${plexMono.className} mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-[0.65rem] uppercase tracking-[0.15em] text-white/30`}
