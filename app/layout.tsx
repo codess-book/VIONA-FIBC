@@ -4,6 +4,9 @@ import "./globals.css";
 // import WhatsAppFloat from "@/Components/Whatsapp";
 // import InstagramFloat from "@/Components/instagramfloats";
 // import SiteAmbience from "@/Components/siteAmbience";
+
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -81,10 +84,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col relative">
+        <Navbar />
+        
         {/* <SiteAmbience /> */}
         <div className="relative z-10 flex flex-col flex-1">
           {children}
         </div>
+
+        <Footer />
         {/* <WhatsAppFloat />
         <InstagramFloat /> */}
       </body>
