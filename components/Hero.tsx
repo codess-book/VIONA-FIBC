@@ -68,34 +68,6 @@ function useCountUp(target: number, durationMs: number, start: boolean) {
 
   return value;
 }
-
-// -------- Safe Working Load gauge — desktop-only signature element --------
-function SWLGauge({ active }: { active: boolean }) {
-  const value = useCountUp(2000, 1400, active);
-
-  return (
-    <div className="pointer-events-none absolute left-8 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-3 xl:flex">
-      <span
-        className={`${plexMono.className} text-[0.6rem] tracking-[0.2em] text-white/40`}
-      >
-        SWL
-      </span>
-      <div className="relative h-40 w-px bg-white/10">
-        <motion.div
-          className="absolute bottom-0 left-0 w-px bg-[#C9A227]"
-          initial={{ height: "0%" }}
-          animate={{ height: active ? "100%" : "0%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
-      <span className={`${plexMono.className} text-xs text-[#C9A227]`}>
-        {value.toLocaleString()}
-        <span className="text-white/40"> KG</span>
-      </span>
-    </div>
-  );
-}
-
 // -------- Blueprint-style bag illustration — fills the right side --------
 // Pure SVG line-art, no raster image, negligible weight even on mobile.
 function BagBlueprint({ active }: { active: boolean }) {
