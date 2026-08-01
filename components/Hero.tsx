@@ -14,7 +14,7 @@ import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { Highlight, HeroHighlight } from "./ui/hero0highlight.tsx";
 import { Roboto_Condensed } from "next/font/google";
-
+import type { Variants } from "motion/react";
 const robotoCondensed = Roboto_Condensed({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
@@ -41,7 +41,8 @@ const containerVariants = {
     transition: {
       staggerChildren: 0.12,
       delayChildren: 0.2,
-      ease: [0.22, 1, 0.36, 1],
+    //   ease: [0.22, 1, 0.36, 1],
+    ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -51,7 +52,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -292,33 +293,33 @@ export default function Hero() {
                 </motion.h1> */}
 
         {/* <div className="relative z-10 flex min-h-[80vh] flex-col items-center justify-center px-4 text-center"> */}
-       <motion.h1
-  initial={{
-    opacity: 0,
-    y: 20,
-  }}
-  animate={{
-    opacity: 1,
-    y: [20, -5, 0],
-  }}
-  transition={{
-    duration: 0.5,
-    ease: [0.4, 0.0, 0.2, 1],
-  }}
-  style={{
-    fontFamily: '"Roboto Condensed", sans-serif',
-    fontOpticalSizing: "auto",
-    fontWeight: 700,
-    fontStyle: "normal",
-  }}
-  className="max-w-4xl text-3xl font-bold leading-relaxed text-white md:text-5xl lg:text-6xl lg:leading-snug"
->
-  <Highlight className="text-white">Engineered</Highlight>
-  {" "}for Heavy Loads.
-  <br />
-  <span className="text-blue-300">Built for Lasting</span>{" "}
-  <Highlight className="text-white">Performance.</Highlight>
-</motion.h1>
+        <motion.h1
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: [20, -5, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.4, 0.0, 0.2, 1],
+          }}
+          style={{
+            fontFamily: '"Roboto Condensed", sans-serif',
+            fontOpticalSizing: "auto",
+            fontWeight: 700,
+            fontStyle: "normal",
+          }}
+          className="max-w-4xl text-3xl font-bold leading-relaxed text-white md:text-5xl lg:text-6xl lg:leading-snug"
+        >
+          <Highlight className="text-white">Engineered</Highlight> for Heavy
+          Loads.
+          <br />
+          <span className="text-blue-300">Built for Lasting</span>{" "}
+          <Highlight className="text-white">Performance.</Highlight>
+        </motion.h1>
 
         {/* Description - white with blue accent */}
         <motion.p

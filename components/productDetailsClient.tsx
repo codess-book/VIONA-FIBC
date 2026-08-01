@@ -1,10 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { RotateCcw, Pause, Play, Hand, ShoppingBag, ArrowLeft } from "lucide-react";
+import {
+  RotateCcw,
+  Pause,
+  Play,
+  Hand,
+  ShoppingBag,
+  ArrowLeft,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import type { Product } from "@/lib/data/product";
+import type { PRODUCTS } from "@/lib/data/product";
 
 // --- 3D Viewer Component (unchanged logic, refreshed styling) ---
 function BagViewer3D({ texture, name }: { texture: string; name: string }) {
@@ -67,7 +74,10 @@ function BagViewer3D({ texture, name }: { texture: string; name: string }) {
         onPointerUp={onUp}
         onPointerCancel={onUp}
       >
-        <div className="relative" style={{ perspective: "1000px", perspectiveOrigin: "50% 45%" }}>
+        <div
+          className="relative"
+          style={{ perspective: "1000px", perspectiveOrigin: "50% 45%" }}
+        >
           <div
             className="relative"
             style={{
@@ -81,7 +91,11 @@ function BagViewer3D({ texture, name }: { texture: string; name: string }) {
               <div
                 key={f.label}
                 className="absolute inset-0 rounded-[6px] bg-cover bg-center"
-                style={{ transform: f.t, backgroundImage: `url(${texture})`, backfaceVisibility: "hidden" }}
+                style={{
+                  transform: f.t,
+                  backgroundImage: `url(${texture})`,
+                  backfaceVisibility: "hidden",
+                }}
               />
             ))}
             <div
@@ -118,7 +132,11 @@ function BagViewer3D({ texture, name }: { texture: string; name: string }) {
             onClick={() => setSpinning((s) => !s)}
             className="rounded-full border border-slate-300 p-1.5 text-slate-600 hover:bg-blue-50 hover:border-blue-400 transition-colors"
           >
-            {spinning ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+            {spinning ? (
+              <Pause className="h-3 w-3" />
+            ) : (
+              <Play className="h-3 w-3" />
+            )}
           </button>
           <button
             onClick={() => setAngle({ y: -28, x: -12 })}
@@ -137,16 +155,24 @@ function CornerBrackets() {
   const corner = "absolute h-5 w-5 border-blue-400/60";
   return (
     <>
-      <span className={`${corner} top-3 left-3 border-t-2 border-l-2 rounded-tl-sm`} />
-      <span className={`${corner} top-3 right-3 border-t-2 border-r-2 rounded-tr-sm`} />
-      <span className={`${corner} bottom-3 left-3 border-b-2 border-l-2 rounded-bl-sm`} />
-      <span className={`${corner} bottom-3 right-3 border-b-2 border-r-2 rounded-br-sm`} />
+      <span
+        className={`${corner} top-3 left-3 border-t-2 border-l-2 rounded-tl-sm`}
+      />
+      <span
+        className={`${corner} top-3 right-3 border-t-2 border-r-2 rounded-tr-sm`}
+      />
+      <span
+        className={`${corner} bottom-3 left-3 border-b-2 border-l-2 rounded-bl-sm`}
+      />
+      <span
+        className={`${corner} bottom-3 right-3 border-b-2 border-r-2 rounded-br-sm`}
+      />
     </>
   );
 }
 
 // --- Main Client Layout ---
-export default function ProductDetailsClient({ product }: { product: Product }) {
+export default function ProductDetailsClient({ product }: { product:any }) {
   const hasDiscount = product.originalPrice !== null;
 
   return (
@@ -218,30 +244,51 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
 
               {hasDiscount && (
                 <div className="inline-flex w-fit rounded-full bg-blue-100 px-2.5 py-0.5 text-[10px] font-bold text-blue-700 border border-blue-200">
-                  Save {Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)}%
+                  Save{" "}
+                  {Math.round(
+                    ((product.originalPrice! - product.price) /
+                      product.originalPrice!) *
+                      100,
+                  )}
+                  %
                 </div>
               )}
 
-              <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">{product.description}</p>
+              <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
+                {product.description}
+              </p>
 
               {/* Specs Grid — styled like an engineering spec sheet */}
               <div className="relative grid grid-cols-2 gap-3 bg-blue-50/80 border border-blue-100 p-3 rounded-xl">
                 <span className="absolute -top-2 left-3 rounded-full bg-white px-2 text-[9px] font-bold uppercase tracking-[0.15em] text-blue-500 border border-blue-100">
                   Spec Sheet
                 </span>
-                {product.specs.map((spec, i) => (
-                  <div key={i} className="flex flex-col">
-                    <span className="text-[9px] uppercase font-bold text-blue-500">{spec.label}</span>
-                    <span className="font-mono text-sm font-semibold text-slate-700">{spec.value}</span>
-                  </div>
-                ))}
+                {product.specs.map(
+                  (spec: { label: string; value: string }, i: number) => (
+                    <div key={i} className="flex flex-col">
+                      <span className="text-[9px] uppercase font-bold text-blue-500">
+                        {spec.label}
+                      </span>
+                      <span className="font-mono text-sm font-semibold text-slate-700">
+                        {spec.value}
+                      </span>
+                    </div>
+                  ),
+                )}
               </div>
 
               {/* Stitched divider before the purchase row */}
               <div className="relative w-full h-4 pt-1" aria-hidden="true">
-                <svg viewBox="0 0 600 12" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                <svg
+                  viewBox="0 0 600 12"
+                  preserveAspectRatio="none"
+                  className="absolute inset-0 h-full w-full"
+                >
                   <line
-                    x1="0" y1="6" x2="600" y2="6"
+                    x1="0"
+                    y1="6"
+                    x2="600"
+                    y2="6"
                     stroke="rgb(37 99 235 / 0.3)"
                     strokeWidth="1.5"
                     strokeDasharray="8 6"
@@ -252,9 +299,15 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
 
               <div className="flex items-center gap-3 pt-1">
                 <div className="flex items-center border border-slate-200 rounded-full bg-white overflow-hidden">
-                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">-</button>
-                  <span className="w-10 text-center text-sm font-medium text-slate-800">1</span>
-                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">+</button>
+                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">
+                    -
+                  </button>
+                  <span className="w-10 text-center text-sm font-medium text-slate-800">
+                    1
+                  </span>
+                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">
+                    +
+                  </button>
                 </div>
 
                 <button className="flex-1 flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white py-2.5 px-5 rounded-full text-sm font-semibold transition-colors shadow-md shadow-blue-900/20">

@@ -3,7 +3,7 @@
 import { motion, useInView } from "motion/react";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Link } from "lucide-react";
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
 
 // ---------- Stats ----------
@@ -64,7 +64,6 @@ export default function AboutSection() {
     >
       {/* ============ BACKGROUND PREMIUM EFFECTS ============ */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        
         {/* 1. Moving Gradient Blobs (Navy & Light Blue) */}
         <motion.div
           className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-900/10 blur-3xl"
@@ -207,9 +206,7 @@ export default function AboutSection() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center justify-center"
           >
-            
             <CardContainer className="inter-var">
-                
               <CardBody className="bg-white relative group/card hover:shadow-2xl hover:shadow-blue-900/[0.1] border border-blue-200 w-auto sm:w-[30rem] h-auto rounded-xl p-6">
                 <CardItem
                   translateZ="50"
@@ -218,7 +215,7 @@ export default function AboutSection() {
                   VIONA Manufacturing
                 </CardItem>
                 <CardItem
-                  as="p"
+                  //   as="p"
                   translateZ="60"
                   className="text-blue-600 text-sm max-w-sm mt-2"
                 >
@@ -234,17 +231,17 @@ export default function AboutSection() {
                   />
                 </CardItem>
                 <div className="flex justify-between items-center mt-6">
+                  <Link href="#">
+                    <CardItem
+                      translateZ={20}
+                      className="px-4 py-2 rounded-xl text-xs font-normal text-slate-500 hover:text-blue-600"
+                    >
+                      Learn more →
+                    </CardItem>
+                  </Link>
                   <CardItem
                     translateZ={20}
-                    as="a"
-                    href="#"
-                    className="px-4 py-2 rounded-xl text-xs font-normal text-slate-500 hover:text-blue-600 transition-colors"
-                  >
-                    Learn more →
-                  </CardItem>
-                  <CardItem
-                    translateZ={20}
-                    as="button"
+                    // as="button"
                     className="px-4 py-2 rounded-xl bg-blue-900 text-white text-xs font-bold hover:bg-blue-800 transition-colors"
                   >
                     Know more

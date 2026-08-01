@@ -12,7 +12,7 @@ import {
     Recycle,
     ArrowRight,
 } from 'lucide-react';
-
+import type { Variants } from "motion/react";
 // ✅ Original Industries List with Accurate Icons
 const industries = [
     { name: 'Mining', icon: Pickaxe },
@@ -39,7 +39,7 @@ const item = {
         opacity: 1,
         scale: 1,
         y: 0,
-        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1]  as const},
     },
 };
 
