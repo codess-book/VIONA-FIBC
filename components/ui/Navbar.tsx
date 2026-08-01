@@ -33,14 +33,14 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
-// Animation variants
+// Animation variants with proper types
 const mobileMenuVariants = {
   hidden: { 
     opacity: 0,
     height: 0,
     transition: {
       duration: 0.3,
-      ease: [0.22, 1, 0.36, 1] as const
+      ease: [0.22, 1, 0.36, 1] as const,
     }
   },
   visible: { 
@@ -48,7 +48,7 @@ const mobileMenuVariants = {
     height: "auto",
     transition: {
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1]
+      ease: [0.22, 1, 0.36, 1] as const,
     }
   }
 };
@@ -61,7 +61,7 @@ const mobileLinkVariants = {
     transition: {
       delay: i * 0.06,
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1]
+      ease: [0.22, 1, 0.36, 1] as const,
     }
   })
 };
