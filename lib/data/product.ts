@@ -6,8 +6,8 @@ export const PRODUCTS = [
     description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
     price: 24.99,
     originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
+    image: '/Images/products/singleloop.png', // ✅ lowercase 'images'
+    texture: '/Images/products/singleloop.png', // ✅ Correct path
     specs: [
       { label: "Capacity", value: "1,500 kg" },
       { label: "Dimensions", value: "90 x 90 x 120 cm" },
@@ -36,8 +36,8 @@ export const PRODUCTS = [
     description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
     price: 24.99,
     originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
+    image: '/Images/products/singleloop.png', // ✅ lowercase 'images'
+    texture: '/Images/products/singleloop.png', // ✅ Correct path
     specs: [
       { label: "Capacity", value: "1,500 kg" },
       { label: "Dimensions", value: "90 x 90 x 120 cm" },

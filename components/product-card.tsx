@@ -13,7 +13,7 @@ const PRODUCTS = [
     slug: 'u-panel-fibc',
     name: 'U-Panel FIBC Bags',
     description: 'High load stability for palletized bulk transport.',
-    image: '/images/factory3.jpg',
+    image: '/Images/factory3.jpg',
   },
   {
     slug: '4-panel-fibc',
@@ -25,13 +25,13 @@ const PRODUCTS = [
     slug: 'baffle-bags',
     name: 'Baffle Bags',
     description: 'Square profile that maximizes container space.',
-    image: '/images/factory3.jpg',
+    image: '/Images/factory3.jpg',
   },
   {
     slug: 'food-grade-fibc',
     name: 'Food Grade FIBC Bags',
     description: 'FDA-compliant bags for grains, sugar & edible oils.',
-    image: '/images/factory3.jpg',
+    image: '/Images/factory3.jpg',
   },
 ];
 
