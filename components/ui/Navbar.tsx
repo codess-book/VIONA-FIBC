@@ -1,21 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Box } from "lucide-react";
 import { Bebas_Neue, Inter, IBM_Plex_Mono } from "next/font/google";
 
+// Display face for the logo wordmark — bold, condensed, stamped —
+// fits an industrial packaging brand far better than a generic sans.
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
   weight: "400",
 });
 
+// Body face for nav links — clean and highly legible at small sizes.
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
+// Utility face — same technical/spec voice used in the Hero.
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
@@ -31,45 +35,39 @@ const navLinks = [
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Home/Hero has a dark background, so the navbar reads white there.
-  // Every other page is on a white background, so it reads blue.
-  // No scroll listener needed — this alone decides the theme, which
-  // also means one less scroll-driven re-render on mobile.
-  const isHome = pathname === "/";
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 bg-transparent ${inter.className}`}
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${
+        isScrolled
+          ? "border-white/10 bg-[#0A0A0B]/90 backdrop-blur-xl"
+          : "border-white/[0.06] bg-[#0A0A0B]/40 backdrop-blur-lg"
+      } ${inter.className} text-white`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* --- LEFT: LOGO + COMPANY NAME --- */}
           <Link href="/" className="group flex items-center gap-3">
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors duration-200 ${
-                isHome
-                  ? "border-white/15 bg-white/[0.03] text-white/80 group-hover:text-blue-400"
-                  : "border-blue-900/15 bg-blue-900/[0.04] text-blue-900 group-hover:text-blue-600"
-              }`}
-            >
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-md border border-white/15 bg-white/[0.03] text-white/80 transition-colors duration-300 group-hover:border-[#6E8CAE]/60 group-hover:text-white">
               <Box className="h-5 w-5" strokeWidth={1.5} />
             </div>
             <span className="flex flex-col leading-none">
               <span
-                className={`${bebasNeue.className} text-3xl tracking-[0.08em] transition-colors duration-200 ${
-                  isHome
-                    ? "text-white group-hover:text-blue-400"
-                    : "text-blue-900 group-hover:text-blue-600"
-                }`}
+                className={`${bebasNeue.className} text-3xl tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
               >
                 VIONA
               </span>
               <span
-                className={`${plexMono.className} hidden text-[0.55rem] tracking-[0.3em] sm:block ${
-                  isHome ? "text-white/40" : "text-blue-900/40"
-                }`}
+                className={`${plexMono.className} hidden text-[0.55rem] tracking-[0.3em] text-white/35 sm:block`}
               >
                 FIBC PACKAGING
               </span>
@@ -84,28 +82,23 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
-                    isHome
-                      ? isActive
-                        ? "text-blue-400"
-                        : "text-white/80 hover:text-blue-400"
-                      : isActive
-                        ? "text-blue-600"
-                        : "text-blue-900/70 hover:text-blue-600"
+                  className={`group relative text-sm font-medium tracking-wide transition-colors duration-200 ${
+                    isActive ? "text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
                   {link.name}
+                  <span
+                    className={`absolute -bottom-1.5 left-0 h-px bg-[#C9A227] transition-all duration-300 ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
                 </Link>
               );
             })}
 
             <Link
               href="/contact"
-              className={`rounded-full border px-5 py-2.5 text-sm font-medium tracking-wide transition-colors duration-200 ${
-                isHome
-                  ? "border-white/20 text-white hover:border-blue-400 hover:bg-blue-400/10"
-                  : "border-blue-900/25 text-blue-900 hover:border-blue-600 hover:bg-blue-600/10 hover:text-blue-600"
-              }`}
+              className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/10"
             >
               Get a quote
             </Link>
@@ -114,11 +107,7 @@ export default function Navbar() {
           {/* --- MOBILE HAMBURGER BUTTON --- */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`inline-flex items-center justify-center rounded-md p-2 transition-colors md:hidden ${
-              isHome
-                ? "text-white/80 hover:bg-white/[0.06] active:bg-white/10"
-                : "text-blue-900 hover:bg-blue-900/[0.06] active:bg-blue-900/10"
-            }`}
+            className="inline-flex items-center justify-center rounded-md p-2 text-white/80 transition-colors hover:bg-white/[0.06] active:bg-white/10 md:hidden"
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -131,17 +120,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* --- MOBILE DROPDOWN MENU ---
-          The trigger bar above stays fully transparent as requested, but
-          the open dropdown needs a readable backdrop — links floating over
-          whatever content happens to be behind them would be unreadable.
-          It still follows the same white/blue theme as the rest of the nav. */}
+      {/* --- MOBILE DROPDOWN MENU --- */}
       <div
-        className={`fixed left-0 right-0 top-16 overflow-hidden border-b transition-all duration-300 md:hidden ${
-          isHome
-            ? "border-white/10 bg-[#0A0A0B]/95"
-            : "border-blue-900/10 bg-white/95"
-        } ${isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+        className={`fixed left-0 right-0 top-16 overflow-hidden border-b border-white/10 bg-[#0A0A0B]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
+          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
       >
         <div className="flex flex-col space-y-1 px-4 py-6">
           {navLinks.map((link) => {
@@ -151,33 +134,19 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`w-fit rounded-lg px-3 py-2.5 text-base font-medium transition-colors duration-200 ${
-                  isHome
-                    ? isActive
-                      ? "text-blue-400"
-                      : "text-white/80 active:bg-white/5"
-                    : isActive
-                      ? "text-blue-600"
-                      : "text-blue-900/80 active:bg-blue-900/5"
+                className={`w-fit rounded-lg px-3 py-2.5 text-base font-medium transition-colors duration-200 active:bg-white/5 ${
+                  isActive ? "text-white" : "text-white/60 hover:text-white"
                 }`}
               >
                 {link.name}
               </Link>
             );
           })}
-          <div
-            className={`mt-3 border-t pt-4 ${
-              isHome ? "border-white/10" : "border-blue-900/10"
-            }`}
-          >
+          <div className="mt-3 border-t border-white/10 pt-4">
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`inline-block w-full rounded-full border px-5 py-3 text-center text-sm font-medium tracking-wide transition-colors duration-200 active:scale-[0.98] ${
-                isHome
-                  ? "border-white/20 text-white hover:border-blue-400 hover:bg-blue-400/10"
-                  : "border-blue-900/25 text-blue-900 hover:border-blue-600 hover:bg-blue-600/10"
-              }`}
+              className="inline-block w-full rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/10 active:scale-[0.98]"
             >
               Get a quote
             </Link>
