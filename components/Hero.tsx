@@ -162,7 +162,7 @@ export default function Hero() {
         }}
       >
         <Image
-          src="/Images/hero-bags.png"
+          src="/Images/hero-bags.jpg"
           alt="FIBC bulk bags stacked in a warehouse, ready for dispatch"
           fill
           className="object-cover"
