@@ -48,7 +48,7 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.22, 1, 0.36, 1], // smooth "easeOutExpo"-ish curve
+      ease: [0.22, 1, 0.36, 1] as const, // smooth "easeOutExpo"-ish curve
     },
   },
 };
@@ -58,7 +58,7 @@ const headingVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
