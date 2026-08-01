@@ -1,39 +1,27 @@
 "use client";
 
+import { useRef, useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Sparkles } from "lucide-react";
 import {
   motion,
   useScroll,
+  useSpring,
   useTransform,
   useMotionValue,
-  useSpring,
   useInView,
+  useReducedMotion,
 } from "motion/react";
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
-import { Highlight, HeroHighlight } from "./ui/hero0highlight.tsx";
+import { Highlight } from "./ui/hero0highlight.tsx";
 import { Roboto_Condensed } from "next/font/google";
-import type { Variants } from "motion/react";
+
 const robotoCondensed = Roboto_Condensed({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
 });
-// -------- Letter animation variants --------
-const letterVariants = {
-  hidden: { opacity: 0, y: 60, rotateX: -15 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.035,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
-};
 
+// -------- Animation variants --------
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -41,8 +29,7 @@ const containerVariants = {
     transition: {
       staggerChildren: 0.12,
       delayChildren: 0.2,
-    //   ease: [0.22, 1, 0.36, 1],
-    ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -56,15 +43,23 @@ const itemVariants = {
   },
 };
 
-// -------- Particle component (now blue) --------
-const Particle = ({ delay, duration, size, x, y }: any) => (
+// -------- Particle component --------
+type ParticleData = {
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+  delay: number;
+};
+
+const Particle = ({ delay, duration, size, x, y }: ParticleData) => (
   <motion.div
     className="absolute rounded-full bg-blue-400/20"
     style={{
       width: size,
       height: size,
-      left: x,
-      top: y,
+      left: `${x}%`,
+      top: `${y}%`,
       filter: "blur(1px)",
       willChange: "transform, opacity",
     }}
@@ -84,6 +79,20 @@ const Particle = ({ delay, duration, size, x, y }: any) => (
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Detect device capability once on mount — avoids running
+  // heavy parallax / particles / grain on phones & tablets.
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px) and (pointer: fine)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -95,11 +104,24 @@ export default function Hero() {
     mass: 0.5,
   });
 
-  const imageScale = useTransform(smoothScrollProgress, [0, 1], [1, 1.08], {
-    clamp: false,
-  });
-  const imageOpacity = useTransform(smoothScrollProgress, [0, 0.4], [1, 0.7]);
-  const contentY = useTransform(smoothScrollProgress, [0, 0.5], [0, 40]);
+  // On mobile / reduced-motion we just skip the transforms entirely
+  // (still valid hooks — we just don't feed them into scale/opacity).
+  const imageScale = useTransform(
+    smoothScrollProgress,
+    [0, 1],
+    isDesktop && !prefersReducedMotion ? [1, 1.08] : [1, 1],
+    { clamp: false },
+  );
+  const imageOpacity = useTransform(
+    smoothScrollProgress,
+    [0, 0.4],
+    isDesktop ? [1, 0.7] : [1, 1],
+  );
+  const contentY = useTransform(
+    smoothScrollProgress,
+    [0, 0.5],
+    isDesktop && !prefersReducedMotion ? [0, 40] : [0, 0],
+  );
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -107,30 +129,35 @@ export default function Hero() {
   const springY = useSpring(mouseY, { damping: 30, stiffness: 200 });
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const x = (clientX / window.innerWidth - 0.5) * 20;
-      const y = (clientY / window.innerHeight - 0.5) * 20;
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+    if (!isDesktop || prefersReducedMotion) return;
 
-  const [particles, setParticles] = useState<
-    Array<{
-      x: number;
-      y: number;
-      size: number;
-      duration: number;
-      delay: number;
-    }>
-  >([]);
+    let raf = 0;
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const { clientX, clientY } = e;
+        mouseX.set((clientX / window.innerWidth - 0.5) * 20);
+        mouseY.set((clientY / window.innerHeight - 0.5) * 20);
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [isDesktop, prefersReducedMotion, mouseX, mouseY]);
+
+  // Particles: fewer, and only on desktop — this was one of the
+  // biggest mobile-lag contributors (12 infinite animated divs).
+  const [particles, setParticles] = useState<ParticleData[]>([]);
 
   useEffect(() => {
+    if (!isDesktop || prefersReducedMotion) {
+      setParticles([]);
+      return;
+    }
     setParticles(
-      Array.from({ length: 12 }, () => ({
+      Array.from({ length: 8 }, () => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 6 + 2,
@@ -138,26 +165,24 @@ export default function Hero() {
         delay: Math.random() * 5,
       })),
     );
-  }, []);
+  }, [isDesktop, prefersReducedMotion]);
 
   const gridRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(gridRef, { once: true });
-
-  const titleText = "Built for the big lift.";
 
   return (
     <section
       ref={containerRef}
       className="relative flex min-h-[100vh] items-end overflow-hidden bg-[#0c0b09]"
     >
-      {/* ---- Background Image with Mouse Parallax ---- */}
+      {/* ---- Background Image with Mouse Parallax (desktop only) ---- */}
       <motion.div
         className="absolute inset-0 h-full w-full"
         style={{
           scale: imageScale,
           opacity: imageOpacity,
-          x: useTransform(springX, (v) => v * 0.8),
-          y: useTransform(springY, (v) => v * 0.8),
+          x: isDesktop ? useTransform(springX, (v) => v * 0.8) : 0,
+          y: isDesktop ? useTransform(springY, (v) => v * 0.8) : 0,
           willChange: "transform, opacity",
         }}
       >
@@ -165,40 +190,40 @@ export default function Hero() {
           src="/Images/hero-bags.jpg"
           alt="FIBC bulk bags stacked in a warehouse, ready for dispatch"
           fill
+          sizes="100vw"
+          quality={75}
           className="object-cover"
           priority
+          fetchPriority="high"
         />
-        {/* ---- Overlay gradients (cool blue tones) ---- */}
+
+        {/* ---- Overlay gradients ---- */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0c0b09]/60 via-[#0c0b09]/50 to-[#0c0b09]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0c0b09]/40 via-transparent to-[#0c0b09]/20" />
 
-        {/* ---- Animated light sweep (blue) ---- */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/10 to-transparent"
-          animate={{
-            x: ["-100%", "200%"],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ width: "60%", filter: "blur(60px)" }}
-        />
+        {/* ---- Animated light sweep — desktop only ---- */}
+        {isDesktop && !prefersReducedMotion && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/10 to-transparent"
+            animate={{ x: ["-100%", "200%"] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            style={{ width: "60%", filter: "blur(60px)" }}
+          />
+        )}
 
-        {/* ---- Warm glow accents replaced with blue ---- */}
-        <div className="absolute bottom-0 left-0 h-[60%] w-[60%] bg-blue-400/5 blur-[120px] rounded-full" />
-        <div className="absolute top-0 right-0 h-[40%] w-[40%] bg-blue-400/5 blur-[100px] rounded-full" />
+        {/* ---- Glow accents — smaller blur radius, hidden on mobile ---- */}
+        <div className="absolute bottom-0 left-0 hidden h-[60%] w-[60%] rounded-full bg-blue-400/5 blur-[60px] md:block md:blur-[120px]" />
+        <div className="absolute top-0 right-0 hidden h-[40%] w-[40%] rounded-full bg-blue-400/5 blur-[50px] md:block md:blur-[100px]" />
 
-        {/* ---- Subtle grid overlay (blue) ---- */}
+        {/* ---- Subtle grid overlay ---- */}
         <div
           ref={gridRef}
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none hidden md:block"
           style={{
             backgroundImage: `
-                            linear-gradient(rgba(96, 165, 250, 0.03) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(96, 165, 250, 0.03) 1px, transparent 1px)
-                        `,
+              linear-gradient(rgba(96, 165, 250, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(96, 165, 250, 0.03) 1px, transparent 1px)
+            `,
             backgroundSize: "60px 60px",
             opacity: isInView ? 0.6 : 0,
             transition: "opacity 1.5s ease",
@@ -206,7 +231,7 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* ---- Floating Particles (blue) ---- */}
+      {/* ---- Floating Particles — desktop only ---- */}
       {particles.length > 0 && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {particles.map((p, i) => (
@@ -215,14 +240,14 @@ export default function Hero() {
         </div>
       )}
 
-      {/* ---- Grain texture (kept) ---- */}
-      <div className="absolute inset-0 opacity-[0.035] pointer-events-none mix-blend-soft-light">
+      {/* ---- Grain texture — desktop only, this filter is very GPU heavy ---- */}
+      <div className="absolute inset-0 hidden opacity-[0.035] pointer-events-none mix-blend-soft-light md:block">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
           <filter id="grain">
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.75"
-              numOctaves="3"
+              numOctaves="2"
               stitchTiles="stitch"
             />
             <feColorMatrix
@@ -242,7 +267,7 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
       >
-        {/* Badge - white & blue */}
+        {/* Badge */}
         <motion.div variants={itemVariants} className="flex items-center gap-4">
           <span className="h-px w-12 bg-blue-400/60" />
           <span className="flex items-center gap-2 text-[0.65rem] font-medium uppercase tracking-[0.25em] text-blue-400/80">
@@ -252,60 +277,11 @@ export default function Hero() {
           <span className="h-px flex-1 bg-blue-400/20" />
         </motion.div>
 
-        {/* Main Heading - white with blue accent */}
-        {/* <motion.h1
-                    variants={itemVariants}
-                    className="mt-8 max-w-3xl font-display text-5xl font-black uppercase leading-[0.92] text-white sm:text-7xl lg:text-8xl"
-                >
-                    <span className="inline-block overflow-hidden">
-                        {titleText.split(' ').map((word, wordIdx) => (
-                            <span key={wordIdx} className="inline-block mr-3">
-                                {word === "big" || word === "lift." ? (
-                                    <span className="text-blue-400">
-                                        {word.split('').map((char, charIdx) => (
-                                            <motion.span
-                                                key={charIdx}
-                                                custom={charIdx + wordIdx * 2}
-                                                variants={letterVariants}
-                                                className="inline-block"
-                                            >
-                                                {char}
-                                            </motion.span>
-                                        ))}
-                                    </span>
-                                ) : (
-                                    <span>
-                                        {word.split('').map((char, charIdx) => (
-                                            <motion.span
-                                                key={charIdx}
-                                                custom={charIdx + wordIdx * 2}
-                                                variants={letterVariants}
-                                                className="inline-block"
-                                            >
-                                                {char}
-                                            </motion.span>
-                                        ))}
-                                    </span>
-                                )}
-                            </span>
-                        ))}
-                    </span>
-                </motion.h1> */}
-
-        {/* <div className="relative z-10 flex min-h-[80vh] flex-col items-center justify-center px-4 text-center"> */}
+        {/* Main Heading */}
         <motion.h1
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: [20, -5, 0],
-          }}
-          transition={{
-            duration: 0.5,
-            ease: [0.4, 0.0, 0.2, 1],
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: [20, -5, 0] }}
+          transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
           style={{
             fontFamily: '"Roboto Condensed", sans-serif',
             fontOpticalSizing: "auto",
@@ -321,7 +297,7 @@ export default function Hero() {
           <Highlight className="text-white">Performance.</Highlight>
         </motion.h1>
 
-        {/* Description - white with blue accent */}
+        {/* Description */}
         <motion.p
           variants={itemVariants}
           className={`${robotoCondensed.className} mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:text-xl`}
@@ -333,30 +309,28 @@ export default function Hero() {
           lasting value to customers around the world.
         </motion.p>
 
-        {/* CTA Group - blue button */}
-        {/* CTA Group - Premium Glass Button */}
+        {/* CTA */}
         <motion.div
           variants={itemVariants}
           className="mt-10 flex flex-wrap items-center gap-5"
         >
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-blue-500 hover:border-blue-500 hover:text-white hover:shadow-blue-500/40"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:text-white hover:shadow-blue-500/40"
           >
             Request a quote
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
-        {/* Divider with certifications - white/blue */}
 
-        {/* Scroll Indicator - white/blue */}
+        {/* Scroll Indicator */}
         <motion.div
           variants={itemVariants}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 text-[0.55rem] font-medium uppercase tracking-[0.25em] text-white/25"
+          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[0.55rem] font-medium uppercase tracking-[0.25em] text-white/25 sm:flex"
         >
           <span>Scroll</span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
+            animate={isDesktop && !prefersReducedMotion ? { y: [0, 6, 0] } : {}}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="h-8 w-px bg-gradient-to-b from-blue-400/40 to-transparent"
           />
@@ -365,8 +339,6 @@ export default function Hero() {
     </section>
   );
 }
-
-// "use client";
 
 // import { motion } from "motion/react";
 // import Image from "next/image";
