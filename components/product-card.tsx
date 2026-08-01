@@ -19,7 +19,7 @@ const PRODUCTS = [
     slug: '4-panel-fibc',
     name: '4-Panel FIBC Bags',
     description: 'Uniform shape, efficient for automated filling lines.',
-    image: '/images/products/singleloop.png',
+    image: '/Images/products/singleloop.png',
   },
   {
     slug: 'baffle-bags',
@@ -35,11 +35,52 @@ const PRODUCTS = [
   },
 ];
 
-function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
+// Animation variants — alternate direction based on index (even = left, odd = right)
+const cardVariants = {
+  hidden: (index: number) => ({
+    opacity: 0,
+    x: index % 2 === 0 ? -60 : 60,
+    y: 20,
+  }),
+  visible: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1], // smooth "easeOutExpo"-ish curve
+    },
+  },
+};
+
+const headingVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+function ProductCard({
+  product,
+  index,
+}: {
+  product: (typeof PRODUCTS)[number];
+  index: number;
+}) {
   const [hovering, setHovering] = useState(false);
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-xl hover:shadow-blue-900/10 transition-all duration-300">
+    <motion.div
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      whileHover={{ y: -6 }}
+      className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-xl hover:shadow-blue-900/10 transition-shadow duration-300 will-change-transform"
+    >
       {/* Lens Effect (Zoom on Hover) */}
       <Lens hovering={hovering} setHovering={setHovering}>
         <div className="relative aspect-square overflow-hidden rounded-xl bg-blue-50/80">
@@ -51,6 +92,7 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
             src={product.image}
             alt={product.name}
             fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
           />
         </div>
@@ -73,7 +115,7 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
         </Link>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -123,7 +165,13 @@ export default function ProductsSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8">
-        <div className="mx-auto mb-12 max-w-xl text-center">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.6 }}
+          variants={headingVariants}
+          className="mx-auto mb-12 max-w-xl text-center"
+        >
           <span className="inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-blue-700">
             <span className="h-px w-8 bg-blue-700" />
             Our Products
@@ -134,16 +182,22 @@ export default function ProductsSection() {
           <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">
             Premium woven polypropylene bags engineered for industrial strength and reliability.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-4">
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.slug} product={product} />
+          {PRODUCTS.map((product, index) => (
+            <ProductCard key={product.slug} product={product} index={index} />
           ))}
         </div>
 
         {/* "Explore All Products" Button - Premium Glassmorphism Style */}
-        <div className="mt-12 flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.8 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+          className="mt-12 flex justify-center"
+        >
           <Link
             href="/products"
             className="group inline-flex items-center gap-2 rounded-full border border-blue-300/50 bg-white/80 px-8 py-3 text-sm font-semibold text-blue-700 shadow-md backdrop-blur-md transition-all duration-300 hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-xl hover:shadow-blue-900/20"
@@ -151,7 +205,7 @@ export default function ProductsSection() {
             Explore All Products
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
