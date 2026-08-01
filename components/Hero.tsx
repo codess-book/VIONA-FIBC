@@ -45,7 +45,7 @@ const itemVariants = {
   },
 };
 
-// -------- Count-up hook for the SWL gauge (signature element) --------
+// -------- Count-up hook for the SWL gauge --------
 function useCountUp(target: number, durationMs: number, start: boolean) {
   const [value, setValue] = useState(0);
 
@@ -69,18 +69,18 @@ function useCountUp(target: number, durationMs: number, start: boolean) {
   return value;
 }
 
-// -------- Safe Working Load gauge — left-side signature element --------
+// -------- Safe Working Load gauge --------
 function SWLGauge({ active }: { active: boolean }) {
   const value = useCountUp(2000, 1400, active);
 
   return (
-    <div className="pointer-events-none absolute left-8 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-3 xl:flex">
+    <div className="pointer-events-none absolute left-4 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-3 lg:flex xl:left-8">
       <span
         className={`${plexMono.className} text-[0.6rem] tracking-[0.2em] text-white/40`}
       >
         SWL
       </span>
-      <div className="relative h-40 w-px bg-white/10">
+      <div className="relative h-32 w-px bg-white/10 lg:h-40">
         <motion.div
           className="absolute bottom-0 left-0 w-px bg-[#C9A227]"
           initial={{ height: "0%" }}
@@ -96,9 +96,7 @@ function SWLGauge({ active }: { active: boolean }) {
   );
 }
 
-// -------- Spec card — fills the right side with real product facts --------
-// Replaces the earlier literal bag illustration with something that reads
-// as premium/informational rather than decorative.
+// -------- Spec card --------
 const specRows = [
   { label: "Fabric", value: "Woven PP, 90–220 GSM" },
   { label: "UV Rating", value: "12-month stabilized" },
@@ -108,28 +106,28 @@ const specRows = [
 function SpecCard({ active }: { active: boolean }) {
   return (
     <motion.div
-      className="pointer-events-none absolute right-8 top-1/2 hidden w-[300px] -translate-y-1/2 rounded-lg border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm lg:block xl:right-16 xl:w-[320px]"
+      className="pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-lg border border-white/10 bg-white/[0.02] p-4 backdrop-blur-sm lg:block xl:right-8 xl:w-[320px] xl:p-6"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: active ? 1 : 0, x: active ? 0 : 20 }}
       transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+      <div className="flex items-center gap-2 border-b border-white/10 pb-3">
         <span className="h-1.5 w-1.5 rounded-full bg-[#C9A227]" />
         <span
-          className={`${plexMono.className} text-[0.6rem] uppercase tracking-[0.25em] text-white/50`}
+          className={`${plexMono.className} text-[0.55rem] uppercase tracking-[0.25em] text-white/50 xl:text-[0.6rem]`}
         >
           Specification
         </span>
       </div>
-      <dl className="mt-4 flex flex-col gap-4">
+      <dl className="mt-3 flex flex-col gap-3 xl:mt-4 xl:gap-4">
         {specRows.map((row) => (
           <div key={row.label} className="flex flex-col gap-0.5">
             <dt
-              className={`${plexMono.className} text-[0.6rem] uppercase tracking-[0.15em] text-white/35`}
+              className={`${plexMono.className} text-[0.5rem] uppercase tracking-[0.15em] text-white/35 xl:text-[0.6rem]`}
             >
               {row.label}
             </dt>
-            <dd className={`${plexMono.className} text-sm text-white/80`}>
+            <dd className={`${plexMono.className} text-xs text-white/80 xl:text-sm`}>
               {row.value}
             </dd>
           </div>
@@ -143,8 +141,6 @@ export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Hero is always above the fold on load, so trigger the signature
-  // animations on mount rather than relying on scroll-into-view.
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -195,56 +191,199 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-[100vh] items-end overflow-hidden bg-[#0A0A0B]"
+      className="relative flex min-h-screen items-center overflow-hidden bg-[#0A0A0B]"
     >
-      {/* ---- Background image ---- */}
-      <motion.div
-        className="absolute inset-0 h-full w-full"
-        style={{ scale: imageScale, opacity: imageOpacity, willChange: "transform, opacity" }}
-      >
-        <Image
-          src="/Images/hero-bags.jpg"
-          alt="FIBC bulk bags stacked in a warehouse, ready for dispatch"
-          fill
-          sizes="100vw"
-          quality={90}
-          className="object-cover"
-          priority
-          fetchPriority="high"
-          placeholder="empty"
-        />
+      {/* ---- Enhanced Background with Multiple Layers ---- */}
+      <div className="absolute inset-0 h-full w-full">
+        {/* Main Image */}
+        <div className="relative h-full w-full">
+          <Image
+            src="/Images/hero-bags.jpg"
+            alt="FIBC bulk bags stacked in a warehouse, ready for dispatch"
+            fill
+            sizes="100vw"
+            quality={90}
+            className="object-cover"
+            priority
+            fetchPriority="high"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q=="
+          />
+        </div>
 
-        {/* Base overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/70 to-[#0A0A0B]/25" />
+        {/* Main Gradient Overlay - Darker for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/80 to-[#0A0A0B]/40" />
 
-        {/* Woven-fabric texture — echoes the actual FIBC material, not a
-            random grain. Pure CSS gradients: static, no filter, cheap on
-            every device including mobile. */}
+        {/* Additional Gradient from corners for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0B]/50 via-transparent to-[#0A0A0B]/70" />
+
+        {/* Woven Fabric Texture - Main Pattern */}
         <div
-          className="absolute inset-0 opacity-[0.5] mix-blend-overlay"
+          className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 7px),
-              repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 7px)
+              repeating-linear-gradient(
+                45deg, 
+                rgba(255,255,255,0.1) 0px, 
+                rgba(255,255,255,0.1) 1px, 
+                transparent 1px, 
+                transparent 8px
+              ),
+              repeating-linear-gradient(
+                -45deg, 
+                rgba(255,255,255,0.1) 0px, 
+                rgba(255,255,255,0.1) 1px, 
+                transparent 1px, 
+                transparent 8px
+              )
             `,
           }}
         />
 
-        {/* Depth accents — two soft glows, desktop only, lighter blur than
-            before so they stay cheap while adding richness back in. */}
-        <div className="absolute bottom-0 right-0 hidden h-[55%] w-[45%] rounded-full bg-[#6E8CAE]/[0.08] blur-[90px] md:block" />
-        <div className="absolute left-0 top-0 hidden h-[35%] w-[35%] rounded-full bg-[#C9A227]/[0.04] blur-[80px] md:block" />
-      </motion.div>
+        {/* Diagonal Cross-hatch Pattern - Industrial feel */}
+        <div
+          className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                0deg, 
+                transparent, 
+                transparent 40px,
+                rgba(255,255,255,0.03) 40px,
+                rgba(255,255,255,0.03) 41px,
+                transparent 41px,
+                transparent 80px
+              ),
+              repeating-linear-gradient(
+                90deg, 
+                transparent, 
+                transparent 40px,
+                rgba(255,255,255,0.03) 40px,
+                rgba(255,255,255,0.03) 41px,
+                transparent 41px,
+                transparent 80px
+              )
+            `,
+          }}
+        />
 
-      {/* SWL gauge — signature motion moment, left side */}
+        {/* Subtle Noise Texture - Organic feel */}
+        <div
+          className="absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(255,255,255,0.03) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(200,200,200,0.02) 0%, transparent 70%)
+            `,
+          }}
+        />
+
+        {/* Premium Grain Texture - Like woven polypropylene */}
+        <div
+          className="absolute inset-0 opacity-[0.06] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                to right,
+                transparent 0px,
+                transparent 3px,
+                rgba(255,255,255,0.03) 3px,
+                rgba(255,255,255,0.03) 4px,
+                transparent 4px,
+                transparent 7px
+              ),
+              repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(255,255,255,0.03) 3px,
+                rgba(255,255,255,0.03) 4px,
+                transparent 4px,
+                transparent 7px
+              )
+            `,
+          }}
+        />
+
+        {/* Ambient Light Glow - Left side warm accent */}
+        <div className="absolute left-0 top-0 h-[60%] w-[40%] rounded-full bg-[#C9A227]/[0.06] blur-[100px]" />
+
+        {/* Ambient Light Glow - Right side cool accent */}
+        <div className="absolute bottom-0 right-0 h-[70%] w-[50%] rounded-full bg-[#6E8CAE]/[0.06] blur-[120px]" />
+
+        {/* Central Highlight - Adds depth to the middle */}
+        <div className="absolute left-1/2 top-1/2 h-[40%] w-[30%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.02] blur-[80px]" />
+
+        {/* Edge Vignette - Darkens edges for focus */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(
+                ellipse at center,
+                transparent 50%,
+                rgba(10,10,11,0.3) 100%
+              )
+            `,
+          }}
+        />
+
+        {/* Industrial Grid Pattern - Subtle structure overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+
+        {/* Dynamic Light Rays - Diagonal beams */}
+        <div
+          className="absolute inset-0 opacity-[0.04] mix-blend-overlay"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                65deg,
+                transparent 0px,
+                transparent 100px,
+                rgba(255,255,255,0.05) 100px,
+                rgba(255,255,255,0.05) 101px,
+                transparent 101px,
+                transparent 200px
+              ),
+              repeating-linear-gradient(
+                -65deg,
+                transparent 0px,
+                transparent 100px,
+                rgba(255,255,255,0.05) 100px,
+                rgba(255,255,255,0.05) 101px,
+                transparent 101px,
+                transparent 200px
+              )
+            `,
+          }}
+        />
+
+        {/* Glass Reflection Effect - Top */}
+        <div className="absolute left-0 top-0 h-[1px] w-[30%] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+
+        {/* Glass Reflection Effect - Bottom */}
+        <div className="absolute bottom-0 right-0 h-[1px] w-[30%] bg-gradient-to-l from-transparent via-white/5 to-transparent" />
+      </div>
+
+      {/* SWL gauge */}
       <SWLGauge active={signatureActive} />
 
-      {/* Spec card — fills the right side with real product facts */}
+      {/* Spec card */}
       <SpecCard active={signatureActive} />
 
       {/* ---- Content ---- */}
       <motion.div
-        className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-20 pt-32 lg:px-12 lg:pb-24"
+        className="relative z-10 mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16 md:pb-20 md:pt-32 lg:px-12 lg:pb-24"
         style={{ y: contentY }}
         variants={containerVariants}
         initial="hidden"
@@ -252,9 +391,9 @@ export default function Hero() {
       >
         {/* Eyebrow */}
         <motion.div variants={itemVariants} className="flex items-center gap-3">
-          <span className="h-px w-8 bg-[#6E8CAE]/50" />
+          <span className="h-px w-6 bg-[#C9A227]/50 sm:w-8" />
           <span
-            className={`${plexMono.className} text-[0.65rem] uppercase tracking-[0.25em] text-white/50`}
+            className={`${plexMono.className} text-[0.55rem] uppercase tracking-[0.2em] text-white/50 sm:text-[0.65rem] sm:tracking-[0.25em]`}
           >
             Viona FIBC Private Limited
           </span>
@@ -263,7 +402,7 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           variants={itemVariants}
-          className="mt-8 max-w-3xl text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-white sm:text-6xl lg:text-7xl"
+          className="mt-6 max-w-3xl text-4xl leading-[1.05] tracking-[-0.02em] text-white sm:text-6xl lg:text-7xl"
           style={{ fontFamily: robotoCondensed.style.fontFamily }}
         >
           <span className="font-light text-white/70">Engineered for</span>
@@ -277,7 +416,7 @@ export default function Hero() {
         {/* Description */}
         <motion.p
           variants={itemVariants}
-          className={`${robotoCondensed.className} mt-8 max-w-lg text-base leading-relaxed text-white/50 sm:text-lg`}
+          className={`${robotoCondensed.className} mt-6 max-w-lg text-sm leading-relaxed text-white/50 sm:text-base sm:mt-8 sm:text-lg`}
         >
           Viona Flexible Packaging Pvt. Ltd. designs and manufactures durable
           FIBC bulk bags — precision-engineered, load-tested, and built to
@@ -287,34 +426,16 @@ export default function Hero() {
         {/* CTA */}
         <motion.div
           variants={itemVariants}
-          className="mt-10 flex flex-wrap items-center gap-8"
+          className="mt-8 flex flex-wrap items-center gap-6 sm:mt-10 sm:gap-8"
         >
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/10"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:border-[#C9A227] hover:bg-[#C9A227]/10 hover:shadow-[0_0_30px_rgba(201,162,39,0.1)] sm:px-6 sm:py-3"
           >
             Request a quote
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-          {/* <Link
-            href="/products"
-            className={`${plexMono.className} text-xs uppercase tracking-[0.15em] text-white/40 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/70`}
-          >
-            View specifications
-          </Link> */}
         </motion.div>
-
-        {/* Spec strip */}
-        {/* <motion.div
-          variants={itemVariants}
-          className={`${plexMono.className} mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-[0.65rem] uppercase tracking-[0.15em] text-white/30`}
-        >
-          <span>ISO 9001 Certified</span>
-          <span className="hidden h-3 w-px bg-white/15 sm:block" />
-          <span>UN Certified Packaging</span>
-          <span className="hidden h-3 w-px bg-white/15 sm:block" />
-          <span>Export to 20+ Countries</span>
-        </motion.div> */}
       </motion.div>
     </section>
   );
