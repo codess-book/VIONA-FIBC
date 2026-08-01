@@ -296,16 +296,16 @@ export default function Hero() {
             Request a quote
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-          <Link
+          {/* <Link
             href="/products"
             className={`${plexMono.className} text-xs uppercase tracking-[0.15em] text-white/40 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/70`}
           >
             View specifications
-          </Link>
+          </Link> */}
         </motion.div>
 
         {/* Spec strip */}
-        <motion.div
+        {/* <motion.div
           variants={itemVariants}
           className={`${plexMono.className} mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-[0.65rem] uppercase tracking-[0.15em] text-white/30`}
         >
@@ -314,7 +314,7 @@ export default function Hero() {
           <span>UN Certified Packaging</span>
           <span className="hidden h-3 w-px bg-white/15 sm:block" />
           <span>Export to 20+ Countries</span>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </section>
   );
