@@ -22,7 +22,7 @@ const PRODUCTS = [
     name: "Single Loop",
     description:
       "Built for efficient bulk material handling, the Single Loop FIBC combines high-strength woven polypropylene with a reinforced lifting loop to ensure safe transport, storage, and streamlined operations.",
-    image: "/Images/Products/singleloop.png",
+       image: '/Images/Products/singleloop.png',
   },
   {
     slug: "ventilated",

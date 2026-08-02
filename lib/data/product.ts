@@ -2,7 +2,7 @@
 
 export const PRODUCTS = [
   {
-    slug: 'inlet-and-outlet-closure',
+    slug: 'Inlet-and-Outlet-Closure',
     name: 'Inlet and Outlet Closure',
     description:
       'Designed with secure inlet and outlet closures to support efficient filling, safe material containment, and smooth discharge. Built for reliable performance across demanding bulk packaging applications.',
@@ -16,7 +16,7 @@ export const PRODUCTS = [
     ],
   },
   {
-    slug: "single-loop",
+    slug: "Single-Loop",
     name: "Single Loop",
     description:
       "Designed for cost-effective bulk handling, the Single Loop FIBC features a reinforced lifting loop that simplifies loading, transportation, and unloading while maintaining dependable strength and durability.",
