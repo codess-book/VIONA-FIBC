@@ -6,7 +6,7 @@ import NextLink from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
-
+import HeroButton from "./ui/animatedbutton";
 // ---------- Stats ----------
 const stats = [
   { value: "25+", label: "Years of Experience" },
@@ -167,28 +167,19 @@ export default function AboutSection() {
             </motion.div>
 
             {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.45 }}
-              className="mt-8 flex flex-wrap items-center gap-4"
-            >
-              <NextLink
-                href="/about"
-                className="group inline-flex items-center gap-2 rounded-full bg-blue-900 px-6 py-3 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-blue-800 hover:shadow-blue-900/30 active:scale-95"
-              >
-                Know More
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </NextLink>
-
-              <NextLink
-                href="/contact"
-                className="group inline-flex items-center gap-2 rounded-full border-2 border-blue-900 bg-transparent px-6 py-3 text-sm font-medium tracking-wide text-blue-900 shadow-sm transition-all duration-300 hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-blue-600/40 active:scale-95"
-              >
-                Talk to our team
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </NextLink>
-            </motion.div>
+             <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.45 }}
+      className="mt-8 flex flex-wrap items-center gap-4"
+    >
+      <HeroButton href="/about" variant="primary">
+        Know More
+      </HeroButton>
+      <HeroButton href="/contact" variant="secondary">
+        Contact Us
+      </HeroButton>
+    </motion.div>
           </div>
 
           {/* ---- RIGHT: 3D Card ---- */}
@@ -212,7 +203,10 @@ export default function AboutSection() {
                 >
                   State‑of‑the‑art facility for precision FIBC production.
                 </CardItem>
-                <CardItem translateZ="100" className="relative w-full mt-4 h-60">
+                <CardItem
+                  translateZ="100"
+                  className="relative w-full mt-4 h-60"
+                >
                   <Image
                     src="/Images/factory.jpg"
                     alt="VIONA factory"
@@ -223,7 +217,7 @@ export default function AboutSection() {
                     className="object-cover rounded-xl group-hover/card:shadow-xl"
                   />
                 </CardItem>
-                <div className="flex justify-between items-center mt-6">
+                {/* <div className="flex justify-between items-center mt-6">
                   <NextLink href="/about">
                     <CardItem
                       translateZ={20}
@@ -238,7 +232,7 @@ export default function AboutSection() {
                   >
                     Know more
                   </CardItem>
-                </div>
+                </div> */}
               </CardBody>
             </CardContainer>
           </motion.div>

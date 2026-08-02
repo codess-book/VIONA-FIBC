@@ -1,140 +1,211 @@
 // lib/data.ts
 export const PRODUCTS = [
+ {
+  slug: 'Inlet-and-Outlet-Closure',
+  name: 'Inlet and Outlet Closure',
+  description:
+    'Designed with secure inlet and outlet closures to support efficient filling, safe material containment, and smooth discharge. Built for reliable performance across demanding bulk packaging applications.',
+
+  image: '/Images/Products/inlet-outlet.png',
+  texture: '/Images/Products/inlet-outlet.png',
+   specs: [
+    { label: "Top Options", value: "Spout, Duffle, Open Top" },
+    { label: "Bottom Options", value: "Spout, Flat, Conical" },
+    { label: "Closure Type", value: "Tie Cord / Petal Closure" },
+    { label: "Compatibility", value: "Custom FIBC Designs" },
+  ],
+},
+ {
+   slug: "Single-Loop",
+  name: "Single Loop",
+  description:
+    "Designed for cost-effective bulk handling, the Single Loop FIBC features a reinforced lifting loop that simplifies loading, transportation, and unloading while maintaining dependable strength and durability.",
+image: '/Images/Products/singleloop.png',
+  texture: '/Images/Products/singleloop.png',
+  specs: [
+    { label: "Safe Working Load", value: "500–2,000 kg" },
+    { label: "Fabric", value: "Woven Polypropylene (PP)" },
+    { label: "Lifting", value: "Single Reinforced Loop" },
+    { label: "Safety Factor", value: "5:1 or 6:1" },
+  ],
+},
   {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/Images/Products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/Images/Products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/Products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/Products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/Images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/Images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
-  {
-    slug: 'u-panel-fibc',
-    name: 'Single Loop',
-    description: 'High load stability for palletized bulk transport. Engineered with an integrated U-panel design.',
-    price: 24.99,
-    originalPrice: 32.99,
-    image: '/images/products/singleloop.png', // ✅ lowercase 'images'
-    texture: '/images/products/singleloop.png', // ✅ Correct path
-    specs: [
-      { label: "Capacity", value: "1,500 kg" },
-      { label: "Dimensions", value: "90 x 90 x 120 cm" },
-      { label: "Material", value: "PP Woven" },
-      { label: "Loops", value: "4 x Standard" },
-    ],
-  },
+  slug: "ventilated",
+  name: "Ventilated FIBC",
+  description:
+    "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
+image: '/images/products/vantilated.png',
+    texture: '/images/products/vantilated.png', //
+  specs: [
+    { label: "Application", value: "Agricultural Products" },
+    { label: "Fabric", value: "Ventilated PP Fabric" },
+    { label: "Airflow", value: "High Ventilation" },
+    { label: "Safety Factor", value: "5:1" },
+  ],
+},
+ {
+  slug: "four-panel",
+  name: "Four Panel Bag",
+  description:
+    "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
+
+  image: "/images/Products/four-pannel.png",
+  texture: "/images/Products/four-pannel.png",
+
+  specs: [
+    { label: "Safe Working Load", value: "500–2,000 kg" },
+    { label: "Construction", value: "Four Panel" },
+    { label: "Fabric", value: "100% Virgin Woven Polypropylene (PP)" },
+    { label: "Safety Factor", value: "5:1 / 6:1" },
+    { label: "Lifting Loops", value: "4 Reinforced Corner Loops" },
+    { label: "Top Options", value: "Open, Duffle, Filling Spout" },
+    { label: "Bottom Options", value: "Flat, Discharge Spout, Conical" },
+    { label: "Coating", value: "Coated / Uncoated" },
+    { label: "Liner", value: "Optional PE Inner Liner" },
+    { label: "Applications", value: "Food, Chemicals, Fertilizers, Minerals & Cement" },
+  ],
+},
+ {
+  slug: "onion-mesh-bag",
+  name: "Onion Mesh Bag",
+  description:
+    "Designed for the safe storage and transportation of fresh onions, our Onion Mesh Bags provide excellent airflow to help maintain freshness and reduce moisture buildup. Made from high-strength woven mesh, they offer durability, lightweight handling, and reliable performance throughout harvesting, packing, and distribution.",
+
+  image: "/images/Products/onionbag.png",
+  texture: "/images/Products/onionbag.png",
+
+  specs: [
+    { label: "Material", value: "HDPE / PP Mesh" },
+    { label: "Capacity", value: "5–50 kg" },
+    { label: "Mesh Type", value: "Breathable Open Mesh" },
+    { label: "Closure", value: "Drawstring / Stitching" },
+    { label: "UV Protection", value: "Optional UV Stabilized" },
+    { label: "Colors", value: "Red, Orange, Green, Yellow & Custom" },
+    { label: "Applications", value: "Onions, Potatoes, Garlic & Vegetables" },
+    { label: "Customization", value: "Available in Various Sizes & Printing Options" },
+  ],
+},
+ {
+  slug: "jute-bag",
+  name: "Jute Bag",
+  description:
+    "Crafted from high-quality natural jute fibers, our Jute Bags provide a durable and sustainable packaging solution for agricultural, industrial, and commercial applications. Designed for strength, breathability, and reusability, they offer dependable performance while supporting environmentally responsible packaging practices.",
+
+  image: "/images/Products/jutebag.png",
+  texture: "/images/Products/jutebag.png",
+
+  specs: [
+    { label: "Material", value: "100% Natural Jute Fiber" },
+    { label: "Capacity", value: "5–100 kg" },
+    { label: "Construction", value: "Plain or Laminated Weave" },
+    { label: "Closure", value: "Open Mouth / Drawstring / Stitching" },
+    { label: "Reusable", value: "Yes" },
+    { label: "Eco-Friendly", value: "Biodegradable & Recyclable" },
+    { label: "Applications", value: "Coffee, Cocoa, Grains, Sugar, Seeds & Agricultural Produce" },
+    { label: "Customization", value: "Custom Sizes, Colors & Printing Available" },
+  ],
+},
+ {
+  slug: "valve-bag",
+  name: "Valve Bag",
+  description:
+    "Designed for high-speed filling operations, our Valve Bags provide efficient, dust-controlled packaging for powdered and fine granular materials. Their self-closing valve ensures secure filling, minimizes product loss, and supports safe handling throughout storage and transportation.",
+
+  image: "/images/Products/valve-bag.jpg",
+  texture: "/images/Products/valve-bag.jpg",
+
+  specs: [
+    { label: "Material", value: "Woven Polypropylene (PP) / Paper Laminated" },
+    { label: "Capacity", value: "10–50 kg" },
+    { label: "Valve Type", value: "Internal / External Self-Closing Valve" },
+    { label: "Construction", value: "Laminated or Unlaminated" },
+    { label: "Moisture Protection", value: "Optional PE Liner / Lamination" },
+    { label: "Printing", value: "Multi-Color Custom Printing Available" },
+    { label: "Applications", value: "Cement, Chemicals, Fertilizers, Minerals & Building Materials" },
+    { label: "Customization", value: "Custom Sizes, Valve Types & Branding Available" },
+  ],
+},
+ {
+  slug: "tarpaulin",
+  name: "Tarpaulin",
+  description:
+    "Manufactured from high-quality woven polyethylene and polypropylene fabrics, our Tarpaulins provide dependable protection against rain, sunlight, dust, and moisture. Built for long-lasting outdoor performance, they are lightweight, tear-resistant, and suitable for a wide range of industrial, agricultural, transportation, and construction applications.",
+
+  image: "/images/Products/tarpaulin.png",
+  texture: "/images/Products/tarpaulin.png",
+
+  specs: [
+    { label: "Material", value: "HDPE / PP Woven Fabric" },
+    { label: "Coating", value: "LDPE Laminated" },
+    { label: "Thickness", value: "80–300 GSM" },
+    { label: "Waterproof", value: "100% Waterproof" },
+    { label: "UV Protection", value: "UV Stabilized (Optional)" },
+    { label: "Eyelets", value: "Aluminum / Brass Reinforced" },
+    { label: "Applications", value: "Construction, Agriculture, Transport & Storage" },
+    { label: "Customization", value: "Custom Sizes, Colors & GSM Available" },
+  ],
+},
+{
+  slug: "bopp-bag",
+  name: "BOPP Bag",
+  description:
+    "Our BOPP Bags combine high-strength woven polypropylene with premium BOPP film lamination to deliver superior durability, moisture resistance, and outstanding print quality. Designed for retail and industrial packaging, they provide excellent product protection while enhancing shelf appeal with vibrant, high-definition graphics.",
+
+  image: "/images/Products/boop-bag.png",
+  texture: "/images/Products/boop-bag.png",
+
+  specs: [
+    { label: "Material", value: "Woven PP with BOPP Lamination" },
+    { label: "Capacity", value: "5–50 kg" },
+    { label: "Construction", value: "Laminated Woven Polypropylene" },
+    { label: "Moisture Protection", value: "High Moisture Resistance" },
+    { label: "Printing", value: "High-Resolution Rotogravure Printing" },
+    { label: "Finish", value: "Glossy or Matte" },
+    { label: "Applications", value: "Rice, Flour, Sugar, Animal Feed, Fertilizers & Seeds" },
+    { label: "Customization", value: "Custom Sizes, Designs & Multi-Color Printing" },
+  ],
+},
+
+{
+  slug: "pp-bag",
+  name: "PP Woven Bag",
+  description:
+    "Manufactured from premium woven polypropylene fabric, our PP Woven Bags offer exceptional strength, durability, and moisture resistance for secure packaging and transportation. Designed for a wide range of industrial and agricultural applications, they provide reliable performance while supporting efficient storage, handling, and distribution.",
+
+  image: "/images/Products/pp-bag.png",
+  texture: "/images/Products/pp-bag.png",
+
+  specs: [
+    { label: "Material", value: "100% Virgin Woven Polypropylene (PP)" },
+    { label: "Capacity", value: "5–100 kg" },
+    { label: "Construction", value: "Laminated / Unlaminated" },
+    { label: "Fabric Weight", value: "50–140 GSM" },
+    { label: "Moisture Protection", value: "Optional Lamination & PE Liner" },
+    { label: "Printing", value: "Single to Multi-Color Flexographic Printing" },
+    { label: "Applications", value: "Grains, Sugar, Flour, Fertilizers, Cement, Chemicals & Animal Feed" },
+    { label: "Customization", value: "Custom Sizes, Colors & Printing Available" },
+  ],
+},
+{
+  slug: "silo-bag",
+  name: "Silo Bag",
+  description:
+    "Engineered for efficient grain storage, our Silo Bags provide a reliable and cost-effective solution for preserving harvested crops in outdoor environments. Manufactured from high-strength, multi-layer polyethylene film, they offer excellent protection against moisture, UV exposure, and environmental conditions, helping maintain grain quality during long-term storage.",
+
+  image: "/images/Products/slave-bag.png",
+  texture: "/images/Products/slave-bag.png",
+
+  specs: [
+    { label: "Material", value: "Multi-Layer Polyethylene (PE)" },
+    { label: "Diameter", value: "5–12 ft (Custom Available)" },
+    { label: "Length", value: "30–90 m" },
+    { label: "Capacity", value: "Up to 300 Tons" },
+    { label: "UV Protection", value: "UV Stabilized" },
+    { label: "Weather Resistance", value: "Moisture & Weather Resistant" },
+    { label: "Applications", value: "Grains, Corn, Wheat, Rice, Soybeans & Silage" },
+    { label: "Customization", value: "Available in Various Sizes & Thicknesses" },
+  ],
+},
   // ... baaki saare products yahan daalein
 ];
 

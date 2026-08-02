@@ -20,35 +20,35 @@ const stages = [
   {
     label: "Rigorous Testing",
     icon: FlaskConical,
-    image: "/Images/quality/testing.jpg",
+    image: "/Images/quality/test.png",
     blurb:
       "Every batch goes through thorough, rigorous testing so nothing short of premium quality moves forward into production.",
   },
   {
     label: "Precision Manufacturing",
     icon: Cog,
-    image: "/Images/quality/manufacturing.jpg",
+    image: "/Images/quality/manufacture-eqipments.jpg",
     blurb:
       "Sophisticated equipment and stringent process controls shape every bag to world-class manufacturing standards.",
   },
   {
     label: "Quality Assurance Checks",
     icon: ClipboardCheck,
-    image: "/Images/quality/qa-check.jpg",
+    image: "/Images/quality/quality.jpg",
     blurb:
       "Our Quality Assurance team checks at every single stage, ensuring the product meets every required standard before moving on.",
   },
   {
     label: "R&D & Continuous Improvement",
     icon: Lightbulb,
-    image: "/Images/quality/rnd.jpg",
+    image: "/Images/quality/r&d.jpg",
     blurb:
       "We keep raising the standards of FIBC manufacturing through continuous R&D, so quality never stands still.",
   },
   {
     label: "Final Delivery",
     icon: Truck,
-    image: "/Images/quality/delivery.jpg",
+    image: "/Images/quality/finaldelivery.png",
     blurb:
       "From our floor to your door, every bag carries our uncompromising commitment to quality and customer satisfaction.",
   },

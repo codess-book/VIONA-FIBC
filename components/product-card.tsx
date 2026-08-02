@@ -1,38 +1,45 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
-import { Lens } from './ui/productlens';
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { Lens } from "./ui/productlens";
+import HeroButton from "./ui/animatedbutton";
 
 // 🟢 Product Data (Make sure image paths are lowercase)
 const PRODUCTS = [
   {
-    slug: 'u-panel-fibc',
-    name: 'U-Panel FIBC Bags',
-    description: 'High load stability for palletized bulk transport.',
-    image: '/Images/factory3.jpg',
+    slug: "Inlet-and-Outlet-Closure",
+    name: "Inlet and Outlet closure",
+    description:
+      "Our inlet and outlet closure system ensures safe filling, dependable containment, and controlled emptying in every operation",
+    image: "/Images/Products/inlet-outlet.png",
   },
   {
-    slug: '4-panel-fibc',
-    name: '4-Panel FIBC Bags',
-    description: 'Uniform shape, efficient for automated filling lines.',
-    image: '/Images/products/singleloop.png',
+    slug: "Single-Loop",
+    name: "Single Loop",
+    description:
+      "Built for efficient bulk material handling, the Single Loop FIBC combines high-strength woven polypropylene with a reinforced lifting loop to ensure safe transport, storage, and streamlined operations.",
+    image: "/Images/products/singleloop.png",
   },
   {
-    slug: 'baffle-bags',
-    name: 'Baffle Bags',
-    description: 'Square profile that maximizes container space.',
-    image: '/Images/factory3.jpg',
+    slug: "ventilated",
+    name: "Ventilated FIBC",
+    description:
+      "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
+    image: "/images/products/vantilated.png",
   },
-  {
-    slug: 'food-grade-fibc',
-    name: 'Food Grade FIBC Bags',
-    description: 'FDA-compliant bags for grains, sugar & edible oils.',
-    image: '/Images/factory3.jpg',
-  },
+ {
+  slug: "four-panel",
+  name: "Four Panel Bag",
+  description:
+    "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
+
+  image: "/images/Products/four-pannel.png",
+  texture: "/images/Products/four-pannel.png",
+ },
 ];
 
 // Animation variants — alternate direction based on index (even = left, odd = right)
@@ -48,7 +55,7 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.22, 1, 0.36, 1] as const, // smooth "easeOutExpo"-ish curve
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -79,15 +86,13 @@ function ProductCard({
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
       whileHover={{ y: -6 }}
-      className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-xl hover:shadow-blue-900/10 transition-shadow duration-300 will-change-transform"
+      className="group flex flex-col rounded-2xl bg-white shadow-sm hover:shadow-xl hover:shadow-blue-900/10 transition-shadow duration-300 will-change-transform"
     >
-      {/* Lens Effect (Zoom on Hover) */}
+      {/* Bigger image, no border/margin eating into it */}
       <Lens hovering={hovering} setHovering={setHovering}>
-        <div className="relative aspect-square overflow-hidden rounded-xl bg-blue-50/80">
-          
-          {/* Navy Blue + Light Blue Gradient Overlay on Image */}
+        <div className="relative aspect-square sm:aspect-[4/5] overflow-hidden rounded-2xl bg-blue-50/80">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-500/10 pointer-events-none z-10" />
-          
+
           <Image
             src={product.image}
             alt={product.name}
@@ -98,64 +103,76 @@ function ProductCard({
         </div>
       </Lens>
 
-      <motion.div
-        animate={{ filter: hovering ? 'blur(2px)' : 'blur(0px)' }}
-        className="flex flex-1 flex-col pt-4"
-      >
-        <h3 className="text-sm font-semibold text-slate-900 sm:text-base">{product.name}</h3>
-        <p className="mt-1 flex-1 text-xs leading-relaxed text-slate-500 sm:text-sm">
+      {/* No blur-on-hover, tight consistent padding */}
+      <div className="flex flex-1 flex-col px-1 pt-2.5 pb-1 sm:pt-4">
+        <h3 className="text-xs font-semibold text-slate-900 sm:text-base">
+          {product.name}
+        </h3>
+        <p className="mt-1 flex-1 text-[0.7rem] leading-relaxed text-slate-500 sm:text-sm line-clamp-2 sm:line-clamp-none">
           {product.description}
         </p>
 
+        {/* Button — matches hero button style, works on tap too */}
         <Link
           href={`/products/${product.slug}`}
-          className="group mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-wide text-blue-700 transition-all duration-300 hover:bg-blue-900 hover:border-blue-900 hover:text-white"
+          className="group/btn relative mt-2.5 sm:mt-4 inline-flex items-center justify-center gap-1.5 sm:gap-2 overflow-hidden rounded-full bg-blue-900 px-3 py-1.5 sm:px-4 sm:py-2.5 text-[0.6rem] sm:text-[0.7rem] font-semibold uppercase tracking-wide text-white shadow-sm transition-transform duration-200 active:scale-95 hover:scale-[1.02] touch-manipulation"
+          style={{ WebkitTapHighlightColor: "transparent" }}
         >
-          Read More
-          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+          <span
+            className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent"
+            style={{ animation: "shine 2.8s ease-in-out infinite" }}
+          />
+          <span className="relative z-10">Read More</span>
+          <ArrowRight className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform duration-300 group-hover/btn:translate-x-1 group-active/btn:translate-x-1" />
+
+          <style jsx>{`
+            @keyframes shine {
+              0% {
+                transform: translateX(-100%);
+              }
+              50%,
+              100% {
+                transform: translateX(100%);
+              }
+            }
+          `}</style>
         </Link>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
 
 export default function ProductsSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
-      
-      {/* ============ PREMIUM ANIMATED BACKGROUND EFFECTS ============ */}
+    <section className="relative overflow-hidden bg-white py-10 md:py-28">
+      {/* ============ BACKGROUND EFFECTS — lighter on mobile ============ */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        
-        {/* 1. Pulsing Glow Blobs (Navy & Light Blue) */}
+        {/* Kept everywhere, but smaller + cheaper blur on mobile */}
         <motion.div
-          className="absolute -top-32 -left-32 h-[500px] w-[500px] rounded-full bg-blue-900/10 blur-3xl"
-          animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
+          className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-blue-900/10 blur-2xl md:-top-32 md:-left-32 md:h-[500px] md:w-[500px] md:blur-3xl"
+          animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute -bottom-32 -right-32 h-[500px] w-[500px] rounded-full bg-blue-600/8 blur-3xl"
-          animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
+          className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-600/8 blur-2xl md:-bottom-32 md:-right-32 md:h-[500px] md:w-[500px] md:blur-3xl"
+          animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
           transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         />
-        
-        {/* 2. Central Breathing Glow */}
+
+        {/* Desktop-only extras — hidden on mobile for performance/battery */}
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[600px] bg-blue-500/5 blur-3xl rounded-full"
+          className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[600px] bg-blue-500/5 blur-3xl rounded-full"
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-
-        {/* 3. Floating Geometric Shapes (Left Top) */}
-        <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64">
+        <div className="hidden md:block pointer-events-none absolute -top-16 -left-16 h-64 w-64">
           <motion.div
             className="h-full w-full rounded-full bg-gradient-to-br from-blue-900/5 to-blue-500/5"
             animate={{ scale: [1, 1.1, 1], rotate: [0, 45, 0] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
-
-        {/* 4. Rotating Dashed Ring (Right Side) */}
-        <div className="pointer-events-none absolute top-1/4 right-0 h-48 w-48">
+        <div className="hidden md:block pointer-events-none absolute top-1/4 right-0 h-48 w-48">
           <motion.div
             className="h-full w-full rounded-full border-2 border-dashed border-blue-900/10"
             animate={{ scale: [1, 1.15, 1], rotate: [0, -30, 0] }}
@@ -170,41 +187,37 @@ export default function ProductsSection() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.6 }}
           variants={headingVariants}
-          className="mx-auto mb-12 max-w-xl text-center"
+          className="mx-auto mb-6 md:mb-12 max-w-xl text-center"
         >
-          <span className="inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-blue-700">
+          <span className="inline-flex items-center gap-2 text-[0.6rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-blue-700">
             <span className="h-px w-8 bg-blue-700" />
             Our Products
           </span>
-          <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 className="mt-3 text-xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
             FIBC Bags Built for Every Load
           </h2>
-          <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">
-            Premium woven polypropylene bags engineered for industrial strength and reliability.
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+            Premium woven polypropylene bags engineered for industrial strength
+            and reliability.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6 lg:grid-cols-4">
           {PRODUCTS.map((product, index) => (
             <ProductCard key={product.slug} product={product} index={index} />
           ))}
         </div>
 
-        {/* "Explore All Products" Button - Premium Glassmorphism Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-          className="mt-12 flex justify-center"
+          className="mt-10 md:mt-12 flex justify-center"
         >
-          <Link
-            href="/products"
-            className="group inline-flex items-center gap-2 rounded-full border border-blue-300/50 bg-white/80 px-8 py-3 text-sm font-semibold text-blue-700 shadow-md backdrop-blur-md transition-all duration-300 hover:border-blue-900 hover:bg-blue-900 hover:text-white hover:shadow-xl hover:shadow-blue-900/20"
-          >
+          <HeroButton href="/allProducts" variant="secondary">
             Explore All Products
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+          </HeroButton>
         </motion.div>
       </div>
     </section>

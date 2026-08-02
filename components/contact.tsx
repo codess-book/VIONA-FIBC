@@ -125,12 +125,12 @@ export default function ContactSection() {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         
         {/* 1. Dotted flowing lines (Horizontal & Diagonal) */}
-        <AnimatedNetworkLine delay={0} />
+        {/* <AnimatedNetworkLine delay={0} />
         <AnimatedNetworkLine delay={2} reverse={true} />
-        <AnimatedNetworkLine delay={4} />
+        <AnimatedNetworkLine delay={4} /> */}
         
         {/* 2. Additional Diagonal flowing dotted line */}
-        <motion.div
+        {/* <motion.div
           className="absolute w-[200%] h-[2px] bg-gradient-to-r from-transparent via-blue-400/30 to-transparent rotate-[-30deg] top-[60%] -left-[50%]"
           initial={{ x: '-50%' }}
           animate={{ x: '50%' }}
@@ -141,10 +141,10 @@ export default function ContactSection() {
             animate={{ x: ['0%', '100%'] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           />
-        </motion.div>
+        </motion.div> */}
 
         {/* 3. Arrow indicators moving along paths */}
-        <motion.div
+        {/* <motion.div
           className="absolute text-blue-400/20"
           animate={{
             x: ['0%', '80%', '0%'],
@@ -158,9 +158,9 @@ export default function ContactSection() {
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </motion.div>
+        </motion.div> */}
 
-        <motion.div
+        {/* <motion.div
           className="absolute text-blue-400/20"
           animate={{
             x: ['0%', '-60%', '0%'],
@@ -174,13 +174,13 @@ export default function ContactSection() {
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </motion.div>
+        </motion.div> */}
 
         {/* 4. Glowing Network Nodes */}
-        <GlowingNode top="15%" left="15%" delay={0} />
+        {/* <GlowingNode top="15%" left="15%" delay={0} />
         <GlowingNode top="70%" left="25%" delay={1.5} />
         <GlowingNode top="30%" left="85%" delay={3} />
-        <GlowingNode top="85%" left="75%" delay={2} />
+        <GlowingNode top="85%" left="75%" delay={2} /> */}
 
         {/* 5. Soft Background Blue Blobs */}
         <motion.div

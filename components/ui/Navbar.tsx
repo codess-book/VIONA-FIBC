@@ -35,22 +35,22 @@ const navLinks = [
 
 // Animation variants with proper types
 const mobileMenuVariants = {
-  hidden: { 
+  hidden: {
     opacity: 0,
     height: 0,
     transition: {
       duration: 0.3,
       ease: [0.22, 1, 0.36, 1] as const,
-    }
+    },
   },
-  visible: { 
+  visible: {
     opacity: 1,
     height: "auto",
     transition: {
       duration: 0.4,
       ease: [0.22, 1, 0.36, 1] as const,
-    }
-  }
+    },
+  },
 };
 
 const mobileLinkVariants = {
@@ -62,8 +62,8 @@ const mobileLinkVariants = {
       delay: i * 0.06,
       duration: 0.4,
       ease: [0.22, 1, 0.36, 1] as const,
-    }
-  })
+    },
+  }),
 };
 
 export default function Navbar() {
@@ -87,12 +87,12 @@ export default function Navbar() {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
 
@@ -106,22 +106,31 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 sm:h-16 items-center justify-between">
-          
           {/* --- LOGO --- */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="group flex items-center gap-2 sm:gap-3 relative"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Icon Box with animation */}
-            <motion.div 
-              className="relative flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md border border-white/15 bg-white/[0.03] text-white/80 transition-colors duration-300 group-hover:border-[#6E8CAE]/60 group-hover:text-white"
+            {/* Icon Box with logo */}
+            <motion.div
+              className="relative flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-md border border-white/15 bg-white/[0.03] text-white/80 transition-colors duration-300 group-hover:border-[#6E8CAE]/60 group-hover:text-white"
               whileHover={{ scale: 1.05, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Box className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.5} />
-              
+              {/* Logo Image - properly contained */}
+              <div className="relative h-6 w-6 sm:h-8 sm:w-8">
+                <img
+                  src="/Images/logo/logo.png"
+                  alt="VIONA Logo"
+                  className="h-full w-full object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+
               {/* Glow effect on hover */}
               <motion.div
                 className="absolute inset-0 rounded-md bg-[#6E8CAE]/10 blur-md"
@@ -161,7 +170,7 @@ export default function Navbar() {
                   }`}
                 >
                   <span className="relative z-10">{link.name}</span>
-                  
+
                   {/* Active indicator */}
                   {isActive && (
                     <motion.span
@@ -172,24 +181,21 @@ export default function Navbar() {
                       transition={{ duration: 0.3 }}
                     />
                   )}
-                  
+
                   {/* Hover underline */}
                   <span
                     className={`absolute -bottom-1.5 left-0 h-px bg-gradient-to-r from-[#6E8CAE] to-[#8FA8C4] transition-all duration-300 ${
                       isActive ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
-                  
+
                   {/* Hover glow */}
                   <span className="absolute inset-0 -z-10 rounded-lg bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </Link>
               );
             })}
 
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/contact"
                 className="relative overflow-hidden rounded-full border border-white/20 px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:border-[#6E8CAE] hover:shadow-[0_0_30px_rgba(110,140,174,0.15)] group"
@@ -222,7 +228,7 @@ export default function Navbar() {
                 )}
               </motion.div>
             </div>
-            
+
             {/* Notification dot */}
             {!isMobileMenuOpen && (
               <motion.span
@@ -262,8 +268,8 @@ export default function Navbar() {
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`relative flex items-center justify-between w-full rounded-lg px-3 py-3 sm:py-3.5 text-base font-medium transition-all duration-200 active:scale-[0.98] ${
-                        isActive 
-                          ? "text-white bg-white/5" 
+                        isActive
+                          ? "text-white bg-white/5"
                           : "text-white/60 hover:text-white hover:bg-white/5"
                       }`}
                     >

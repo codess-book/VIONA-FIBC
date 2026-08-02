@@ -33,10 +33,11 @@ const teamMembers = [
 
 // ---------- Certificates Data ----------
 const certificates = [
-  { name: "ISO 9001:2015", logo: "/Images/certs/iso.png" },
-  { name: "FDA Approved", logo: "/Images/certs/fda.png" },
-  { name: "BIS Certified", logo: "/Images/certs/bis.png" },
+  { name: "ISO 900:1:2015", logo: "/Images/certificates/cert2.png" },
+  { name: "ISO 14001:2015 ", logo: "/Images/certificates/certi3.png" },
+  { name: "ISO 22000:2018", logo: "/Images/certificates/certi1.png" },
 ];
+
 
 // ---------- Animated Team Card ----------
 function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: number }) {
@@ -51,7 +52,6 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
     }
   }, [isInView, controls]);
 
-  // Left side se aayega (index 0), Center se (index 1), Right side se (index 2)
   const getInitialX = () => {
     if (prefersReducedMotion) return 0;
     if (index === 0) return -80;
@@ -71,8 +71,8 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
       initial="hidden"
       animate={controls}
       variants={{
-        hidden: { 
-          opacity: 0, 
+        hidden: {
+          opacity: 0,
           x: getInitialX(),
           y: getInitialY(),
           scale: 0.9,
@@ -95,7 +95,6 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
           : "border-slate-200 bg-white/85 hover:border-blue-300 hover:shadow-lg"
       }`}
     >
-      {/* Woven texture */}
       <div className="card-weave pointer-events-none absolute inset-0 opacity-[0.04]" />
 
       {member.isDirector && (
@@ -118,7 +117,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
         >
           <Image src={member.image} alt={member.name} fill className="object-cover" />
         </motion.div>
-        
+
         <motion.h3
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -127,7 +126,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
         >
           {member.name}
         </motion.h3>
-        
+
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -136,7 +135,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
         >
           {member.role}
         </motion.p>
-        
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -145,7 +144,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
         >
           {member.bio}
         </motion.p>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -161,7 +160,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
   );
 }
 
-// ---------- Animated Certificate Card ----------
+// ---------- Animated Certificate Card (redesigned: bigger, clearer, grid-based) ----------
 function CertificateCard({ cert, index }: { cert: typeof certificates[0]; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -198,15 +197,15 @@ function CertificateCard({ cert, index }: { cert: typeof certificates[0]; index:
           },
         },
       }}
-      className="cert-card group relative flex w-40 flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white/85 px-6 py-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+      className="cert-card group relative flex w-full flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-white/90 px-5 py-8 sm:px-8 sm:py-10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
     >
       <motion.div
         initial={{ opacity: 0, rotate: -30 }}
         animate={{ opacity: 1, rotate: 0 }}
         transition={{ delay: 0.2 + index * 0.12 }}
-        className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-dashed border-blue-200 transition-colors duration-300 group-hover:border-blue-400"
+        className="relative flex h-28 w-28 sm:h-36 sm:w-36 items-center justify-center rounded-full border-2 border-dashed border-blue-200 bg-blue-50/40 transition-colors duration-300 group-hover:border-blue-400"
       >
-        <div className="relative h-14 w-14 grayscale transition-all duration-500 group-hover:grayscale-0">
+        <div className="relative h-24 w-24 sm:h-32 sm:w-32 transition-transform duration-500 group-hover:scale-105">
           <Image src={cert.logo} alt={cert.name} fill className="object-contain" />
         </div>
         <motion.div
@@ -214,15 +213,15 @@ function CertificateCard({ cert, index }: { cert: typeof certificates[0]; index:
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4 + index * 0.12 }}
         >
-          <ShieldCheck className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white p-0.5 text-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <ShieldCheck className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-white p-1 text-blue-600 shadow-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </motion.div>
       </motion.div>
-      
+
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 + index * 0.12 }}
-        className="text-center text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors"
+        className="text-center text-sm font-semibold text-slate-700 group-hover:text-blue-700 transition-colors"
       >
         {cert.name}
       </motion.p>
@@ -235,7 +234,6 @@ function StitchDivider() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
   const controls = useAnimation();
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (isInView) {
@@ -253,10 +251,7 @@ function StitchDivider() {
         visible: {
           opacity: 1,
           scaleX: 1,
-          transition: {
-            duration: 1.2,
-            ease: [0.22, 1, 0.36, 1],
-          },
+          transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
         },
       }}
       className="relative w-full h-6"
@@ -286,7 +281,6 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
   const controls = useAnimation();
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (isInView) {
@@ -304,10 +298,7 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
         visible: {
           opacity: 1,
           y: 0,
-          transition: {
-            duration: 0.7,
-            ease: [0.22, 1, 0.36, 1],
-          },
+          transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
         },
       }}
       className="text-center mb-12"
@@ -335,11 +326,8 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 }
 
 export default function TeamAndCertificatesPage() {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
     <section className="relative min-h-screen bg-white overflow-hidden">
-      {/* ---- Background System ---- */}
       <div className="pointer-events-none absolute inset-0">
         <motion.div
           initial={{ opacity: 0 }}
@@ -347,7 +335,7 @@ export default function TeamAndCertificatesPage() {
           transition={{ duration: 1.5 }}
           className="weave-layer absolute inset-0"
         />
-        
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.05 }}
@@ -361,14 +349,14 @@ export default function TeamAndCertificatesPage() {
             backgroundSize: "48px 48px",
           }}
         />
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5 }}
           className="glow-drift-1 absolute top-[-10%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-blue-500/[0.07] blur-3xl"
         />
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -415,7 +403,8 @@ export default function TeamAndCertificatesPage() {
             </motion.p>
           </div>
 
-          <div className="flex flex-wrap items-stretch justify-center gap-6 md:gap-8">
+          {/* Mobile: stacked one below another. sm+: clean 3-col row */}
+          <div className="mx-auto grid max-w-xs grid-cols-1 gap-4 sm:max-w-3xl sm:grid-cols-3 sm:gap-6 md:gap-8">
             {certificates.map((cert, idx) => (
               <CertificateCard key={idx} cert={cert} index={idx} />
             ))}

@@ -184,8 +184,8 @@ export default function ProductDetailsClient({ product }: { product:any }) {
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(37, 99, 235, 0.25) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(37, 99, 235, 0.25) 1px, transparent 1px)
+              linear-gradient(rgba(180, 198, 198, 0.25) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(188, 191, 199, 0.54) 1px, transparent 1px)
             `,
             backgroundSize: "40px 40px",
           }}
@@ -203,7 +203,7 @@ export default function ProductDetailsClient({ product }: { product:any }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           {/* Left: Static Image with technical corner-bracket frame — dark canvas so white product photos pop */}
-          <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 border border-blue-900/40 rounded-2xl p-6 shadow-sm overflow-hidden h-[300px] sm:h-[400px] lg:h-[450px]">
+          <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-950 via-black-900 to-slate-900 border border-blue-900/40 rounded-2xl p-6 shadow-sm overflow-hidden h-[300px] sm:h-[400px] lg:h-[450px]">
             <div className="pointer-events-none absolute inset-0 opacity-[0.06] viewer-weave" />
             <CornerBrackets />
             <Image
@@ -230,7 +230,7 @@ export default function ProductDetailsClient({ product }: { product:any }) {
                     {product.name}
                   </h1>
                 </div>
-                <div className="text-right">
+                {/* <div className="text-right">
                   <span className="font-mono text-2xl font-semibold text-slate-900">
                     ${product.price.toFixed(2)}
                   </span>
@@ -239,10 +239,10 @@ export default function ProductDetailsClient({ product }: { product:any }) {
                       ${product.originalPrice?.toFixed(2)}
                     </p>
                   )}
-                </div>
+                </div> */}
               </div>
 
-              {hasDiscount && (
+              {/* {hasDiscount && (
                 <div className="inline-flex w-fit rounded-full bg-blue-100 px-2.5 py-0.5 text-[10px] font-bold text-blue-700 border border-blue-200">
                   Save{" "}
                   {Math.round(
@@ -252,7 +252,7 @@ export default function ProductDetailsClient({ product }: { product:any }) {
                   )}
                   %
                 </div>
-              )}
+              )} */}
 
               <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
                 {product.description}
@@ -297,7 +297,7 @@ export default function ProductDetailsClient({ product }: { product:any }) {
                 </svg>
               </div>
 
-              <div className="flex items-center gap-3 pt-1">
+              {/* <div className="flex items-center gap-3 pt-1">
                 <div className="flex items-center border border-slate-200 rounded-full bg-white overflow-hidden">
                   <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">
                     -
@@ -314,7 +314,7 @@ export default function ProductDetailsClient({ product }: { product:any }) {
                   <ShoppingBag className="h-4 w-4" />
                   Add to Cart
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
