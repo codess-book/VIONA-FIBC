@@ -378,19 +378,24 @@ export default function About() {
               Our Certifications & Standards
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-12 md:gap-16">
-            {certificates.map((cert, idx) => (
-              <div key={idx} className="group flex flex-col items-center gap-3">
-                <div className="h-20 w-28 relative grayscale hover:grayscale-0 transition-all duration-500">
-                  <Image src={cert.logo} alt={cert.name} fill className="object-contain" />
-                </div>
-                <p className="text-xs font-medium text-slate-500 group-hover:text-blue-600 transition-colors">
-                  {cert.name}
-                </p>
-              </div>
-            ))}
-          </div>
+<div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-16">
+  {certificates.map((cert, idx) => (
+    <div key={idx} className="group flex flex-col items-center gap-3">
+      <div className="relative w-56 h-56 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 transition-all duration-500">
+        <Image 
+          src={cert.logo} 
+          alt={cert.name} 
+          fill 
+          className="object-contain" 
+          sizes="(max-width: 640px) 224px, (max-width: 768px) 192px, (max-width: 1024px) 256px, 320px"
+        />
+      </div>
+      <p className="text-sm sm:text-xs md:text-sm font-medium text-slate-500 sm:group-hover:text-blue-600 transition-colors text-center">
+        {cert.name}
+      </p>
+    </div>
+  ))}
+</div>
         </div>
       </div>
 
