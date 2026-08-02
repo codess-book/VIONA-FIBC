@@ -22,14 +22,14 @@ const PRODUCTS = [
     name: "Single Loop",
     description:
       "Built for efficient bulk material handling, the Single Loop FIBC combines high-strength woven polypropylene with a reinforced lifting loop to ensure safe transport, storage, and streamlined operations.",
-    image: "/Images/products/singleloop.png",
+    image: "/Images/Products/singleloop.png",
   },
   {
     slug: "ventilated",
     name: "Ventilated FIBC",
     description:
       "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
-    image: "/images/products/vantilated.png",
+    image: "/Images/Products/vantilated.png",
   },
  {
   slug: "four-panel",
@@ -38,7 +38,7 @@ const PRODUCTS = [
     "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
 
   image: "/images/Products/four-pannel.png",
-  texture: "/images/Products/four-pannel.png",
+  texture: "/Images/Products/four-pannel.png",
  },
 ];
 

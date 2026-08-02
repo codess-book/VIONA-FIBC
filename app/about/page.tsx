@@ -46,9 +46,9 @@ const csrItems = [
 
 // ---------- Certificates Data ----------
 const certificates = [
-  { name: "ISO 9001:2015", logo: "/Images/certs/iso.png" },
-  { name: "FDA Approved", logo: "/Images/certs/fda.png" },
-  { name: "BIS Certified", logo: "/Images/certs/bis.png" },
+  { name: "ISO 900:1:2015", logo: "/Images/certificates/cert2.png" },
+  { name: "ISO 14001:2015 ", logo: "/Images/certificates/certi3.png" },
+  { name: "ISO 22000:2018", logo: "/Images/certificates/certi1.png" },
 ];
 
 // ---------- Stitched Seam Divider ----------
