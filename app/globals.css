@@ -1,21 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-
 :root {
   --background: #0b0d10;
   --foreground: #edeff2;
 
-  /* Brand tokens — Viona FIBC — used across components via Tailwind
-     arbitrary values, e.g. bg-[var(--surface)], text-[var(--accent)] */
   --surface: #14181d;
   --surface-2: #1b2027;
   --line: rgba(237, 239, 242, 0.1);
   --text-muted: #9aa3ae;
 
-  --accent: #e8a33d; /* woven-poly gold */
+  --accent: #e8a33d;
   --accent-soft: rgba(232, 163, 61, 0.14);
-  --accent-2: #5c8aa6; /* steel blue */
+  --accent-2: #5c8aa6;
 
   --font-display: "Space Grotesk", var(--font-sans), sans-serif;
   --font-body: "Inter", var(--font-sans), sans-serif;
@@ -33,4 +30,109 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
+  top: 0px !important;
+  position: static !important;
+}
+
+html {
+  top: 0px !important;
+}
+
+/* =========================================================
+   GOOGLE TRANSLATE HARNESS & POPUP OPEN FIX
+========================================================= */
+
+/* Top iframe/banner hide */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-banner,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+}
+
+/* Page body shift stop */
+body {
+  top: 0px !important;
+}
+
+/* Main inline container styling */
+.goog-te-gadget-simple {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  cursor: pointer !important;
+}
+
+.goog-te-gadget-simple * {
+  cursor: pointer !important;
+}
+
+/* Unwanted arrows/icons hide */
+.goog-te-gadget-icon,
+.goog-te-menu-value img,
+.goog-te-menu-value span:nth-child(3),
+.goog-te-menu-value span:nth-child(5) {
+  display: none !important;
+}
+
+/* Text color fix */
+.goog-te-menu-value span {
+  color: #edeff2 !important;
+  font-size: 13px !important;
+  font-family: inherit !important;
+  border: none !important;
+}
+
+/* Force Google Translate Iframe to stay on TOP of Navbar */
+iframe.goog-te-menu-frame,
+.goog-te-menu2,
+div[id*="goog-gt-"] {
+  z-index: 2147483647 !important; /* Maximum 32-bit integer z-index */
+  position: fixed !important;
+  pointer-events: auto !important;
+}
+
+/* Disable pointer blocking */
+.skiptranslate {
+  opacity: 1 !important;
+}
+/* 1. Google ke saare background containers aur hidden iframes ke CLICK EVENTS DISABLE karein */
+#google_translate_hidden_element,
+.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-te-spinner-pos,
+iframe[id*=":google"] {
+  pointer-events: none !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* 2. Top Banner Offset Permanent Fix */
+html, body {
+  top: 0px !important;
+  position: static !important;
+  margin-top: 0px !important;
+}
+
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* 3. Original Text Highlight Remove */
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }

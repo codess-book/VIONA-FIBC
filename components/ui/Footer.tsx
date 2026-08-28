@@ -21,14 +21,14 @@ const footerProducts = [
   "Tarpaulin",
   "BOPP",
 ];
- const bebasNeue = Bebas_Neue({
-    subsets: ["latin"],
-    weight: "400",
-  });
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
- 
+
   return (
     <footer className="relative w-full bg-[#0A0A0B]/95 border-t border-white/5 shadow-[0_-4px_20px_rgba(59,130,246,0.15)]">
       {/* ---- Subtle Top Glow (Blue) ---- */}
@@ -50,7 +50,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {/* ---- Column 1: Address ---- */}
           <div className="flex flex-col space-y-2">
-            <h3  className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}>
+            <h3
+              className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
+            >
               Address
             </h3>
             <div className="flex flex-col space-y-1.5 text-sm text-slate-400 font-sans">
@@ -91,8 +93,9 @@ export default function Footer() {
 
           {/* ---- Column 2: Our Products ---- */}
           <div className="flex flex-col space-y-2">
-            <h3 
-           className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}>
+            <h3
+              className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
+            >
               Our Products
             </h3>
             <ul className="grid grid-cols-1 gap-y-0.5 text-sm text-slate-400 font-sans">
@@ -112,7 +115,9 @@ export default function Footer() {
 
           {/* ---- Column 3: Business Hours ---- */}
           <div className="flex flex-col space-y-2">
-            <h3  className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}>
+            <h3
+              className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
+            >
               Business Hours
             </h3>
             <div className="flex flex-col space-y-0.5 text-sm text-slate-400 font-sans">
@@ -143,26 +148,21 @@ export default function Footer() {
 
           {/* ---- Column 4: Brand Info ---- */}
           <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2">
-              {/* <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white font-serif font-bold text-lg shadow-md shadow-blue-500/20">
-                V
-              </div> */}
+            <Link href="/" className="flex items-center">
               <img
-                src="/Images/logo/logo.png"
+                src="/Images/logo/logo-new.png"
                 alt="VIONA Logo"
-                className="h-12 w-auto object-contain"
+                className="h-16 sm:h-40 w-auto object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
-              <span className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}>
-                VIONA
-              </span>
-            </div>
+            </Link>
 
             <p className="text-sm leading-relaxed text-slate-400 font-sans">
-              VIONA-FIBC Pvt. Ltd. – India based manufacturer of premium Big
-              Bags, driven by innovation and technology.
+              VIONA-FIBC PRIVATE LIMITED is a India based company working
+              towards excellence in the Production of Big Bags, and believe in
+              pursuing business through innovation and technology.
             </p>
 
             <div className="mt-0.5">

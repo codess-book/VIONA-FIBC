@@ -16,14 +16,14 @@ import HeroButton from "./ui/animatedbutton";
 
 // ✅ Original Industries List with Accurate Icons
 const industries = [
-  { name: "Mining", icon: Pickaxe },
-  { name: "Minerals", icon: Gem },
-  { name: "Construction", icon: HardHat },
-  { name: "Agriculture", icon: Wheat },
-  { name: "Post & Parcel", icon: Package },
-  { name: "Chemical", icon: FlaskConical },
-  { name: "Disposal", icon: Trash2 },
-  { name: "Recycling", icon: Recycle },
+  { name: "Mining", icon: Pickaxe, desc: "Heavy-duty bulk material handling" },
+  { name: "Minerals", icon: Gem, desc: "Refined ore & powder packaging" },
+  { name: "Construction", icon: HardHat, desc: "Aggregate & sand transport" },
+  { name: "Agriculture", icon: Wheat, desc: "Grain & fertilizer distribution" },
+  { name: "Post & Parcel", icon: Package, desc: "Logistics & bulk shipments" },
+  { name: "Chemical", icon: FlaskConical, desc: "Hazardous & UN-certified bags" },
+  { name: "Disposal", icon: Trash2, desc: "Industrial waste containment" },
+  { name: "Recycling", icon: Recycle, desc: "Eco-friendly reusable packaging" },
 ];
 
 /* ---------------- Left column: heading entrance ---------------- */
@@ -35,7 +35,6 @@ const headingContainer: Variants = {
   },
 };
 
-// eyebrow + underline + paragraph + button slide up
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -45,7 +44,6 @@ const fadeUp: Variants = {
   },
 };
 
-// heading itself slides in from the left
 const slideFromLeft: Variants = {
   hidden: { opacity: 0, x: -40 },
   visible: {
@@ -65,7 +63,6 @@ const container: Variants = {
   },
 };
 
-// alternate left/right based on index (set via custom prop)
 const item: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
@@ -95,7 +92,6 @@ export default function SupportingIndustries() {
           animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
           transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Central Soft Blue Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[600px] bg-blue-500/5 blur-3xl rounded-full" />
       </div>
 
@@ -103,7 +99,6 @@ export default function SupportingIndustries() {
         <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16">
           {/* ---- LEFT SIDE: Heading + Animated background ---- */}
           <div className="relative flex-1 lg:w-5/12">
-            {/* Premium Geometric Shapes */}
             <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64">
               <motion.div
                 className="h-full w-full rounded-full bg-gradient-to-br from-blue-900/5 to-blue-500/5"
@@ -182,44 +177,49 @@ export default function SupportingIndustries() {
             </motion.div>
           </div>
 
-          {/* ---- RIGHT SIDE: Industry Grid ---- */}
+          {/* ---- RIGHT SIDE: Larger Industry Grid Columns ---- */}
           <div className="flex-1 lg:w-7/12">
             <motion.div
               variants={container}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.15 }}
-              className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-5"
             >
-              {industries.map(({ name, icon: Icon }, index) => (
+              {industries.map(({ name, icon: Icon, desc }, index) => (
                 <motion.div
                   key={name}
                   custom={index}
                   variants={item}
                   whileHover={{
                     y: -6,
-                    boxShadow: "0 12px 40px -12px rgba(27,58,107,0.2)",
+                    boxShadow: "0 20px 40px -15px rgba(27,58,107,0.15)",
                   }}
                   whileTap={{
                     y: -3,
                     scale: 0.98,
-                    boxShadow: "0 8px 28px -10px rgba(27,58,107,0.25)",
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="group flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-5 text-center transition-colors duration-300 hover:border-blue-400 hover:bg-blue-50/50 active:border-blue-400 active:bg-blue-50/50 touch-manipulation"
+                  className="group relative flex items-start gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-400 hover:bg-blue-50/40 active:border-blue-400 touch-manipulation"
                   style={{ WebkitTapHighlightColor: "transparent" }}
                 >
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: -3 }}
                     whileTap={{ scale: 1.1, rotate: -3 }}
                     transition={{ duration: 0.25 }}
-                    className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-900 transition-colors duration-300 group-hover:bg-blue-900 group-hover:text-white group-active:bg-blue-900 group-active:text-white"
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-900 transition-colors duration-300 group-hover:bg-blue-900 group-hover:text-white"
                   >
-                    <Icon className="h-6 w-6" strokeWidth={1.8} />
+                    <Icon className="h-7 w-7" strokeWidth={1.8} />
                   </motion.div>
-                  <span className="mt-2.5 text-xs font-semibold text-slate-800 transition-colors duration-300 group-hover:text-blue-800 group-active:text-blue-800 sm:text-sm">
-                    {name}
-                  </span>
+
+                  <div className="flex flex-col">
+                    <span className="text-base font-bold text-slate-900 transition-colors duration-300 group-hover:text-blue-900 sm:text-lg">
+                      {name}
+                    </span>
+                    <span className="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      {desc}
+                    </span>
+                  </div>
                 </motion.div>
               ))}
             </motion.div>

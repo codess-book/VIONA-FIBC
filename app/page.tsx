@@ -1,5 +1,3 @@
-
-
 import Hero from "@/components/Hero";
 import IndustriesSection from "@/components/industryServed";
 import AboutSection from "@/components/About";
@@ -9,24 +7,24 @@ import ContactSection from "@/components/contact";
 import ProductsSection from "@/components/product-card";
 import Navbar from "@/components/ui/Navbar";
 import CompanyProfilePage from "./whoweare/page";
-import TeamAndCertificatesPage from "@/components/ourTeam"
+import TeamAndCertificatesPage from "@/components/ourTeam";
+import GlobalPresence from "@/components/GlobalPresence";
 export default function Home() {
   return (
-   <>
-   {/* <Navbar /> */}
-     <main className="pt-16">
+    <>
+      {/* <Navbar /> */}
+      <main className="pt-16">
         <Hero />
         <AboutSection />
         <ProductsSection />
         <IndustriesSection />
         <TeamAndCertificatesPage />
+        <GlobalPresence />
         <Testimonials />
         {/* <GlobeDemo /> */}
-        
+
         <ContactSection />
-        
       </main>
-   
-   </>
+    </>
   );
 }

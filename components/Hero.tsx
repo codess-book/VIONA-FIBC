@@ -100,7 +100,7 @@ function SWLGauge({ active }: { active: boolean }) {
 const specRows = [
   { label: "Fabric", value: "Woven PP, 90–220 GSM" },
   { label: "UV Rating", value: "12-month stabilized" },
-  { label: "Capacity Range", value: "500 – 2,000 KG" },
+  // { label: "Capacity Range", value: "500 – 2,000 KG" },
 ];
 
 function SpecCard({ active }: { active: boolean }) {

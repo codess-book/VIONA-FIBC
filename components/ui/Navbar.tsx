@@ -2,28 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // Next.js Image import
 import { usePathname } from "next/navigation";
-import { Menu, X, Box, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Bebas_Neue, Inter, IBM_Plex_Mono } from "next/font/google";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Display face for the logo wordmark
-const bebasNeue = Bebas_Neue({
-  subsets: ["latin"],
-  weight: "400",
-});
-
-// Body face for nav links
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-// Utility face
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
+import GoogleTranslator from "../GoogleTranslator";
+// Fonts
+const bebasNeue = Bebas_Neue({ subsets: ["latin"], weight: "400" });
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"] });
+const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -33,23 +21,16 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
-// Animation variants with proper types
 const mobileMenuVariants = {
   hidden: {
     opacity: 0,
     height: 0,
-    transition: {
-      duration: 0.3,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
   },
   visible: {
     opacity: 1,
     height: "auto",
-    transition: {
-      duration: 0.4,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -113,25 +94,22 @@ export default function Navbar() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Icon Box with logo */}
             <motion.div
               className="relative flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-md border border-white/15 bg-white/[0.03] text-white/80 transition-colors duration-300 group-hover:border-[#6E8CAE]/60 group-hover:text-white"
               whileHover={{ scale: 1.05, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Logo Image - properly contained */}
-              <div className="relative h-6 w-6 sm:h-8 sm:w-8">
-                <img
-                  src="/Images/logo/logo.png"
+              {/* <div className="relative h-6 w-6 sm:h-8 sm:w-8"> */}
+                <Image
+                  src="/Images/logo/logo-new.png"
                   alt="VIONA Logo"
-                  className="h-full w-full object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
+                  fill
+                  sizes="32px"
+                  className="object-contain"
+                  priority
                 />
-              </div>
+              {/* </div> */}
 
-              {/* Glow effect on hover */}
               <motion.div
                 className="absolute inset-0 rounded-md bg-[#6E8CAE]/10 blur-md"
                 initial={{ opacity: 0 }}
@@ -140,7 +118,6 @@ export default function Navbar() {
               />
             </motion.div>
 
-            {/* Logo Text */}
             <span className="flex flex-col leading-none">
               <motion.span
                 className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
@@ -152,7 +129,8 @@ export default function Navbar() {
               <span
                 className={`${plexMono.className} hidden sm:block text-[0.45rem] sm:text-[0.55rem] tracking-[0.2em] sm:tracking-[0.3em] text-white/35`}
               >
-                FIBC PACKAGING
+                {/* FIBC PACKAGING */}
+                 VIONA FIBC PVT LTD
               </span>
             </span>
           </Link>
@@ -171,7 +149,6 @@ export default function Navbar() {
                 >
                   <span className="relative z-10">{link.name}</span>
 
-                  {/* Active indicator */}
                   {isActive && (
                     <motion.span
                       layoutId="activeNav"
@@ -182,18 +159,20 @@ export default function Navbar() {
                     />
                   )}
 
-                  {/* Hover underline */}
                   <span
                     className={`absolute -bottom-1.5 left-0 h-px bg-gradient-to-r from-[#6E8CAE] to-[#8FA8C4] transition-all duration-300 ${
                       isActive ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
 
-                  {/* Hover glow */}
                   <span className="absolute inset-0 -z-10 rounded-lg bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </Link>
               );
             })}
+
+            <div className="relative z-50">
+              <GoogleTranslator />
+            </div>
 
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
@@ -214,7 +193,6 @@ export default function Navbar() {
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
           >
-            {/* Animated hamburger icon */}
             <div className="relative h-5 w-5 sm:h-6 sm:w-6">
               <motion.div
                 className="absolute inset-0 flex items-center justify-center"
@@ -229,7 +207,6 @@ export default function Navbar() {
               </motion.div>
             </div>
 
-            {/* Notification dot */}
             {!isMobileMenuOpen && (
               <motion.span
                 className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#6E8CAE]"
@@ -252,7 +229,6 @@ export default function Navbar() {
             className="fixed left-0 right-0 top-[56px] sm:top-[64px] overflow-hidden border-t border-white/10 bg-[#0A0A0B]/98 backdrop-blur-2xl md:hidden shadow-2xl"
           >
             <div className="flex flex-col px-4 py-4 sm:py-6">
-              {/* Mobile Links */}
               {navLinks.map((link, index) => {
                 const isActive = pathname === link.href;
                 return (
@@ -286,7 +262,6 @@ export default function Navbar() {
                 );
               })}
 
-              {/* Divider */}
               <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
@@ -294,7 +269,15 @@ export default function Navbar() {
                 className="my-2 border-t border-white/10"
               />
 
-              {/* Mobile CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mb-4 flex justify-center"
+              >
+                <GoogleTranslator />
+              </motion.div>
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -314,7 +297,6 @@ export default function Navbar() {
                 </Link>
               </motion.div>
 
-              {/* Brand tagline */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

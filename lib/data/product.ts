@@ -81,24 +81,24 @@ export const PRODUCTS = [
       { label: "Customization", value: "Available in Various Sizes & Printing Options" },
     ],
   },
-  {
-    slug: "jute-bag",
-    name: "Jute Bag",
-    description:
-      "Crafted from high-quality natural jute fibers, our Jute Bags provide a durable and sustainable packaging solution for agricultural, industrial, and commercial applications. Designed for strength, breathability, and reusability, they offer dependable performance while supporting environmentally responsible packaging practices.",
-    image: "/Images/Products/jutebag.png",
-    texture: "/Images/Products/jutebag.png",
-    specs: [
-      { label: "Material", value: "100% Natural Jute Fiber" },
-      { label: "Capacity", value: "5–100 kg" },
-      { label: "Construction", value: "Plain or Laminated Weave" },
-      { label: "Closure", value: "Open Mouth / Drawstring / Stitching" },
-      { label: "Reusable", value: "Yes" },
-      { label: "Eco-Friendly", value: "Biodegradable & Recyclable" },
-      { label: "Applications", value: "Coffee, Cocoa, Grains, Sugar, Seeds & Agricultural Produce" },
-      { label: "Customization", value: "Custom Sizes, Colors & Printing Available" },
-    ],
-  },
+  // {
+  //   slug: "jute-bag",
+  //   name: "Jute Bag",
+  //   description:
+  //     "Crafted from high-quality natural jute fibers, our Jute Bags provide a durable and sustainable packaging solution for agricultural, industrial, and commercial applications. Designed for strength, breathability, and reusability, they offer dependable performance while supporting environmentally responsible packaging practices.",
+  //   image: "/Images/Products/jutebag.png",
+  //   texture: "/Images/Products/jutebag.png",
+  //   specs: [
+  //     { label: "Material", value: "100% Natural Jute Fiber" },
+  //     { label: "Capacity", value: "5–100 kg" },
+  //     { label: "Construction", value: "Plain or Laminated Weave" },
+  //     { label: "Closure", value: "Open Mouth / Drawstring / Stitching" },
+  //     { label: "Reusable", value: "Yes" },
+  //     { label: "Eco-Friendly", value: "Biodegradable & Recyclable" },
+  //     { label: "Applications", value: "Coffee, Cocoa, Grains, Sugar, Seeds & Agricultural Produce" },
+  //     { label: "Customization", value: "Custom Sizes, Colors & Printing Available" },
+  //   ],
+  // },
   {
     slug: "valve-bag",
     name: "Valve Bag",

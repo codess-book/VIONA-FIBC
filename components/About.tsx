@@ -2,28 +2,28 @@
 
 import { motion, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import NextLink from "next/link";
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { Award, ShieldCheck } from "lucide-react";
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
 import HeroButton from "./ui/animatedbutton";
-// ---------- Stats ----------
+
+// ---------- Updated Stats Config ----------
 const stats = [
-  { value: "25+", label: "Years of Experience" },
-  { value: "500+", label: "Packaging Variants" },
-  { value: "100+", label: "Business Partners" },
-  { value: "99%", label: "Quality Compliance" },
+  { value: "67+", label: "Years of Experience", type: "counter" },
+  { value: "500+", label: "Our Employees", type: "counter" },
+  { value: "Premium", label: "Best Quality", type: "badge", icon: Award },
+  { value: "99%", label: "Quality Compliance", type: "badge", icon: ShieldCheck },
 ];
 
-// ---------- Counter ----------
+// ---------- Counter Component ----------
 const Counter = ({ value, label }: { value: string; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
   const [count, setCount] = useState(0);
-  const target = parseInt(value);
+  const target = parseInt(value.replace(/\D/g, "")) || 0;
 
   useEffect(() => {
-    if (isInView && target) {
+    if (isInView && target > 0) {
       let start = 0;
       const duration = 2000;
       const increment = target / (duration / 16);
@@ -41,12 +41,12 @@ const Counter = ({ value, label }: { value: string; label: string }) => {
   }, [isInView, target]);
 
   return (
-    <div ref={ref} className="text-center">
+    <div ref={ref} className="text-center p-4 rounded-xl bg-blue-50/40 border border-blue-100/60">
       <p className="text-3xl font-bold text-blue-900 sm:text-4xl">
         {isInView ? count : 0}
         {value.includes("+") ? "+" : value.includes("%") ? "%" : ""}
       </p>
-      <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-blue-600">
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
         {label}
       </p>
     </div>
@@ -59,9 +59,6 @@ export default function AboutSection() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   const prefersReducedMotion = useReducedMotion();
 
-  // Ambient background blobs are pure decoration — only run them on
-  // desktop pointer devices. This was the main source of jank on phones,
-  // where 5 infinite blurred animations were running for no visual payoff.
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px) and (pointer: fine)");
@@ -78,7 +75,7 @@ export default function AboutSection() {
       ref={sectionRef}
       className="relative overflow-hidden bg-white py-16 md:py-24"
     >
-      {/* ============ BACKGROUND EFFECTS — desktop only ============ */}
+      {/* ============ BACKGROUND EFFECTS ============ */}
       {ambientActive && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
@@ -134,7 +131,7 @@ export default function AboutSection() {
               className="mt-5 h-[2px] w-14 origin-left rounded-full bg-gradient-to-r from-blue-900 to-blue-500"
             />
 
-            {/* Premium Paragraphs */}
+            {/* Paragraphs */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -167,19 +164,19 @@ export default function AboutSection() {
             </motion.div>
 
             {/* Buttons */}
-             <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: 0.45 }}
-      className="mt-8 flex flex-wrap items-center gap-4"
-    >
-      <HeroButton href="/about" variant="primary">
-        Know More
-      </HeroButton>
-      <HeroButton href="/contact" variant="secondary">
-        Contact Us
-      </HeroButton>
-    </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.45 }}
+              className="mt-8 flex flex-wrap items-center gap-4"
+            >
+              <HeroButton href="/about" variant="primary">
+                Know More
+              </HeroButton>
+              <HeroButton href="/contact" variant="secondary">
+                Contact Us
+              </HeroButton>
+            </motion.div>
           </div>
 
           {/* ---- RIGHT: 3D Card ---- */}
@@ -217,37 +214,39 @@ export default function AboutSection() {
                     className="object-cover rounded-xl group-hover/card:shadow-xl"
                   />
                 </CardItem>
-                {/* <div className="flex justify-between items-center mt-6">
-                  <NextLink href="/about">
-                    <CardItem
-                      translateZ={20}
-                      className="px-4 py-2 rounded-xl text-xs font-normal text-slate-500 hover:text-blue-600"
-                    >
-                      Learn more →
-                    </CardItem>
-                  </NextLink>
-                  <CardItem
-                    translateZ={20}
-                    className="px-4 py-2 rounded-xl bg-blue-900 text-white text-xs font-bold hover:bg-blue-800 transition-colors"
-                  >
-                    Know more
-                  </CardItem>
-                </div> */}
               </CardBody>
             </CardContainer>
           </motion.div>
         </div>
 
-        {/* ---- Stats ---- */}
+        {/* ---- Optimized Stats Section ---- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 grid grid-cols-2 gap-6 border-t border-blue-200 pt-10 sm:grid-cols-4"
+          className="mt-16 grid grid-cols-2 gap-4 border-t border-blue-200 pt-10 sm:grid-cols-4 sm:gap-6"
         >
-          {stats.map((stat, idx) => (
-            <Counter key={idx} value={stat.value} label={stat.label} />
-          ))}
+          {stats.map((stat, idx) => {
+            if (stat.type === "counter") {
+              return <Counter key={idx} value={stat.value} label={stat.label} />;
+            }
+
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-b from-blue-50/80 to-white border border-blue-100 shadow-sm text-center"
+              >
+                <div className="flex items-center gap-1.5 text-blue-900 font-bold text-2xl sm:text-3xl">
+                  {Icon && <Icon className="w-6 h-6 text-blue-600 shrink-0" />}
+                  <span>{stat.value}</span>
+                </div>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
+                  {stat.label}
+                </p>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
