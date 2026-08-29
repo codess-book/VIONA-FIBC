@@ -400,16 +400,31 @@ export default function About() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-16">
             {certificates.map((cert, idx) => (
               <div key={idx} className="group flex flex-col items-center gap-3">
-                <div className="relative w-56 h-56 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 transition-all duration-500">
-                  <Image
-                    src={cert.logo}
-                    alt={cert.name}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 640px) 224px, (max-width: 768px) 192px, (max-width: 1024px) 256px, 320px"
-                  />
+                <div className="relative flex h-60 w-60 sm:h-82 sm:w-82 items-center justify-center rounded-full border-2 border-dashed border-blue-200/80 bg-blue-50/30 transition-colors duration-300 group-hover:border-blue-400">
+                  <div className="relative h-48 w-48 sm:h-82 sm:w-82 transition-transform duration-300 group-hover:scale-105">
+                    {/* <Image
+                         src={cert.logo}
+                         alt={cert.name}
+                         fill
+                         className="object-contain"
+                         sizes="(max-width: 640px) 240px, 288px"
+                       /> */}
+                    <Image
+                      src={cert.logo}
+                      alt={cert.name}
+                      fill
+                      className="object-contain scale-150 sm:scale-100"
+                      sizes="(max-width: 640px) 320px, 400px"
+                    />
+                  </div>
+
+                  {/* Shield Icon */}
+                  <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 rounded-full bg-white p-2 text-blue-600 shadow-md border border-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <ShieldCheck className="h-7 w-7" />
+                  </div>
                 </div>
-                <p className="text-sm sm:text-xs md:text-sm font-medium text-slate-500 sm:group-hover:text-blue-600 transition-colors text-center">
+
+                <p className="text-center text-lg sm:text-xl font-bold text-slate-800 group-hover:text-blue-700 transition-colors mt-4">
                   {cert.name}
                 </p>
               </div>
