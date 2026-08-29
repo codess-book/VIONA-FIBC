@@ -20,7 +20,7 @@ export default function Home() {
         <IndustriesSection />
         <TeamAndCertificatesPage />
         <GlobalPresence />
-        <Testimonials />
+        {/* <Testimonials /> */}
         {/* <GlobeDemo /> */}
 
         <ContactSection />
