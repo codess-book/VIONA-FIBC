@@ -125,12 +125,19 @@ function CertificateCard({
       */}
       <div className="relative flex h-60 w-60 sm:h-82 sm:w-82 items-center justify-center rounded-full border-2 border-dashed border-blue-200/80 bg-blue-50/30 transition-colors duration-300 group-hover:border-blue-400">
         <div className="relative h-48 w-48 sm:h-82 sm:w-82 transition-transform duration-300 group-hover:scale-105">
-          <Image
+          {/* <Image
             src={cert.logo}
             alt={cert.name}
             fill
             className="object-contain"
             sizes="(max-width: 640px) 240px, 288px"
+          /> */}
+          <Image
+            src={cert.logo}
+            alt={cert.name}
+            fill
+            className="object-contain scale-150 sm:scale-100"
+            sizes="(max-width: 640px) 320px, 400px"
           />
         </div>
 
