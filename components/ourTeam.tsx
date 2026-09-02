@@ -47,7 +47,7 @@ const teamMembers = [
   {
     name: "Tarun Lodhi",
     role: "Documentation Head",
-    image: "/Images/team/documentationHead-Tarun.jpeg",
+    image: "/Images/Team/documentationHead-Tarun.jpeg",
     leadership: false,
   },
 ];
