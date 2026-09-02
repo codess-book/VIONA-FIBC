@@ -317,7 +317,7 @@ export default function TeamAndCertificatesPage() {
 
           <div className="mt-12 flex justify-center">
             <Link
-              href="/team"
+              href="/Team"
               className="viona-shine-btn group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-blue-900 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-900/20 transition-all duration-300 hover:bg-blue-800 hover:shadow-lg hover:shadow-blue-900/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             >
               <span className="relative z-10">Know more about our team</span>
