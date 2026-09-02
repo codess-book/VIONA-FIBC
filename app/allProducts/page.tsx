@@ -31,9 +31,9 @@ export default function AllProductsPage() {
             Our Collection
             <span className="h-px w-8 bg-blue-700" />
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+          <h1 className="text-4xl md:text-4xl font-bold text-slate-900">
             All{" "}
-            <span className="bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">
+            <span className="text-4xl bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">
               Products
             </span>
           </h1>

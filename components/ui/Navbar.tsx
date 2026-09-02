@@ -18,6 +18,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Products", href: "/allProducts" },
   { name: "Quality", href: "/quality" },
+  { name: "Team", href: "/Team" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -100,14 +101,14 @@ export default function Navbar() {
               whileTap={{ scale: 0.95 }}
             >
               {/* <div className="relative h-6 w-6 sm:h-8 sm:w-8"> */}
-                <Image
-                  src="/Images/logo/logo-new.png"
-                  alt="VIONA Logo"
-                  fill
-                  sizes="32px"
-                  className="object-contain"
-                  priority
-                />
+              <Image
+                src="/Images/logo/navbar-logo.png"
+                alt="VIONA Logo"
+                fill
+                sizes="36px"
+                className="object-contain"
+                priority
+              />
               {/* </div> */}
 
               <motion.div
@@ -130,7 +131,7 @@ export default function Navbar() {
                 className={`${plexMono.className} hidden sm:block text-[0.45rem] sm:text-[0.55rem] tracking-[0.2em] sm:tracking-[0.3em] text-white/35`}
               >
                 {/* FIBC PACKAGING */}
-                 VIONA FIBC PVT LTD
+                VIONA FIBC PVT LTD
               </span>
             </span>
           </Link>
@@ -226,7 +227,7 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="fixed left-0 right-0 top-[56px] sm:top-[64px] overflow-hidden border-t border-white/10 bg-[#0A0A0B]/98 backdrop-blur-2xl md:hidden shadow-2xl"
+            className="fixed left-0 right-0 top-[56px] sm:top-[64px] h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] overflow-y-auto border-t border-white/10 bg-[#0A0A0B]/98 backdrop-blur-2xl md:hidden shadow-2xl"
           >
             <div className="flex flex-col px-4 py-4 sm:py-6">
               {navLinks.map((link, index) => {
@@ -273,7 +274,7 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
-                className="mb-4 flex justify-center"
+                className="mb-4 flex justify-center relative z-[9999]"
               >
                 <GoogleTranslator />
               </motion.div>

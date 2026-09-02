@@ -79,7 +79,7 @@ export default function GlobalPresence() {
           </motion.h2> */}
           <motion.h2
             variants={slideFromLeft}
-            className="mt-5 font-display text-4xl font-black uppercase leading-[0.95] text-slate-900 sm:text-5xl lg:text-5xl"
+            className="mt-5 font-display text-4xl font-black  leading-[0.95] text-slate-900 sm:text-5xl lg:text-5xl"
           >
             Our Global{" "}
             <span className="bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">

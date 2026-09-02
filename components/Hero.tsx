@@ -388,7 +388,7 @@ export default function Hero() {
       </div>
 
       {/* SWL Gauge */}
-      <SWLGauge active={signatureActive} />
+      {/* <SWLGauge active={signatureActive} /> */}
 
       {/* Spec Card */}
       <SpecCard active={signatureActive} />

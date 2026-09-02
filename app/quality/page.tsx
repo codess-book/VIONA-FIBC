@@ -1,12 +1,23 @@
-import { Metadata } from "next";
-import Image from "next/image";
-import { ShieldCheck, FlaskConical, Cog, ClipboardCheck, Lightbulb, Truck } from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Quality | VIONA-FIBC Private Limited",
-  description:
-    "Quality at VIONA-FIBC — from raw material selection to final delivery, every stage is built on rigorous testing, R&D, and an uncompromising commitment to standards.",
-};
+import { useRef } from "react";
+import Image from "next/image";
+import {
+  ShieldCheck,
+  FlaskConical,
+  Cog,
+  ClipboardCheck,
+  Lightbulb,
+  Truck,
+} from "lucide-react";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 
 // ---------- Quality Journey Data ----------
 const stages = [
@@ -54,7 +65,143 @@ const stages = [
   },
 ];
 
-export default function QualityPage() {
+// ---------- Hero entrance choreography (runs once, on load) ----------
+const heroContainer: Variants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+  },
+};
+
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+// ---------- Scroll-drawn stitched spine ----------
+function StitchedSpine({
+  containerRef,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 75%", "end 60%"],
+  });
+  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <svg
+      className="absolute left-6 md:left-1/2 top-0 h-full w-4 md:-translate-x-1/2"
+      viewBox="0 0 16 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <line
+        x1="8"
+        y1="0"
+        x2="8"
+        y2="100"
+        stroke="rgb(37 99 235 / 0.16)"
+        strokeWidth="2"
+        vectorEffect="non-scaling-stroke"
+      />
+      <motion.line
+        x1="8"
+        y1="0"
+        x2="8"
+        y2="100"
+        stroke="rgb(37 99 235 / 0.5)"
+        strokeWidth="2"
+        strokeDasharray="6 5"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        style={prefersReducedMotion ? undefined : { pathLength }}
+      />
+    </svg>
+  );
+}
+
+// ---------- One stage row ----------
+function StageRow({
+  stage,
+  idx,
+}: {
+  stage: (typeof stages)[number];
+  idx: number;
+}) {
+  const Icon = stage.icon;
+  const isEven = idx % 2 === 0;
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
+
+  return (
+    <div
+      ref={ref}
+      className="relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center pl-16 md:pl-0"
+    >
+      {/* numbered node on the spine */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.4 }}
+        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.4, ease: "backOut", delay: 0.15 }}
+        className="absolute left-6 md:left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
+      >
+        <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-blue-500 shadow-sm">
+          <span className="font-mono text-xs font-bold text-blue-700">
+            {String(idx + 1).padStart(2, "0")}
+          </span>
+          <span className="node-ping absolute inset-0 rounded-full border border-blue-400" />
+        </div>
+      </motion.div>
+
+      {/* Image */}
+      <motion.div
+        initial={{ opacity: 0, x: isEven ? -28 : 28, scale: 0.97 }}
+        animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+        className={`${isEven ? "md:order-1" : "md:order-2"}`}
+      >
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-blue-200/50 bg-blue-50/30 shadow-sm">
+          <Image src={stage.image} alt={stage.label} fill className="object-cover" />
+        </div>
+      </motion.div>
+
+      {/* Text */}
+      <motion.div
+        initial={{ opacity: 0, x: isEven ? 28 : -28 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+        className={`${isEven ? "md:order-2 md:pl-4" : "md:order-1 md:pr-4 md:text-right"}`}
+      >
+        <div className={`inline-flex items-center gap-2 ${!isEven ? "md:flex-row-reverse" : ""}`}>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/10 border border-blue-300/50">
+            <Icon className="h-4 w-4 text-blue-700" />
+          </span>
+          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-blue-600">
+            Stage {String(idx + 1).padStart(2, "0")}
+          </span>
+        </div>
+        <h3 className="mt-2 text-xl font-bold text-slate-900">{stage.label}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{stage.blurb}</p>
+      </motion.div>
+    </div>
+  );
+}
+
+export default function QualityContent() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const journeyHeadingRef = useRef(null);
+  const journeyHeadingInView = useInView(journeyHeadingRef, {
+    once: true,
+    margin: "-60px",
+  });
+
   return (
     <section className="relative min-h-screen bg-white pt-24 pb-16 md:pt-28 md:pb-24 overflow-hidden">
       {/* ---- Shared background system ---- */}
@@ -75,16 +222,30 @@ export default function QualityPage() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 lg:px-8">
-        {/* ---- HERO ---- */}
-        <div className="text-center mb-20">
-          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-700">
+        {/* ---- HERO (animates in on page load) ---- */}
+        <motion.div
+          variants={heroContainer}
+          initial="hidden"
+          animate="show"
+          className="text-center mb-20"
+        >
+          <motion.span
+            variants={heroItem}
+            className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-700 block"
+          >
             Our Commitment
-          </span>
-          <h1 className="mt-2 text-4xl md:text-5xl font-bold text-slate-900">
+          </motion.span>
+          <motion.h1
+            variants={heroItem}
+            className="mt-2 text-4xl md:text-5xl font-bold text-slate-900"
+          >
             Quality, <span className="text-blue-700">Uncompromised</span>
-          </h1>
+          </motion.h1>
 
-          <div className="mt-8 space-y-4 text-sm leading-relaxed text-slate-600 max-w-2xl mx-auto text-left md:text-center">
+          <motion.div
+            variants={heroItem}
+            className="mt-8 space-y-4 text-sm leading-relaxed text-slate-600 max-w-2xl mx-auto text-left md:text-center"
+          >
             <p>
               Quality is first and foremost in our mind. When you deal with Viona-FIBC Pvt Ltd, you are
               guaranteed a higher level of quality and customer satisfaction &mdash; maintained right from
@@ -95,140 +256,116 @@ export default function QualityPage() {
               stage, backed by rigorous testing so we deliver a premium product at the best value. Through
               continuous R&amp;D, Viona-FIBC keeps raising the standards of FIBC manufacturing.
             </p>
-          </div>
+          </motion.div>
 
-          <p className="mt-6 mx-auto max-w-xl text-sm font-medium text-blue-800 italic">
+          <motion.p
+            variants={heroItem}
+            className="mt-6 mx-auto max-w-xl text-sm font-medium text-blue-800 italic"
+          >
             &ldquo;Uncompromising attitude towards quality and customer satisfaction has made us world
             leaders in FIBC.&rdquo;
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* ---- QUALITY JOURNEY: stitched timeline ---- */}
-        <div className="text-center mb-14">
+        <motion.div
+          ref={journeyHeadingRef}
+          initial={{ opacity: 0, y: 16 }}
+          animate={journeyHeadingInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14"
+        >
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-700">
             How We Get There
           </span>
           <h2 className="mt-2 text-3xl font-bold text-slate-900">
             The Quality <span className="text-blue-700">Journey</span>
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="relative">
-          {/* central stitched spine */}
-          <svg
-            className="absolute left-6 md:left-1/2 top-0 h-full w-4 md:-translate-x-1/2"
-            viewBox="0 0 16 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <line
-              x1="8"
-              y1="0"
-              x2="8"
-              y2="100"
-              stroke="rgb(37 99 235 / 0.35)"
-              strokeWidth="2"
-              strokeDasharray="6 5"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              className="spine-line"
-            />
-          </svg>
+        <div ref={timelineRef} className="relative">
+          <StitchedSpine containerRef={timelineRef} />
 
           <div className="flex flex-col gap-16">
-            {stages.map((stage, idx) => {
-              const Icon = stage.icon;
-              const isEven = idx % 2 === 0;
-              return (
-                <div
-                  key={stage.label}
-                  className={`relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center pl-16 md:pl-0`}
-                >
-                  {/* numbered node on the spine */}
-                  <div className="absolute left-6 md:left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10">
-                    <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-blue-500 shadow-sm">
-                      <span className="font-mono text-xs font-bold text-blue-700">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span className="node-ping absolute inset-0 rounded-full border border-blue-400" />
-                    </div>
-                  </div>
-
-                  {/* Image */}
-                  <div className={`${isEven ? "md:order-1" : "md:order-2"}`}>
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-blue-200/50 bg-blue-50/30 shadow-sm">
-                      <Image
-                        src={stage.image}
-                        alt={stage.label}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Text */}
-                  <div className={`${isEven ? "md:order-2 md:pl-4" : "md:order-1 md:pr-4 md:text-right"}`}>
-                    <div className={`inline-flex items-center gap-2 ${!isEven ? "md:flex-row-reverse" : ""}`}>
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/10 border border-blue-300/50">
-                        <Icon className="h-4 w-4 text-blue-700" />
-                      </span>
-                      <span className="text-xs font-semibold uppercase tracking-[0.15em] text-blue-600">
-                        Stage {String(idx + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <h3 className="mt-2 text-xl font-bold text-slate-900">{stage.label}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">{stage.blurb}</p>
-                  </div>
-                </div>
-              );
-            })}
+            {stages.map((stage, idx) => (
+              <StageRow key={stage.label} stage={stage} idx={idx} />
+            ))}
           </div>
         </div>
       </div>
 
-      <style>{`
+      <style jsx>{`
         .weave-layer {
-          background-image:
-            repeating-linear-gradient(45deg, rgba(30,64,175,0.9) 0px, rgba(30,64,175,0.9) 1px, transparent 1px, transparent 10px),
-            repeating-linear-gradient(-45deg, rgba(37,99,235,0.9) 0px, rgba(37,99,235,0.9) 1px, transparent 1px, transparent 10px);
+          background-image: repeating-linear-gradient(
+              45deg,
+              rgba(30, 64, 175, 0.9) 0px,
+              rgba(30, 64, 175, 0.9) 1px,
+              transparent 1px,
+              transparent 10px
+            ),
+            repeating-linear-gradient(
+              -45deg,
+              rgba(37, 99, 235, 0.9) 0px,
+              rgba(37, 99, 235, 0.9) 1px,
+              transparent 1px,
+              transparent 10px
+            );
           background-size: 14px 14px;
           animation: weave-drift 40s linear infinite;
         }
         @keyframes weave-drift {
-          0%   { background-position: 0 0, 0 0; }
-          100% { background-position: 200px 200px, -200px 200px; }
+          0% {
+            background-position: 0 0, 0 0;
+          }
+          100% {
+            background-position: 200px 200px, -200px 200px;
+          }
         }
 
-        .glow-drift-1 { animation: float-a 22s ease-in-out infinite; }
-        .glow-drift-2 { animation: float-b 26s ease-in-out infinite; }
+        .glow-drift-1 {
+          animation: float-a 22s ease-in-out infinite;
+        }
+        .glow-drift-2 {
+          animation: float-b 26s ease-in-out infinite;
+        }
         @keyframes float-a {
-          0%, 100% { transform: translate(-50%, 0) scale(1); }
-          50%      { transform: translate(-50%, 30px) scale(1.08); }
+          0%,
+          100% {
+            transform: translate(-50%, 0) scale(1);
+          }
+          50% {
+            transform: translate(-50%, 30px) scale(1.08);
+          }
         }
         @keyframes float-b {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50%      { transform: translate(-20px, -25px) scale(1.05); }
-        }
-
-        .spine-line {
-          stroke-dasharray: 6 5;
-          stroke-dashoffset: 200;
-          animation: stitch-in 3s ease-out forwards;
-        }
-        @keyframes stitch-in {
-          to { stroke-dashoffset: 0; }
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          50% {
+            transform: translate(-20px, -25px) scale(1.05);
+          }
         }
 
         .node-ping {
           animation: ping-out 2.4s ease-out infinite;
         }
         @keyframes ping-out {
-          0%   { transform: scale(1); opacity: 0.8; }
-          100% { transform: scale(1.8); opacity: 0; }
+          0% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(1.8);
+            opacity: 0;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .weave-layer, .glow-drift-1, .glow-drift-2, .spine-line, .node-ping {
+          .weave-layer,
+          .glow-drift-1,
+          .glow-drift-2,
+          .node-ping {
             animation: none !important;
           }
         }

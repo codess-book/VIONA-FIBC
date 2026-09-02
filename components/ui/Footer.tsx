@@ -102,7 +102,7 @@ export default function Footer() {
               {footerProducts.map((product) => (
                 <li key={product}>
                   <Link
-                    href={`/products/${product.toLowerCase().replace(/\s+/g, "-").replace(/[()]/g, "")}`}
+                    href={"/allProducts"}
                     className="relative inline-block hover:text-blue-400 transition-colors duration-200 group"
                   >
                     {product}

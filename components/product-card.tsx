@@ -15,21 +15,21 @@ const PRODUCTS = [
     name: "Inlet and Outlet closure",
     description:
       "Our inlet and outlet closure system ensures safe filling, dependable containment, and controlled emptying in every operation",
-    image: "/Images/Products/inlet-outlet.png",
+    // image: "",
   },
   {
     slug: "Single-Loop",
     name: "Single Loop",
     description:
       "Built for efficient bulk material handling, the Single Loop FIBC combines high-strength woven polypropylene with a reinforced lifting loop to ensure safe transport, storage, and streamlined operations.",
-    image: "/Images/Products/singleloop.png",
+    // image: "",
   },
   {
     slug: "ventilated",
     name: "Ventilated FIBC",
     description:
       "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
-    image: "/Images/Products/vantilated.png",
+    // image: "",
   },
   {
     slug: "four-panel",
@@ -37,7 +37,7 @@ const PRODUCTS = [
     description:
       "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
 
-    image: "/Images/Products/four-pannel.png",
+    // image: "",
     texture: "/Images/Products/four-pannel.png",
   },
 ];
@@ -89,7 +89,7 @@ function ProductCard({
       className="group flex flex-col rounded-2xl bg-white shadow-sm hover:shadow-xl hover:shadow-blue-900/10 transition-shadow duration-300 will-change-transform"
     >
       {/* Bigger image, no border/margin eating into it */}
-      <Lens hovering={hovering} setHovering={setHovering}>
+      {/* <Lens hovering={hovering} setHovering={setHovering}>
         <div className="relative aspect-square sm:aspect-[4/5] overflow-hidden rounded-2xl bg-blue-50/80">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-500/10 pointer-events-none z-10" />
 
@@ -101,7 +101,7 @@ function ProductCard({
             className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
           />
         </div>
-      </Lens>
+      </Lens> */}
 
       {/* No blur-on-hover, tight consistent padding */}
       <div className="flex flex-1 flex-col px-1 pt-2.5 pb-1 sm:pt-4">
