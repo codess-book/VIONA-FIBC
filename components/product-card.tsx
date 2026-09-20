@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Lens } from "./ui/productlens";
 import HeroButton from "./ui/animatedbutton";
 
-// 🟢 Product Data (Make sure image paths are lowercase)
+
 const PRODUCTS = [
   {
     slug: "Inlet-and-Outlet-Closure",
@@ -95,13 +95,19 @@ function ProductCard({
         <div className="relative aspect-square sm:aspect-[4/5] overflow-hidden rounded-2xl bg-blue-50/80">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-500/10 pointer-events-none z-10" />
 
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-          />
+        {product.image ? (
+  <Image
+    src={product.image}
+    alt={product.name}
+    fill
+    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+    className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+  />
+) : (
+  <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
+    Product image coming soon
+  </div>
+)}
         </div>
       </Lens>
 
