@@ -176,10 +176,15 @@ function ValueTag({ label, index }: { label: string; index: number }) {
 // ---------- Main About Page ----------
 export default function About() {
   return (
-    <section className="relative min-h-screen bg-white overflow-hidden">
-      {/* ---- Single shared background system ---- */}
-      <div className="pointer-events-none fixed inset-0">
-        <div className="weave-layer absolute inset-0 opacity-[0.05]" />
+    // `isolate` + `overflow-hidden`: everything inside this section (including the
+    // background) stays inside it, so it can never tint the footer below.
+    <section className="relative isolate min-h-screen overflow-hidden bg-white">
+      {/* ---- Single shared background system ----
+          Was `fixed inset-0`, which painted over the footer too (that is what
+          changed the footer color). Now `absolute`, so it ends with this section. */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        {/* oversized by one tile so the drift can loop seamlessly */}
+        <div className="weave-layer absolute -inset-[14px] opacity-[0.05]" />
         <div
           className="absolute inset-0 opacity-[0.05]"
           style={{
@@ -435,21 +440,24 @@ export default function About() {
 
       {/* ---- Style animations ---- */}
       <style>{`
+        /* Weave now drifts with transform (smooth, GPU) instead of background-position.
+           The layer is 14px oversized and moves exactly one 14px tile, so the loop is seamless. */
         .weave-layer {
           background-image:
             repeating-linear-gradient(45deg, rgba(30,64,175,0.9) 0px, rgba(30,64,175,0.9) 1px, transparent 1px, transparent 10px),
             repeating-linear-gradient(-45deg, rgba(37,99,235,0.9) 0px, rgba(37,99,235,0.9) 1px, transparent 1px, transparent 10px);
           background-size: 14px 14px;
-          animation: weave-drift 40s linear infinite;
+          animation: weave-drift 3s linear infinite;
+          will-change: transform;
         }
         @keyframes weave-drift {
-          0%   { background-position: 0 0, 0 0; }
-          100% { background-position: 200px 200px, -200px 200px; }
+          0%   { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(14px, 14px, 0); }
         }
 
-        .glow-drift-1 { animation: float-a 22s ease-in-out infinite; }
-        .glow-drift-2 { animation: float-b 26s ease-in-out infinite; }
-        .glow-drift-3 { animation: float-c 30s ease-in-out infinite; }
+        .glow-drift-1 { animation: float-a 22s ease-in-out infinite; will-change: transform; }
+        .glow-drift-2 { animation: float-b 26s ease-in-out infinite; will-change: transform; }
+        .glow-drift-3 { animation: float-c 30s ease-in-out infinite; will-change: transform; }
         @keyframes float-a {
           0%, 100% { transform: translate(-50%, 0) scale(1); }
           50%      { transform: translate(-50%, 30px) scale(1.08); }

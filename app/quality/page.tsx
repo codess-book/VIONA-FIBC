@@ -24,28 +24,28 @@ const stages = [
   {
     label: "Raw Material Selection",
     icon: ShieldCheck,
-    image: "/Images/quality/raw-material.jpg",
+    image: "/Images/quality/raw-material.jpeg",
     blurb:
       "Quality begins before the first thread is woven. Every raw material is selected and verified against strict specifications.",
   },
   {
     label: "Rigorous Testing",
     icon: FlaskConical,
-    image: "/Images/quality/test.png",
+    image: "/Images/quality/test.jpeg",
     blurb:
       "Every batch goes through thorough, rigorous testing so nothing short of premium quality moves forward into production.",
   },
   {
     label: "Precision Manufacturing",
     icon: Cog,
-    image: "/Images/quality/manufacture-eqipments.jpg",
+    image: "/Images/quality/Image3.jpeg",
     blurb:
       "Sophisticated equipment and stringent process controls shape every bag to world-class manufacturing standards.",
   },
   {
     label: "Quality Assurance Checks",
     icon: ClipboardCheck,
-    image: "/Images/quality/quality.jpg",
+    image: "/Images/quality/Image4.jpeg",
     blurb:
       "Our Quality Assurance team checks at every single stage, ensuring the product meets every required standard before moving on.",
   },

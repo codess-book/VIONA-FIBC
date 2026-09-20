@@ -14,13 +14,31 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const locations = [
   { name: "India (HQ)", coordinates: [78.9629, 20.5937] },
-  { name: "United States", coordinates: [-95.7129, 37.0902] },
-  { name: "United Kingdom", coordinates: [-3.436, 55.3781] },
-  { name: "Germany", coordinates: [10.4515, 51.1657] },
-  { name: "United Arab Emirates", coordinates: [53.8478, 23.4241] },
-  { name: "Australia", coordinates: [133.7751, -25.2744] },
-  { name: "Brazil", coordinates: [-51.9253, -14.235] },
-  { name: "South Africa", coordinates: [22.9375, -30.5595] },
+  { name: "Mumbai, India", coordinates: [72.8777, 19.076] },
+
+  { name: "Toronto, Canada", coordinates: [-79.3832, 43.6532] },
+  { name: "New York, United States", coordinates: [-74.006, 40.7128] },
+
+  { name: "London, United Kingdom", coordinates: [-0.1276, 51.5072] },
+  { name: "Amsterdam, Netherlands", coordinates: [4.9041, 52.3676] },
+  { name: "Paris, France", coordinates: [2.3522, 48.8566] },
+  { name: "Madrid, Spain", coordinates: [-3.7038, 40.4168] },
+  { name: "Berlin, Germany", coordinates: [13.405, 52.52] },
+  { name: "Rome, Italy", coordinates: [12.4964, 41.9028] },
+  { name: "Warsaw, Poland", coordinates: [21.0122, 52.2297] },
+  { name: "Stockholm, Sweden", coordinates: [18.0686, 59.3293] },
+  { name: "Moscow, Russia", coordinates: [37.6173, 55.7558] },
+
+  { name: "Istanbul, Turkey", coordinates: [28.9784, 41.0082] },
+  { name: "Dubai, UAE", coordinates: [55.2708, 25.2048] },
+  { name: "Riyadh, Saudi Arabia", coordinates: [46.6753, 24.7136] },
+
+  { name: "Bangkok, Thailand", coordinates: [100.5018, 13.7563] },
+  { name: "Singapore", coordinates: [103.8198, 1.3521] },
+  { name: "Hong Kong, China", coordinates: [114.1694, 22.3193] },
+  { name: "Shanghai, China", coordinates: [121.4737, 31.2304] },
+
+  { name: "São Paulo, Brazil", coordinates: [-46.6333, -23.5505] },
 ];
 
 export default function GlobalPresence() {

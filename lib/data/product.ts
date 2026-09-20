@@ -6,8 +6,8 @@ export const PRODUCTS = [
     name: 'Inlet and Outlet Closure',
     description:
       'Designed with secure inlet and outlet closures to support efficient filling, safe material containment, and smooth discharge. Built for reliable performance across demanding bulk packaging applications.',
-    image: '/Images/Products/inlet-outlet.png',
-    texture: '/Images/Products/inlet-outlet.png',
+    image: '/Images/Products/inlet.jpeg',
+    texture: '/Images/Products/inlet.jpeg',
     specs: [
       { label: "Top Options", value: "Spout, Duffle, Open Top" },
       { label: "Bottom Options", value: "Spout, Flat, Conical" },
@@ -20,8 +20,8 @@ export const PRODUCTS = [
     name: "Single Loop",
     description:
       "Designed for cost-effective bulk handling, the Single Loop FIBC features a reinforced lifting loop that simplifies loading, transportation, and unloading while maintaining dependable strength and durability.",
-    image: '/Images/Products/singleloop.png',
-    texture: '/Images/Products/singleloop.png',
+    image: '/Images/Products/single-loop.jpeg',
+    texture: '/Images/Products/single-loop.jpeg',
     specs: [
       { label: "Safe Working Load", value: "500–2,000 kg" },
       { label: "Fabric", value: "Woven Polypropylene (PP)" },

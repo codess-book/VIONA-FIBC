@@ -5,7 +5,7 @@ import WhatsAppFloat from "@/components/watsappfloating";
 import InstagramFloat from "@/components/instagramfloats";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
-
+import FloatingContact from "@/components/floatingContacts";
 // ---------- Fonts ----------
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -154,9 +154,10 @@ export default function RootLayout({
         </main>
 
         <Footer />
-
+        <FloatingContact />
+{/* 
         <WhatsAppFloat />
-        <InstagramFloat />
+        <InstagramFloat /> */}
       </body>
     </html>
   );

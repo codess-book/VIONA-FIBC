@@ -12,7 +12,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 
-// ---------- Team Data (all 6 — full bios live on /team) ----------
+// ---------- Team Data ----------
 const teamMembers = [
   {
     name: "Dr. Chintaman Rathore",
@@ -54,12 +54,34 @@ const teamMembers = [
 
 // ---------- Certificates Data ----------
 const certificates = [
-  { name: "ISO 9001:2015", logo: "/Images/certificates/cert2.png" },
-  { name: "ISO 14001:2015", logo: "/Images/certificates/certi3.png" },
-  { name: "ISO 22000:2018", logo: "/Images/certificates/certi1.png" },
+  {
+    name: "ISO 9001:2015",
+    subtitle: "Quality Management",
+    logo: "/Images/certificates/cert2.png",
+  },
+  {
+    name: "ISO 14001:2015",
+    subtitle: "Environmental",
+    logo: "/Images/certificates/certi3.png",
+  },
+  {
+    name: "ISO 22000:2018",
+    subtitle: "Food Safety",
+    logo: "/Images/certificates/certi1.png",
+  },
 ];
 
-// ---------- Compact Team Chip (photo + name + role only) ----------
+// ---------- Easing ----------
+const EASE_OUT_QUINT = [0.22, 1, 0.36, 1] as const;
+const SPRING_SOFT = {
+  type: "spring" as const,
+  stiffness: 220,
+  damping: 24,
+  mass: 0.9,
+};
+const SPRING_SNAP = { type: "spring" as const, stiffness: 320, damping: 26 };
+
+// ---------- Team Chip ----------
 function TeamChip({
   member,
   index,
@@ -69,22 +91,21 @@ function TeamChip({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 25 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        duration: 0.45,
-        delay: index * 0.08,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="group relative flex flex-col items-center text-center"
+      transition={{ duration: 0.55, delay: index * 0.07, ease: EASE_OUT_QUINT }}
+      whileHover={prefersReducedMotion ? undefined : { y: -6 }}
+      className="group relative flex flex-col items-center text-center will-change-transform"
     >
       <div className="relative">
-        <div
-          className={`relative h-24 w-24 sm:h-28 sm:w-28 overflow-hidden rounded-full ring-4 ring-white shadow-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl ${
+        <motion.div
+          transition={SPRING_SNAP}
+          className={`relative h-24 w-24 sm:h-28 sm:w-28 overflow-hidden rounded-full ring-4 ring-white shadow-md transition-shadow duration-300 group-hover:shadow-xl group-hover:ring-blue-100 ${
             member.leadership
               ? "border-2 border-amber-400/70"
               : "border-2 border-blue-200/60"
@@ -97,12 +118,16 @@ function TeamChip({
             className="object-cover"
             sizes="112px"
           />
-        </div>
+        </motion.div>
 
         {member.leadership && (
-          <div className="absolute -bottom-1 -right-1 rounded-full bg-slate-900 p-1.5 text-amber-300 shadow-sm">
+          <motion.div
+            animate={prefersReducedMotion ? undefined : { scale: [1, 1.08, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-1 -right-1 rounded-full bg-slate-900 p-1.5 text-amber-300 shadow-sm"
+          >
             <Crown className="h-3 w-3" />
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -114,7 +139,7 @@ function TeamChip({
   );
 }
 
-// ---------- Certificate Card ----------
+// ---------- Certificate Card (Redesigned, same size) ----------
 function CertificateCard({
   cert,
   index,
@@ -123,43 +148,119 @@ function CertificateCard({
   index: number;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="cert-card group relative flex w-full flex-col items-center gap-4 py-6 transition-all duration-300 hover:-translate-y-1 transform-gpu"
+      transition={{ duration: 0.7, delay: index * 0.12, ease: EASE_OUT_QUINT }}
+      className="cert-wrap group relative flex w-full flex-col items-center gap-6 transform-gpu will-change-transform"
     >
-      <div className="relative flex h-72 w-72 sm:h-96 sm:w-96 items-center justify-center rounded-full border-2 border-dashed border-blue-200/80 bg-blue-50/30 transition-colors duration-300 group-hover:border-blue-400 overflow-hidden">
-        {/* diagonal shine sweep on hover */}
-        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent_35%,rgba(255,255,255,0.85)_50%,transparent_65%)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+      {/* Outer rotating conic ring wrapper — SAME SIZE */}
+      <motion.div
+        whileHover={prefersReducedMotion ? undefined : { y: -8, scale: 1.015 }}
+        transition={SPRING_SOFT}
+        className="relative flex h-72 w-72 sm:h-96 sm:w-96 items-center justify-center"
+      >
+        {/* Rotating conic gradient ring */}
+        <div
+          className="cert-ring pointer-events-none absolute inset-0 rounded-full opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+          aria-hidden="true"
+        />
 
-        <div className="relative h-60 w-60 sm:h-80 sm:w-80 transition-transform duration-300 group-hover:scale-105">
-          <Image
-            src={cert.logo}
-            alt={cert.name}
-            fill
-            className="object-contain"
-            sizes="(max-width: 640px) 288px, 384px"
+        {/* Soft outer glow (hover) */}
+        <div
+          className="pointer-events-none absolute -inset-4 rounded-full bg-blue-500/0 blur-2xl transition-all duration-500 group-hover:bg-blue-500/15"
+          aria-hidden="true"
+        />
+
+        {/* Main glass disc */}
+        <div className="cert-disc relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-blue-100/80">
+          {/* Inner radial highlight */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 30%, rgba(255,255,255,0.95) 0%, rgba(239,246,255,0.6) 35%, rgba(219,234,254,0.35) 65%, rgba(191,219,254,0.15) 100%)",
+            }}
+            aria-hidden="true"
           />
-        </div>
 
-        <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 rounded-full bg-white p-2 text-blue-600 shadow-md border border-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <ShieldCheck className="h-7 w-7" />
+          {/* Dashed stitch ring */}
+          <svg
+            className="pointer-events-none absolute inset-6 h-[calc(100%-3rem)] w-[calc(100%-3rem)] opacity-40 transition-opacity duration-500 group-hover:opacity-80"
+            viewBox="0 0 100 100"
+            aria-hidden="true"
+          >
+            <circle
+              cx="50"
+              cy="50"
+              r="48"
+              fill="none"
+              stroke="rgb(37 99 235 / 0.55)"
+              strokeWidth="0.6"
+              strokeDasharray="1.5 2.2"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          {/* Diagonal shine sweep — smooth */}
+          <span
+            className="cert-shine pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          />
+
+          {/* Certificate logo (breathing) */}
+          <div className="cert-logo relative h-60 w-60 sm:h-80 sm:w-80 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
+            <Image
+              src={cert.logo}
+              alt={cert.name}
+              fill
+              className="object-contain drop-shadow-[0_8px_24px_rgba(30,64,175,0.15)]"
+              sizes="(max-width: 640px) 288px, 384px"
+            />
+          </div>
+
+          {/* Verified badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 + index * 0.12, ...SPRING_SNAP }}
+            className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1.5 text-blue-600 shadow-md border border-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              Verified
+            </span>
+          </motion.div>
+
+          {/* Index pill — top-left */}
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/90 text-[10px] font-bold text-white backdrop-blur-sm shadow-md">
+            {String(index + 1).padStart(2, "0")}
+          </div>
         </div>
+      </motion.div>
+
+      {/* Labels */}
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-center text-lg sm:text-xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-blue-800">
+          {cert.name}
+        </p>
+        {cert.subtitle && (
+          <p className="text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+            {cert.subtitle}
+          </p>
+        )}
       </div>
-
-      <p className="text-center text-lg sm:text-xl font-bold text-slate-800 group-hover:text-blue-700 transition-colors mt-2">
-        {cert.name}
-      </p>
     </motion.div>
   );
 }
 
-// ---------- Stitched Seam Divider ----------
+// ---------- Stitch Divider ----------
 function StitchDivider() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20px" });
@@ -180,9 +281,9 @@ function StitchDivider() {
           strokeWidth="2"
           strokeDasharray="14 10"
           strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
+          transition={{ duration: 1.1, ease: EASE_OUT_QUINT }}
         />
       </svg>
     </div>
@@ -205,7 +306,7 @@ function SectionTitle({
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6, ease: EASE_OUT_QUINT }}
       className="text-center mb-12"
     >
       {subtitle && (
@@ -220,8 +321,7 @@ function SectionTitle({
   );
 }
 
-// ---------- The single orchestrated moment: a stitched thread that ----------
-// ---------- draws itself under the team row as the section scrolls in ----------
+// ---------- Stitch Progress Thread ----------
 function StitchProgressThread({
   targetRef,
 }: {
@@ -249,17 +349,47 @@ function StitchProgressThread({
   );
 }
 
+// ---------- Page ----------
 export default function TeamAndCertificatesPage() {
   const teamRowRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="relative min-h-screen bg-white overflow-hidden">
-      {/* ---------- Woven texture backdrop ---------- */}
+    <section className="relative min-h-screen overflow-hidden bg-white">
+      {/* ---------- Layered premium backdrop ---------- */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        {/* fine grain, static (perf-safe) */}
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/30 to-white" />
+
+        {/* Aurora mesh blobs */}
+        <div className="viona-blob-a absolute top-[-12%] left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-blue-500/[0.08] blur-3xl" />
+        <div className="viona-blob-b absolute bottom-[6%] right-[4%] h-[440px] w-[600px] rounded-full bg-cyan-400/[0.07] blur-3xl" />
+        <div className="viona-blob-c absolute top-[35%] left-[-8%] h-[380px] w-[520px] rounded-full bg-indigo-400/[0.06] blur-3xl" />
+
+        {/* Woven crosshatch */}
+        <div
+          className="viona-weave absolute inset-0 opacity-[0.045]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, rgba(30,64,175,0.7) 0px, rgba(30,64,175,0.7) 1px, transparent 1px, transparent 10px),
+              repeating-linear-gradient(-45deg, rgba(30,64,175,0.7) 0px, rgba(30,64,175,0.7) 1px, transparent 1px, transparent 10px)
+            `,
+            backgroundSize: "28px 28px",
+          }}
+        />
+
+        {/* Dot texture */}
+        <div
+          className="viona-dots absolute inset-0 opacity-[0.12]"
+          style={{
+            backgroundImage: `radial-gradient(rgba(30, 64, 175, 0.85) 1.4px, transparent 1.4px)`,
+            backgroundSize: "24px 24px",
+          }}
+        />
+
+        {/* SVG grain */}
         <svg
-          className="absolute inset-0 h-full w-full opacity-[0.05] mix-blend-multiply"
+          className="absolute inset-0 h-full w-full opacity-[0.045] mix-blend-multiply"
           aria-hidden="true"
         >
           <filter id="viona-grain">
@@ -274,36 +404,24 @@ export default function TeamAndCertificatesPage() {
           <rect width="100%" height="100%" filter="url(#viona-grain)" />
         </svg>
 
-        {/* woven crosshatch, slowly drifting like fabric under light */}
+        {/* Vignette */}
         <div
-          className="viona-weave absolute inset-0 opacity-[0.05]"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `
-              repeating-linear-gradient(45deg, rgba(30,64,175,0.6) 0px, rgba(30,64,175,0.6) 1px, transparent 1px, transparent 10px),
-              repeating-linear-gradient(-45deg, rgba(30,64,175,0.6) 0px, rgba(30,64,175,0.6) 1px, transparent 1px, transparent 10px)
-            `,
-            backgroundSize: "28px 28px",
+            background:
+              "radial-gradient(ellipse at center, transparent 40%, rgba(15,23,42,0.06) 100%)",
           }}
         />
-
-        {/* dot texture, subtle breathing drift — full section backdrop */}
-        <div
-          className="viona-dots absolute inset-0 opacity-[0.14]"
-          style={{
-            backgroundImage: `radial-gradient(rgba(30, 64, 175, 0.8) 1.6px, transparent 1.6px)`,
-            backgroundSize: "24px 24px",
-          }}
-        />
-
-        <div className="viona-blob-a absolute top-[-10%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-blue-500/[0.06] blur-3xl" />
-        <div className="viona-blob-b absolute bottom-[8%] right-[6%] h-[380px] w-[520px] rounded-full bg-cyan-400/[0.05] blur-3xl" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8 pt-8 pb-12 md:pt-12 md:pb-20">
-        {/* ---- 1. TEAM PREVIEW (all 6, compact) ---- */}
+      <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8 pt-8 pb-16 md:pt-12 md:pb-24">
+        {/* ---- 1. TEAM ---- */}
         <div className="py-12 md:py-16">
           <SectionTitle subtitle="Leadership & Team">
-            The Minds Behind <span className="bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">VIONA</span>
+            The Minds Behind{" "}
+            <span className="bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">
+              VIONA
+            </span>
           </SectionTitle>
 
           <div ref={teamRowRef} className="relative">
@@ -336,18 +454,46 @@ export default function TeamAndCertificatesPage() {
 
         {/* ---- 2. CERTIFICATES ---- */}
         <div className="py-12 md:py-16">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 text-2xl font-semibold uppercase tracking-[0.2em] text-slate-500">
-              <Award className="h-4 w-4" />
-              Our Certifications & Standards
-            </div>
-            <p className="mx-auto mt-3 max-w-md text-s text-slate-500">
+          <div className="text-center mb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: EASE_OUT_QUINT }}
+              className="inline-flex items-center gap-2.5 rounded-full border border-blue-100 bg-white/70 px-4 py-2 backdrop-blur-sm shadow-sm"
+            >
+              <Award className="h-4 w-4 text-blue-700" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-600">
+                Certifications & Standards
+              </span>
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT_QUINT }}
+              className="mt-5 text-3xl md:text-4xl font-bold text-slate-900"
+            >
+              Built on{" "}
+              <span className="bg-gradient-to-r from-blue-900 to-cyan-500 bg-clip-text text-transparent">
+                Global Standards
+              </span>
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.18, ease: EASE_OUT_QUINT }}
+              className="mx-auto mt-4 max-w-lg text-sm text-slate-500 leading-relaxed"
+            >
               Every batch we ship carries the mark of these standards, the same
               way it carries our name.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="mx-auto grid max-w-8xl grid-cols-1 gap-6 sm:grid-cols-3 md:gap-10">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6 md:gap-10">
             {certificates.map((cert, idx) => (
               <CertificateCard key={idx} cert={cert} index={idx} />
             ))}
@@ -355,8 +501,9 @@ export default function TeamAndCertificatesPage() {
         </div>
       </div>
 
-      {/* ---------- scoped styles: texture drift + shiny button ---------- */}
+      {/* ---------- Scoped styles ---------- */}
       <style jsx>{`
+        /* ---------- Backdrop animations ---------- */
         @keyframes viona-weave-drift {
           from {
             background-position:
@@ -391,7 +538,7 @@ export default function TeamAndCertificatesPage() {
             transform: translate(-50%, 0) scale(1);
           }
           50% {
-            transform: translate(-50%, 18px) scale(1.04);
+            transform: translate(-50%, 24px) scale(1.05);
           }
         }
         @keyframes viona-blob-b-float {
@@ -400,16 +547,121 @@ export default function TeamAndCertificatesPage() {
             transform: translate(0, 0) scale(1);
           }
           50% {
-            transform: translate(-14px, -14px) scale(1.05);
+            transform: translate(-18px, -18px) scale(1.06);
+          }
+        }
+        @keyframes viona-blob-c-float {
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          50% {
+            transform: translate(20px, -12px) scale(1.04);
           }
         }
         .viona-blob-a {
-          animation: viona-blob-a-float 14s ease-in-out infinite;
+          animation: viona-blob-a-float 16s ease-in-out infinite;
         }
         .viona-blob-b {
-          animation: viona-blob-b-float 17s ease-in-out infinite;
+          animation: viona-blob-b-float 19s ease-in-out infinite;
+        }
+        .viona-blob-c {
+          animation: viona-blob-c-float 22s ease-in-out infinite;
         }
 
+        /* ---------- Certificate disc ---------- */
+        .cert-disc {
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(239, 246, 255, 0.85) 100%
+          );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.9),
+            inset 0 -20px 40px rgba(30, 64, 175, 0.05),
+            0 20px 45px -22px rgba(30, 64, 175, 0.25),
+            0 8px 20px -12px rgba(15, 23, 42, 0.12);
+          backdrop-filter: blur(6px);
+          transition:
+            box-shadow 500ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+          will-change: transform, box-shadow;
+        }
+        .cert-wrap:hover .cert-disc {
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 1),
+            inset 0 -20px 40px rgba(30, 64, 175, 0.08),
+            0 30px 60px -22px rgba(30, 64, 175, 0.4),
+            0 10px 24px -12px rgba(15, 23, 42, 0.18);
+        }
+
+        /* Rotating conic ring */
+        @keyframes cert-ring-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .cert-ring {
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            rgba(37, 99, 235, 0.55) 40deg,
+            rgba(59, 130, 246, 0.15) 120deg,
+            transparent 180deg,
+            rgba(6, 182, 212, 0.5) 260deg,
+            transparent 340deg
+          );
+          -webkit-mask: radial-gradient(
+            farthest-side,
+            transparent calc(100% - 2px),
+            #000 calc(100% - 1px)
+          );
+          mask: radial-gradient(
+            farthest-side,
+            transparent calc(100% - 2px),
+            #000 calc(100% - 1px)
+          );
+          animation: cert-ring-spin 14s linear infinite;
+          will-change: transform;
+        }
+
+        /* Smooth diagonal shine */
+        @keyframes cert-shine-sweep {
+          0% {
+            transform: translateX(-130%) skewX(-14deg);
+            opacity: 0;
+          }
+          15% {
+            opacity: 0.9;
+          }
+          60% {
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(130%) skewX(-14deg);
+            opacity: 0;
+          }
+        }
+        .cert-shine {
+          background: linear-gradient(
+            100deg,
+            transparent 38%,
+            rgba(255, 255, 255, 0.75) 50%,
+            transparent 62%
+          );
+          transform: translateX(-130%) skewX(-14deg);
+          will-change: transform, opacity;
+        }
+        .cert-wrap:hover .cert-shine {
+          animation: cert-shine-sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Subtle logo breathing (only on hover, not continuous) */
+        .cert-logo {
+          filter: drop-shadow(0 6px 18px rgba(30, 64, 175, 0.12));
+        }
+
+        /* ---------- Button shine ---------- */
         .viona-shine-sweep {
           background: linear-gradient(
             110deg,
@@ -433,12 +685,16 @@ export default function TeamAndCertificatesPage() {
           }
         }
 
+        /* ---------- Reduced motion ---------- */
         @media (prefers-reduced-motion: reduce) {
           .viona-weave,
           .viona-dots,
           .viona-blob-a,
           .viona-blob-b,
-          .viona-shine-sweep {
+          .viona-blob-c,
+          .viona-shine-sweep,
+          .cert-ring,
+          .cert-shine {
             animation: none !important;
           }
         }

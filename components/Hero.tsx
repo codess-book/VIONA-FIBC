@@ -45,108 +45,9 @@ const itemVariants = {
   },
 };
 
-// -------- Count-up hook --------
-function useCountUp(target: number, durationMs: number, start: boolean) {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    let raf = 0;
-
-    const step = (t: number) => {
-      if (startTime === null) startTime = t;
-      const progress = Math.min((t - startTime) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(eased * target));
-      if (progress < 1) raf = requestAnimationFrame(step);
-    };
-
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [start, target, durationMs]);
-
-  return value;
-}
-
-// -------- SWL Gauge --------
-function SWLGauge({ active }: { active: boolean }) {
-  const value = useCountUp(2000, 1400, active);
-
-  return (
-    <div className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 md:flex xl:left-8">
-      <span
-        className={`${plexMono.className} text-[0.5rem] tracking-[0.2em] text-white/40 xl:text-[0.6rem]`}
-      >
-        SWL
-      </span>
-      <div className="relative h-24 w-px bg-white/10 md:h-32 xl:h-40">
-        <motion.div
-          className="absolute bottom-0 left-0 w-px bg-[#6E8CAE]"
-          initial={{ height: "0%" }}
-          animate={{ height: active ? "100%" : "0%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
-      <span className={`${plexMono.className} text-[10px] text-[#6E8CAE] xl:text-xs`}>
-        {value.toLocaleString()}
-        <span className="text-white/40"> KG</span>
-      </span>
-    </div>
-  );
-}
-
-// -------- Spec Card --------
-const specRows = [
-  { label: "Fabric", value: "Woven PP, 90–220 GSM" },
-  { label: "UV Rating", value: "12-month stabilized" },
-  // { label: "Capacity Range", value: "500 – 2,000 KG" },
-];
-
-function SpecCard({ active }: { active: boolean }) {
-  return (
-    <motion.div
-      className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-lg border border-white/10 bg-white/[0.02] p-3 backdrop-blur-sm md:block xl:right-8 xl:w-[300px] xl:p-6"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: active ? 1 : 0, x: active ? 0 : 20 }}
-      transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="flex items-center gap-2 border-b border-white/10 pb-2 xl:pb-3">
-        <span className="h-1 w-1 rounded-full bg-[#6E8CAE] xl:h-1.5 xl:w-1.5" />
-        <span
-          className={`${plexMono.className} text-[0.45rem] uppercase tracking-[0.2em] text-white/50 xl:text-[0.6rem] xl:tracking-[0.25em]`}
-        >
-          Specification
-        </span>
-      </div>
-      <dl className="mt-2 flex flex-col gap-2 xl:mt-4 xl:gap-4">
-        {specRows.map((row) => (
-          <div key={row.label} className="flex flex-col gap-0.5">
-            <dt
-              className={`${plexMono.className} text-[0.4rem] uppercase tracking-[0.15em] text-white/35 xl:text-[0.6rem]`}
-            >
-              {row.label}
-            </dt>
-            <dd
-              className={`${plexMono.className} text-[10px] text-white/80 xl:text-sm`}
-            >
-              {row.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </motion.div>
-  );
-}
-
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -171,24 +72,23 @@ export default function Hero() {
 
   const shouldAnimate = isDesktop && !prefersReducedMotion;
 
+  // Image: slow zoom + gentle dim while scrolling down
   const imageScale = useTransform(
     smoothScrollProgress,
     [0, 1],
-    shouldAnimate ? [1, 1.05] : [1, 1],
-    { clamp: false }
+    shouldAnimate ? [1, 1.08] : [1, 1],
+    { clamp: false },
   );
   const imageOpacity = useTransform(
     smoothScrollProgress,
     [0, 0.4],
-    isDesktop ? [1, 0.75] : [1, 1]
+    isDesktop ? [1, 0.75] : [1, 1],
   );
   const contentY = useTransform(
     smoothScrollProgress,
     [0, 0.5],
-    shouldAnimate ? [0, 30] : [0, 0]
+    shouldAnimate ? [0, 30] : [0, 0],
   );
-
-  const signatureActive = mounted && !prefersReducedMotion;
 
   return (
     <section
@@ -197,10 +97,13 @@ export default function Hero() {
     >
       {/* ---- Premium Background with Visible Textures ---- */}
       <div className="absolute inset-0 h-full w-full">
-        {/* Image Container */}
-        <div className="relative h-full w-full">
+        {/* Image Container (scroll zoom + dim applied here) */}
+        <motion.div
+          className="relative h-full w-full will-change-transform"
+          style={{ scale: imageScale, opacity: imageOpacity }}
+        >
           <Image
-            src="/Images/hero-bags.jpg"
+            src="/Images/factory-background.jpg"
             alt="FIBC bulk bags stacked in a warehouse"
             fill
             sizes="100vw"
@@ -211,7 +114,7 @@ export default function Hero() {
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q=="
           />
-        </div>
+        </motion.div>
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/70 to-[#0A0A0B]/20" />
@@ -387,25 +290,22 @@ export default function Hero() {
         />
       </div>
 
-      {/* SWL Gauge */}
-      {/* <SWLGauge active={signatureActive} /> */}
-
-      {/* Spec Card */}
-      <SpecCard active={signatureActive} />
-
       {/* ---- Content ---- */}
       <motion.div
-        className="relative z-10 mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 md:py-24 lg:px-12 lg:py-28"
+        className="relative z-10 mx-auto w-full max-w-6xl px-6 py-20 sm:px-10 sm:py-24 lg:px-14 lg:py-28"
         style={{ y: contentY }}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Eyebrow */}
-        <motion.div variants={itemVariants} className="flex items-center gap-3">
-          <span className="h-px w-6 bg-[#6E8CAE]/60 sm:w-8" />
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center gap-3 sm:gap-4"
+        >
+          <span className="h-px w-8 bg-gradient-to-r from-[#C9A227]/80 to-[#6E8CAE]/60 sm:w-12" />
           <span
-            className={`${plexMono.className} text-[0.5rem] uppercase tracking-[0.2em] text-white/60 sm:text-[0.6rem] sm:tracking-[0.25em]`}
+            className={`${plexMono.className} text-[0.62rem] uppercase tracking-[0.26em] text-white/65 sm:text-xs sm:tracking-[0.32em]`}
           >
             Viona FIBC Private Limited
           </span>
@@ -414,21 +314,30 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           variants={itemVariants}
-          className="mt-5 max-w-3xl text-4xl leading-[1.08] tracking-[-0.02em] text-white sm:text-5xl md:text-6xl lg:text-7xl"
-          style={{ fontFamily: robotoCondensed.style.fontFamily }}
+          className="mt-6 max-w-4xl text-[2.6rem] leading-[1.04] tracking-[-0.03em] text-white sm:mt-7 sm:text-6xl md:text-7xl lg:text-[5.75rem]"
+          style={{
+            fontFamily: robotoCondensed.style.fontFamily,
+            textShadow: "0 2px 32px rgba(0,0,0,0.5)",
+          }}
         >
-          <span className="font-light text-white/80">Engineered for</span>
-          <br className="hidden sm:block" />
-          <span className="font-bold">Heavy Loads.</span>
-          <br />
-          <span className="font-light text-white/80">Built for lasting</span>{" "}
-          <span className="font-bold text-[#8FA8C4]">performance.</span>
+          <span className="block font-light text-white/75">Engineered for</span>
+          <span className="block font-bold">Heavy Loads.</span>
+          <span className="block font-light text-white/75">
+            Built for lasting{" "}
+            <span className="font-bold text-[#8FA8C4]">performance.</span>
+          </span>
         </motion.h1>
+
+        {/* Thin divider */}
+        <motion.span
+          variants={itemVariants}
+          className="mt-8 block h-px w-16 bg-gradient-to-r from-[#6E8CAE] to-transparent sm:mt-10 sm:w-24"
+        />
 
         {/* Description */}
         <motion.p
           variants={itemVariants}
-          className={`${robotoCondensed.className} mt-5 max-w-lg text-sm leading-relaxed text-white/60 sm:text-base md:mt-6 md:text-lg`}
+          className={`${robotoCondensed.className} mt-6 max-w-xl text-[1.05rem] font-light leading-[1.7] tracking-[0.005em] text-white/70 sm:text-lg md:text-xl`}
         >
           Viona Flexible Packaging Pvt. Ltd. designs and manufactures durable
           FIBC bulk bags — precision-engineered, load-tested, and built to
@@ -438,17 +347,16 @@ export default function Hero() {
         {/* CTA */}
         <motion.div
           variants={itemVariants}
-          className="mt-7 flex flex-wrap items-center gap-5 sm:mt-8 sm:gap-6 md:mt-10 md:gap-8"
+          className="mt-9 flex flex-wrap items-center gap-5 sm:mt-10 md:mt-12"
         >
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium tracking-widetext-white transition-colors duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/10 sm:px-6 sm:py-3"
+            className={`${robotoCondensed.className} group inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/[0.04] px-6 py-3 text-base font-medium tracking-[0.06em] text-white backdrop-blur-sm transition-all duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8FA8C4] sm:px-8 sm:py-3.5`}
           >
             Request a quote
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
-        
       </motion.div>
     </section>
   );

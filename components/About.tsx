@@ -9,7 +9,7 @@ import HeroButton from "./ui/animatedbutton";
 
 // ---------- Updated Stats Config ----------
 const stats = [
-  { value: "67+", label: "Years of Experience", type: "counter" },
+  { value: "8+", label: "Years of Experience", type: "counter" },
   { value: "500+", label: "Our Employees", type: "counter" },
   { value: "Premium", label: "Best Quality", type: "badge", icon: Award },
   { value: "99%", label: "Quality Compliance", type: "badge", icon: ShieldCheck },
@@ -205,7 +205,7 @@ export default function AboutSection() {
                   className="relative w-full mt-4 h-60"
                 >
                   <Image
-                    src="/Images/factory.jpg"
+                    src="/Images/factory.jpeg"
                     alt="VIONA factory"
                     fill
                     sizes="(max-width: 640px) 90vw, 480px"
