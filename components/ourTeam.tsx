@@ -233,9 +233,9 @@ function CertificateCard({
             className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1.5 text-blue-600 shadow-md border border-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           >
             <ShieldCheck className="h-4 w-4" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">
+            {/* <span className="text-[10px] font-bold uppercase tracking-wider">
               Verified
-            </span>
+            </span> */}
           </motion.div>
 
           {/* Index pill — top-left */}

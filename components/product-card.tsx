@@ -8,7 +8,6 @@ import Image from "next/image";
 import { Lens } from "./ui/productlens";
 import HeroButton from "./ui/animatedbutton";
 
-
 const PRODUCTS = [
   {
     slug: "Inlet-and-Outlet-Closure",
@@ -23,7 +22,7 @@ const PRODUCTS = [
     name: "Single Loop",
     description:
       "Built for efficient bulk material handling, the Single Loop FIBC combines high-strength woven polypropylene with a reinforced lifting loop to ensure safe transport, storage, and streamlined operations.",
-     image: "/Images/Products/single-loop.jpeg",
+    image: "/Images/Products/single-loop.jpeg",
     texture: "/Images/Products/single-loop.jpeg",
   },
   {
@@ -31,7 +30,8 @@ const PRODUCTS = [
     name: "Ventilated FIBC",
     description:
       "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
-    // image: "",
+    image: "/Images/Products/vantilated.jpeg",
+    texture: "/Images/Products/vantilated.jpeg",
   },
   {
     slug: "four-panel",
@@ -39,8 +39,8 @@ const PRODUCTS = [
     description:
       "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
 
-    // image: "",
-    texture: "/Images/Products/four-pannel.png",
+    image: "/Images/Products/four-pannel.jpeg",
+    texture: "/Images/Products/four-pannel.jpeg",
   },
 ];
 
@@ -95,19 +95,19 @@ function ProductCard({
         <div className="relative aspect-square sm:aspect-[4/5] overflow-hidden rounded-2xl bg-blue-50/80">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-500/10 pointer-events-none z-10" />
 
-        {product.image ? (
-  <Image
-    src={product.image}
-    alt={product.name}
-    fill
-    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-    className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-  />
-) : (
-  <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
-    Product image coming soon
-  </div>
-)}
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
+              Product image coming soon
+            </div>
+          )}
         </div>
       </Lens>
 

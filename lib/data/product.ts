@@ -34,8 +34,8 @@ export const PRODUCTS = [
     name: "Ventilated FIBC",
     description:
       "Designed with breathable woven panels that promote airflow, helping preserve the freshness and quality of agricultural products during storage and transportation.",
-    image: '/Images/Products/vantilated.png',
-    texture: '/Images/Products/vantilated.png',
+    image: '/Images/Products/vantilated.jpeg',
+    texture: '/Images/Products/vantilated.jpeg',
     specs: [
       { label: "Application", value: "Agricultural Products" },
       { label: "Fabric", value: "Ventilated PP Fabric" },
@@ -48,8 +48,8 @@ export const PRODUCTS = [
     name: "Four Panel Bag",
     description:
       "Constructed from four individually stitched fabric panels, the Four Panel FIBC maintains a stable square shape for efficient stacking, secure transportation, and optimal storage. Its reinforced design delivers reliable performance across a wide range of bulk material handling applications.",
-    image: "/Images/Products/four-pannel.png",
-    texture: "/Images/Products/four-pannel.png",
+    image: "/Images/Products/four-pannel.jpeg",
+    texture: "/Images/Products/four-pannel.jpeg",
     specs: [
       { label: "Safe Working Load", value: "500–2,000 kg" },
       { label: "Construction", value: "Four Panel" },

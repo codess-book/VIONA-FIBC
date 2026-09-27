@@ -191,9 +191,14 @@ export default function Footer() {
             className="text-[10px] font-medium text-slate-500"
           >
             Developed &amp; Designed by{" "}
-            <span className="text-blue-400 hover:text-blue-300 transition-colors">
+            <a
+              href="https://instagram.com/codes.book"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
               codes.book
-            </span>
+            </a>
           </motion.p>
         </div>
       </div>
