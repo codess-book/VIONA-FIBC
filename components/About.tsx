@@ -1,28 +1,29 @@
 "use client";
 
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight, Link } from "lucide-react";
+import { Award, ShieldCheck } from "lucide-react";
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
+import HeroButton from "./ui/animatedbutton";
 
-// ---------- Stats ----------
+// ---------- Updated Stats Config ----------
 const stats = [
-  { value: "25+", label: "Years of Experience" },
-  { value: "500+", label: "Packaging Variants" },
-  { value: "100+", label: "Business Partners" },
-  { value: "99%", label: "Quality Compliance" },
+  { value: "8+", label: "Years of Experience", type: "counter" },
+  { value: "500+", label: "Our Employees", type: "counter" },
+  { value: "Premium", label: "Best Quality", type: "badge", icon: Award },
+  { value: "99%", label: "Quality Compliance", type: "badge", icon: ShieldCheck },
 ];
 
-// ---------- Counter ----------
+// ---------- Counter Component ----------
 const Counter = ({ value, label }: { value: string; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
   const [count, setCount] = useState(0);
-  const target = parseInt(value);
+  const target = parseInt(value.replace(/\D/g, "")) || 0;
 
   useEffect(() => {
-    if (isInView && target) {
+    if (isInView && target > 0) {
       let start = 0;
       const duration = 2000;
       const increment = target / (duration / 16);
@@ -40,12 +41,12 @@ const Counter = ({ value, label }: { value: string; label: string }) => {
   }, [isInView, target]);
 
   return (
-    <div ref={ref} className="text-center">
+    <div ref={ref} className="text-center p-4 rounded-xl bg-blue-50/40 border border-blue-100/60">
       <p className="text-3xl font-bold text-blue-900 sm:text-4xl">
         {isInView ? count : 0}
         {value.includes("+") ? "+" : value.includes("%") ? "%" : ""}
       </p>
-      <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-blue-600">
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
         {label}
       </p>
     </div>
@@ -56,47 +57,39 @@ const Counter = ({ value, label }: { value: string; label: string }) => {
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const prefersReducedMotion = useReducedMotion();
+
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px) and (pointer: fine)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const ambientActive = isDesktop && !prefersReducedMotion;
 
   return (
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-white py-16 md:py-24"
     >
-      {/* ============ BACKGROUND PREMIUM EFFECTS ============ */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* 1. Moving Gradient Blobs (Navy & Light Blue) */}
-        <motion.div
-          className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-900/10 blur-3xl"
-          animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-blue-600/8 blur-3xl"
-          animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[600px] bg-blue-500/5 blur-3xl rounded-full"
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* 2. Premium Floating Shapes (Left Side) */}
-        <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64">
+      {/* ============ BACKGROUND EFFECTS ============ */}
+      {ambientActive && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
-            className="h-full w-full rounded-full bg-gradient-to-br from-blue-900/5 to-blue-500/5"
-            animate={{ scale: [1, 1.1, 1], rotate: [0, 45, 0] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-900/10 blur-2xl"
+            animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-blue-600/8 blur-2xl"
+            animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
-        <div className="pointer-events-none absolute -bottom-8 left-20 h-40 w-40">
-          <motion.div
-            className="h-full w-full rounded-full border-2 border-dashed border-blue-900/10"
-            animate={{ scale: [1, 1.2, 1], rotate: [0, -30, 0] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
-      </div>
+      )}
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
@@ -138,7 +131,7 @@ export default function AboutSection() {
               className="mt-5 h-[2px] w-14 origin-left rounded-full bg-gradient-to-r from-blue-900 to-blue-500"
             />
 
-            {/* Premium Paragraphs */}
+            {/* Paragraphs */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -170,36 +163,23 @@ export default function AboutSection() {
               </p>
             </motion.div>
 
-            {/* Buttons: Navy Blue & Light Blue */}
+            {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.45 }}
               className="mt-8 flex flex-wrap items-center gap-4"
             >
-              <motion.a
-                href="#"
-                className="group inline-flex items-center gap-2 rounded-full bg-blue-900 px-6 py-3 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-blue-800 hover:shadow-blue-900/30"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-              >
+              <HeroButton href="/about" variant="primary">
                 Know More
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </motion.a>
-
-              <motion.a
-                href="/globe"
-                className="group inline-flex items-center gap-2 rounded-full border-2 border-blue-900 bg-transparent px-6 py-3 text-sm font-medium tracking-wide text-blue-900 shadow-sm transition-all duration-300 hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-blue-600/40"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Talk to our team
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </motion.a>
+              </HeroButton>
+              <HeroButton href="/contact" variant="secondary">
+                Contact Us
+              </HeroButton>
             </motion.div>
           </div>
 
-          {/* ---- RIGHT: 3D Card (White & Blue Theme) ---- */}
+          {/* ---- RIGHT: 3D Card ---- */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -215,53 +195,58 @@ export default function AboutSection() {
                   VIONA Manufacturing
                 </CardItem>
                 <CardItem
-                  //   as="p"
                   translateZ="60"
                   className="text-blue-600 text-sm max-w-sm mt-2"
                 >
                   State‑of‑the‑art facility for precision FIBC production.
                 </CardItem>
-                <CardItem translateZ="100" className="w-full mt-4">
-                  <img
-                    src="/images/factory.jpg" // ✅ Fixed lowercase path
-                    height="1000"
-                    width="1000"
-                    className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                <CardItem
+                  translateZ="100"
+                  className="relative w-full mt-4 h-60"
+                >
+                  <Image
+                    src="/Images/factory.jpeg"
                     alt="VIONA factory"
+                    fill
+                    sizes="(max-width: 640px) 90vw, 480px"
+                    quality={80}
+                    loading="lazy"
+                    className="object-cover rounded-xl group-hover/card:shadow-xl"
                   />
                 </CardItem>
-                <div className="flex justify-between items-center mt-6">
-                  <Link href="#">
-                    <CardItem
-                      translateZ={20}
-                      className="px-4 py-2 rounded-xl text-xs font-normal text-slate-500 hover:text-blue-600"
-                    >
-                      Learn more →
-                    </CardItem>
-                  </Link>
-                  <CardItem
-                    translateZ={20}
-                    // as="button"
-                    className="px-4 py-2 rounded-xl bg-blue-900 text-white text-xs font-bold hover:bg-blue-800 transition-colors"
-                  >
-                    Know more
-                  </CardItem>
-                </div>
               </CardBody>
             </CardContainer>
           </motion.div>
         </div>
 
-        {/* ---- Stats ---- */}
+        {/* ---- Optimized Stats Section ---- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 grid grid-cols-2 gap-6 border-t border-blue-200 pt-10 sm:grid-cols-4"
+          className="mt-16 grid grid-cols-2 gap-4 border-t border-blue-200 pt-10 sm:grid-cols-4 sm:gap-6"
         >
-          {stats.map((stat, idx) => (
-            <Counter key={idx} value={stat.value} label={stat.label} />
-          ))}
+          {stats.map((stat, idx) => {
+            if (stat.type === "counter") {
+              return <Counter key={idx} value={stat.value} label={stat.label} />;
+            }
+
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-b from-blue-50/80 to-white border border-blue-100 shadow-sm text-center"
+              >
+                <div className="flex items-center gap-1.5 text-blue-900 font-bold text-2xl sm:text-3xl">
+                  {Icon && <Icon className="w-6 h-6 text-blue-600 shrink-0" />}
+                  <span>{stat.value}</span>
+                </div>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
+                  {stat.label}
+                </p>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>

@@ -13,7 +13,7 @@ export default function AllProductsPage() {
           className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(37, 99, 235, 0.25) 1px, transparent 1px),
+              linear-gradient(rgba(16, 14, 14, 0.93) 1px, transparent 1px),
               linear-gradient(90deg, rgba(37, 99, 235, 0.25) 1px, transparent 1px)
             `,
             backgroundSize: "40px 40px",
@@ -31,9 +31,9 @@ export default function AllProductsPage() {
             Our Collection
             <span className="h-px w-8 bg-blue-700" />
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+          <h1 className="text-4xl md:text-4xl font-bold text-slate-900">
             All{" "}
-            <span className="bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">
+            <span className="text-4xl bg-gradient-to-r from-blue-900 to-blue-500 bg-clip-text text-transparent">
               Products
             </span>
           </h1>
@@ -130,9 +130,9 @@ function ProductCard({
         <p className="text-xs text-slate-500 mt-1 line-clamp-2 flex-1">{product.description}</p>
 
         <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-          <span className="font-mono text-lg font-bold text-blue-900">
+          {/* <span className="font-mono text-lg font-bold text-blue-900">
             ${product.price.toFixed(2)}
-          </span>
+          </span> */}
 
           <Link
             href={`/products/${product.slug}`}

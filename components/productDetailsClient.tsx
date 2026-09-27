@@ -6,143 +6,302 @@ import {
   Pause,
   Play,
   Hand,
-  ShoppingBag,
+  Box,
   ArrowLeft,
+  ArrowRight,
+  Mail,
+  ShieldCheck,
+  ClipboardList,
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import type { PRODUCTS } from "@/lib/data/product";
 
-// --- 3D Viewer Component (unchanged logic, refreshed styling) ---
+// ---------- Bag geometry (a true box: all faces meet at the corners) ----------
+const W = 150; // width  (x)
+const H = 190; // height (y)
+const D = 150; // depth  (z)
+const START = { y: -28, x: -12 };
+
+// ---------- Certifications (same standards shown on the About / Team pages) ----------
+const certs = ["ISO 9001:2015", "ISO 14001:2015", "ISO 22000:2018"];
+
+// ---------- 3D Viewer ----------
+// Rotation is written straight to the DOM (no React re-render every frame), so
+// the auto-spin and dragging stay smooth even on phones.
 function BagViewer3D({ texture, name }: { texture: string; name: string }) {
-  const [angle, setAngle] = useState({ y: -28, x: -12 });
-  const [spinning, setSpinning] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const rotRef = useRef<HTMLDivElement>(null);
+  const angle = useRef({ ...START });
   const dragging = useRef<{ x: number; y: number } | null>(null);
-  const frame = useRef<number>(0);
+
+  const [spinning, setSpinning] = useState(true);
+  const [visible, setVisible] = useState(true);
+
+  const apply = useCallback(() => {
+    if (rotRef.current) {
+      rotRef.current.style.transform = `rotateX(${angle.current.x}deg) rotateY(${angle.current.y}deg)`;
+    }
+  }, []);
+
+  // respect reduced motion: start paused
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setSpinning(false);
+    }
+  }, []);
+
+  // only spin while the viewer is on screen
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) =>
+      setVisible(entry.isIntersecting),
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (!spinning) return;
+    if (!spinning || !visible) return;
+    let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
-      const dt = now - last;
+      angle.current.y += (now - last) * 0.018;
       last = now;
-      setAngle((a) => ({ ...a, y: a.y + dt * 0.018 }));
-      frame.current = requestAnimationFrame(tick);
+      apply();
+      raf = requestAnimationFrame(tick);
     };
-    frame.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame.current);
-  }, [spinning]);
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [spinning, visible, apply]);
 
-  const onDown = useCallback((e: React.PointerEvent) => {
+  const onDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     dragging.current = { x: e.clientX, y: e.clientY };
     setSpinning(false);
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+    e.currentTarget.setPointerCapture?.(e.pointerId);
   }, []);
 
-  const onMove = useCallback((e: React.PointerEvent) => {
-    const start = dragging.current;
-    if (!start) return;
-    const dx = e.clientX - start.x;
-    const dy = e.clientY - start.y;
-    dragging.current = { x: e.clientX, y: e.clientY };
-    setAngle((a) => ({
-      y: a.y + dx * 0.5,
-      x: Math.max(-45, Math.min(35, a.x - dy * 0.3)),
-    }));
-  }, []);
+  const onMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const start = dragging.current;
+      if (!start) return;
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
+      dragging.current = { x: e.clientX, y: e.clientY };
+      angle.current.y += dx * 0.5;
+      angle.current.x = Math.max(-45, Math.min(35, angle.current.x - dy * 0.3));
+      apply();
+    },
+    [apply],
+  );
 
   const onUp = useCallback(() => {
     dragging.current = null;
   }, []);
 
-  const faces = [
-    { t: "translateZ(90px)", label: "Front" },
-    { t: "rotateY(180deg) translateZ(90px)", label: "Back" },
-    { t: "rotateY(90deg) translateZ(90px)", label: "Right" },
-    { t: "rotateY(-90deg) translateZ(90px)", label: "Left" },
+  const onKey = useCallback(
+    (e: React.KeyboardEvent) => {
+      const step = 10;
+      if (e.key === "ArrowLeft") angle.current.y -= step;
+      else if (e.key === "ArrowRight") angle.current.y += step;
+      else if (e.key === "ArrowUp")
+        angle.current.x = Math.min(35, angle.current.x + step);
+      else if (e.key === "ArrowDown")
+        angle.current.x = Math.max(-45, angle.current.x - step);
+      else return;
+      e.preventDefault();
+      setSpinning(false);
+      apply();
+    },
+    [apply],
+  );
+
+  const reset = () => {
+    angle.current = { ...START };
+    apply();
+  };
+
+  // shade = darkness added over the texture so the box reads as 3D
+  const tex = `url(${texture})`;
+  const shaded = (dark: number, light = 0) =>
+    light > 0
+      ? `linear-gradient(rgba(255,255,255,${light}), rgba(255,255,255,${light})), ${tex}`
+      : `linear-gradient(rgba(0,0,0,${dark}), rgba(0,0,0,${dark})), ${tex}`;
+
+  const sides = [
+    { label: "Front", t: `translateZ(${D / 2}px)`, bg: shaded(0) },
+    {
+      label: "Right",
+      t: `rotateY(90deg) translateZ(${W / 2}px)`,
+      bg: shaded(0.18),
+    },
+    {
+      label: "Back",
+      t: `rotateY(180deg) translateZ(${D / 2}px)`,
+      bg: shaded(0.3),
+    },
+    {
+      label: "Left",
+      t: `rotateY(-90deg) translateZ(${W / 2}px)`,
+      bg: shaded(0.18),
+    },
   ];
 
-  return (
-    <div className="relative overflow-hidden rounded-xl border border-blue-200/50 bg-blue-50/30 shadow-sm">
-      {/* faint woven texture backdrop inside the viewer */}
-      <div className="pointer-events-none absolute inset-0 viewer-weave opacity-[0.05]" />
+  const faceBase: React.CSSProperties = {
+    backfaceVisibility: "hidden",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.08)",
+  };
 
+  const controlBtn =
+    "rounded-full border border-white/15 p-2 text-blue-100 transition-colors duration-300 hover:border-blue-300/60 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300";
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative overflow-hidden rounded-3xl border border-blue-900/50 bg-gradient-to-br from-[#0B1F4B] via-[#08142E] to-[#050B1A] shadow-[0_40px_80px_-40px_rgba(30,64,175,0.6)]"
+    >
+      {/* textures */}
       <div
-        className="relative flex h-[200px] sm:h-[240px] lg:h-[280px] w-full cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing"
+        className="viewer-weave pointer-events-none absolute inset-0 opacity-[0.06]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        aria-hidden="true"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(147,197,253,0.6) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(147,197,253,0.6) 1px, transparent 1px)
+          `,
+          backgroundSize: "44px 44px",
+        }}
+      />
+      {/* spotlight behind the bag */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-[45%] h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-400/25 blur-[90px]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 45%, rgba(5,11,26,0.7) 100%)",
+        }}
+      />
+
+      {/* corner brackets */}
+      {[
+        "left-4 top-4 border-l-2 border-t-2 rounded-tl-sm",
+        "right-4 top-4 border-r-2 border-t-2 rounded-tr-sm",
+        "bottom-[4.25rem] left-4 border-b-2 border-l-2 rounded-bl-sm",
+        "bottom-[4.25rem] right-4 border-b-2 border-r-2 rounded-br-sm",
+      ].map((c) => (
+        <span
+          key={c}
+          aria-hidden="true"
+          className={`pointer-events-none absolute z-10 h-5 w-5 border-blue-300/40 ${c}`}
+        />
+      ))}
+
+      {/* header labels */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between px-8 pt-6 text-xs text-blue-100/60">
+        <span className="inline-flex items-center gap-1.5">
+          <Box className="h-3.5 w-3.5" />
+          Interactive 3D view
+        </span>
+        <span className="hidden sm:inline">360°</span>
+      </div>
+
+      {/* stage */}
+      <div
+        role="group"
+        tabIndex={0}
+        aria-label={`Interactive 3D view of ${name}. Drag, or use the arrow keys, to rotate.`}
+        className="relative flex h-[360px] w-full cursor-grab touch-none select-none items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-blue-300/60 active:cursor-grabbing sm:h-[440px] lg:h-[560px]"
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={onUp}
+        onKeyDown={onKey}
       >
-        <div
-          className="relative"
-          style={{ perspective: "1000px", perspectiveOrigin: "50% 45%" }}
-        >
-          <div
-            className="relative"
-            style={{
-              width: 150,
-              height: 190,
-              transformStyle: "preserve-3d",
-              transform: `rotateX(${angle.x}deg) rotateY(${angle.y}deg)`,
-            }}
-          >
-            {faces.map((f) => (
+        <div className="origin-center scale-[1.1] sm:scale-[1.3] lg:scale-[1.7]">
+          <div style={{ perspective: "1100px", perspectiveOrigin: "50% 45%" }}>
+            <div
+              ref={rotRef}
+              className="relative"
+              style={{
+                width: W,
+                height: H,
+                transformStyle: "preserve-3d",
+                transform: `rotateX(${START.x}deg) rotateY(${START.y}deg)`,
+              }}
+            >
+              {sides.map((f) => (
+                <div
+                  key={f.label}
+                  className="absolute inset-0 rounded-[4px]"
+                  style={{ ...faceBase, transform: f.t, backgroundImage: f.bg }}
+                />
+              ))}
+              {/* top */}
               <div
-                key={f.label}
-                className="absolute inset-0 rounded-[6px] bg-cover bg-center"
+                className="absolute left-0 rounded-[4px]"
                 style={{
-                  transform: f.t,
-                  backgroundImage: `url(${texture})`,
-                  backfaceVisibility: "hidden",
+                  ...faceBase,
+                  width: W,
+                  height: D,
+                  top: (H - D) / 2,
+                  transform: `rotateX(90deg) translateZ(${H / 2}px)`,
+                  backgroundImage: shaded(0, 0.14),
                 }}
               />
-            ))}
-            <div
-              className="absolute rounded-[6px] bg-cover bg-center"
-              style={{
-                width: 150,
-                height: 150,
-                transform: "rotateX(90deg) translateZ(95px)",
-                backgroundImage: `url(${texture})`,
-                filter: "brightness(1.1)",
-              }}
-            />
-            <div
-              className="absolute rounded-[6px] bg-cover bg-center"
-              style={{
-                width: 150,
-                height: 150,
-                transform: "rotateX(-90deg) translateZ(95px)",
-                backgroundImage: `url(${texture})`,
-                filter: "brightness(0.5)",
-              }}
-            />
+              {/* bottom */}
+              <div
+                className="absolute left-0 rounded-[4px]"
+                style={{
+                  ...faceBase,
+                  width: W,
+                  height: D,
+                  top: (H - D) / 2,
+                  transform: `rotateX(-90deg) translateZ(${H / 2}px)`,
+                  backgroundImage: shaded(0.55),
+                }}
+              />
+            </div>
           </div>
-          <div className="pointer-events-none mx-auto mt-4 h-4 w-40 rounded-[50%] blur-sm bg-slate-200/60" />
+          {/* floor shadow */}
+          <div className="pointer-events-none mx-auto mt-6 h-5 w-44 rounded-[50%] bg-black/60 blur-md" />
         </div>
       </div>
 
-      <div className="relative flex items-center justify-between gap-2 border-t border-blue-100 bg-white/70 backdrop-blur-sm px-3 py-2">
-        <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-slate-500">
-          <Hand className="h-3 w-3" /> <span>Drag to rotate</span>
+      {/* controls */}
+      <div className="relative z-10 flex items-center justify-between gap-2 border-t border-white/10 bg-white/[0.04] px-5 py-3 backdrop-blur-sm">
+        <span className="flex items-center gap-2 text-xs text-blue-100/60">
+          <Hand className="h-3.5 w-3.5" />
+          Drag to rotate
         </span>
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <button
+            type="button"
             onClick={() => setSpinning((s) => !s)}
-            className="rounded-full border border-slate-300 p-1.5 text-slate-600 hover:bg-blue-50 hover:border-blue-400 transition-colors"
+            aria-label={spinning ? "Pause rotation" : "Start rotation"}
+            className={controlBtn}
           >
             {spinning ? (
-              <Pause className="h-3 w-3" />
+              <Pause className="h-3.5 w-3.5" />
             ) : (
-              <Play className="h-3 w-3" />
+              <Play className="h-3.5 w-3.5" />
             )}
           </button>
           <button
-            onClick={() => setAngle({ y: -28, x: -12 })}
-            className="rounded-full border border-slate-300 p-1.5 text-slate-600 hover:bg-blue-50 hover:border-blue-400 transition-colors"
+            type="button"
+            onClick={reset}
+            aria-label="Reset view"
+            className={controlBtn}
           >
-            <RotateCcw className="h-3 w-3" />
+            <RotateCcw className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
@@ -150,171 +309,137 @@ function BagViewer3D({ texture, name }: { texture: string; name: string }) {
   );
 }
 
-// --- Corner-bracket frame: a technical-drawing reference frame around the hero image ---
-function CornerBrackets() {
-  const corner = "absolute h-5 w-5 border-blue-400/60";
-  return (
-    <>
-      <span
-        className={`${corner} top-3 left-3 border-t-2 border-l-2 rounded-tl-sm`}
-      />
-      <span
-        className={`${corner} top-3 right-3 border-t-2 border-r-2 rounded-tr-sm`}
-      />
-      <span
-        className={`${corner} bottom-3 left-3 border-b-2 border-l-2 rounded-bl-sm`}
-      />
-      <span
-        className={`${corner} bottom-3 right-3 border-b-2 border-r-2 rounded-br-sm`}
-      />
-    </>
-  );
-}
-
-// --- Main Client Layout ---
-export default function ProductDetailsClient({ product }: { product:any }) {
-  const hasDiscount = product.originalPrice !== null;
+// ---------- Main Client Layout ----------
+export default function ProductDetailsClient({ product }: { product: any }) {
+  const enquiry = `mailto:info@vionafibc.com?subject=${encodeURIComponent(
+    `Enquiry: ${product.name}`,
+  )}`;
+  const specs: { label: string; value: string }[] = product.specs ?? [];
 
   return (
-    <section className="relative min-h-screen bg-white pt-24 pb-4 md:pt-28 md:pb-6 overflow-hidden">
-      {/* ---- Shared background system ---- */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="weave-layer absolute inset-0 opacity-[0.04]" />
+    <section className="relative isolate min-h-screen overflow-hidden bg-white pb-16 pt-24 md:pb-24 md:pt-28">
+      {/* ---- Shared background system (kept inside this section) ---- */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="weave-layer absolute -inset-[14px] opacity-[0.04]" />
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(37, 99, 235, 0.25) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(37, 99, 235, 0.25) 1px, transparent 1px)
+              linear-gradient(rgba(180, 198, 198, 0.25) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(188, 191, 199, 0.54) 1px, transparent 1px)
             `,
             backgroundSize: "40px 40px",
           }}
         />
-        <div className="glow-drift-1 absolute top-0 right-0 h-[320px] w-[420px] bg-blue-500/[0.06] blur-3xl rounded-full" />
+        <div className="glow-drift-1 absolute right-0 top-0 h-[320px] w-[420px] rounded-full bg-blue-500/[0.06] blur-3xl" />
+        <div className="glow-drift-2 absolute bottom-[8%] left-[-4%] h-[300px] w-[420px] rounded-full bg-cyan-400/[0.05] blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Link
           href="/allProducts"
-          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium mb-3"
+          className="inline-flex items-center gap-2 rounded-lg text-sm font-medium text-blue-700 transition-colors duration-300 hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Products
+          <ArrowLeft className="h-4 w-4" />
+          Back to products
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          {/* Left: Static Image with technical corner-bracket frame — dark canvas so white product photos pop */}
-          <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 border border-blue-900/40 rounded-2xl p-6 shadow-sm overflow-hidden h-[300px] sm:h-[400px] lg:h-[450px]">
-            <div className="pointer-events-none absolute inset-0 opacity-[0.06] viewer-weave" />
-            <CornerBrackets />
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={500}
-              height={500}
-              priority
-              className="relative z-10 w-full h-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
-            />
+        <div className="mt-6 grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-14">
+          {/* ---------- Left: rotating 3D bag ---------- */}
+          <div className="lg:sticky lg:top-28">
+            <BagViewer3D texture={product.texture} name={product.name} />
           </div>
 
-          {/* Right: 3D Viewer + Details */}
-          <div className="flex flex-col space-y-3 lg:space-y-4">
-            <BagViewer3D texture={product.texture} name={product.name} />
+          {/* ---------- Right: all content ---------- */}
+          <div className="flex flex-col">
+            <div
+              className="pd-rise flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-blue-700"
+              style={{ animationDelay: "0.05s" }}
+            >
+              <span className="h-px w-8 bg-gradient-to-r from-amber-400 to-blue-600" />
+              Industrial grade
+            </div>
 
-            <div className="flex-1 flex flex-col space-y-3 bg-white p-1">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-blue-600 font-bold">
-                    Industrial Grade
-                  </p>
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight">
-                    {product.name}
-                  </h1>
+            <h1
+              className="pd-rise mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-slate-900 md:text-4xl lg:text-5xl"
+              style={{ animationDelay: "0.12s" }}
+            >
+              {product.name}
+            </h1>
+
+            <p
+              className="pd-rise mt-5 max-w-xl text-base leading-relaxed text-slate-600 lg:text-[1.05rem]"
+              style={{ animationDelay: "0.2s" }}
+            >
+              {product.description}
+            </p>
+
+            {/* Specifications */}
+            {specs.length > 0 && (
+              <div
+                className="pd-rise mt-8 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur-sm"
+                style={{ animationDelay: "0.28s" }}
+              >
+                <div className="flex items-center gap-2.5 border-b border-slate-200/70 bg-blue-50/60 px-5 py-3.5">
+                  <ClipboardList className="h-4 w-4 text-blue-700" />
+                  <h2 className="text-sm font-semibold text-slate-900">
+                    Specifications
+                  </h2>
                 </div>
-                <div className="text-right">
-                  <span className="font-mono text-2xl font-semibold text-slate-900">
-                    ${product.price.toFixed(2)}
-                  </span>
-                  {hasDiscount && (
-                    <p className="font-mono text-xs text-slate-400 line-through">
-                      ${product.originalPrice?.toFixed(2)}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {hasDiscount && (
-                <div className="inline-flex w-fit rounded-full bg-blue-100 px-2.5 py-0.5 text-[10px] font-bold text-blue-700 border border-blue-200">
-                  Save{" "}
-                  {Math.round(
-                    ((product.originalPrice! - product.price) /
-                      product.originalPrice!) *
-                      100,
-                  )}
-                  %
-                </div>
-              )}
-
-              <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
-                {product.description}
-              </p>
-
-              {/* Specs Grid — styled like an engineering spec sheet */}
-              <div className="relative grid grid-cols-2 gap-3 bg-blue-50/80 border border-blue-100 p-3 rounded-xl">
-                <span className="absolute -top-2 left-3 rounded-full bg-white px-2 text-[9px] font-bold uppercase tracking-[0.15em] text-blue-500 border border-blue-100">
-                  Spec Sheet
-                </span>
-                {product.specs.map(
-                  (spec: { label: string; value: string }, i: number) => (
-                    <div key={i} className="flex flex-col">
-                      <span className="text-[9px] uppercase font-bold text-blue-500">
-                        {spec.label}
-                      </span>
-                      <span className="font-mono text-sm font-semibold text-slate-700">
+                <dl className="divide-y divide-slate-100">
+                  {specs.map((spec, i) => (
+                    <div
+                      key={`${spec.label}-${i}`}
+                      className="flex items-baseline justify-between gap-6 px-5 py-3.5 transition-colors duration-300 hover:bg-blue-50/40"
+                    >
+                      <dt className="text-sm text-slate-500">{spec.label}</dt>
+                      <dd className="text-right text-sm font-semibold tabular-nums text-slate-900">
                         {spec.value}
-                      </span>
+                      </dd>
                     </div>
-                  ),
-                )}
+                  ))}
+                </dl>
               </div>
+            )}
 
-              {/* Stitched divider before the purchase row */}
-              <div className="relative w-full h-4 pt-1" aria-hidden="true">
-                <svg
-                  viewBox="0 0 600 12"
-                  preserveAspectRatio="none"
-                  className="absolute inset-0 h-full w-full"
-                >
-                  <line
-                    x1="0"
-                    y1="6"
-                    x2="600"
-                    y2="6"
-                    stroke="rgb(37 99 235 / 0.3)"
-                    strokeWidth="1.5"
-                    strokeDasharray="8 6"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </div>
+            {/* Actions */}
+            <div
+              className="pd-rise mt-8 flex flex-wrap items-center gap-3"
+              style={{ animationDelay: "0.36s" }}
+            >
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 rounded-xl bg-blue-900 px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-blue-900/25 transition-[background-color,box-shadow] duration-300 hover:bg-blue-800 hover:shadow-lg hover:shadow-blue-900/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                Request a quote
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+              {/* <a
+                href={enquiry}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white/80 px-6 py-3.5 text-sm font-semibold text-slate-800 transition-colors duration-300 hover:border-blue-400 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                <Mail className="h-4 w-4 text-blue-700" />
+                Email an enquiry
+              </a> */}
+            </div>
 
-              <div className="flex items-center gap-3 pt-1">
-                <div className="flex items-center border border-slate-200 rounded-full bg-white overflow-hidden">
-                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">
-                    -
-                  </button>
-                  <span className="w-10 text-center text-sm font-medium text-slate-800">
-                    1
-                  </span>
-                  <button className="px-3 py-1.5 hover:bg-slate-50 text-slate-600">
-                    +
-                  </button>
-                </div>
-
-                <button className="flex-1 flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white py-2.5 px-5 rounded-full text-sm font-semibold transition-colors shadow-md shadow-blue-900/20">
-                  <ShoppingBag className="h-4 w-4" />
-                  Add to Cart
-                </button>
-              </div>
+            {/* Certifications */}
+            <div
+              className="pd-rise mt-10 border-t border-slate-200/70 pt-6"
+              style={{ animationDelay: "0.44s" }}
+            >
+              <p className="text-xs font-medium text-slate-500">Certified to</p>
+              <ul className="mt-3 flex flex-wrap gap-2.5">
+                {certs.map((c) => (
+                  <li
+                    key={c}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/60 px-3 py-1.5 text-xs font-medium text-slate-700"
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5 text-blue-700" />
+                    {c}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -327,18 +452,37 @@ export default function ProductDetailsClient({ product }: { product:any }) {
             repeating-linear-gradient(-45deg, rgba(37,99,235,0.9) 0px, rgba(37,99,235,0.9) 1px, transparent 1px, transparent 10px);
           background-size: 14px 14px;
         }
-        .weave-layer { animation: weave-drift 40s linear infinite; }
+        /* drifts with transform (smooth); layer is one tile oversized so the loop is seamless */
+        .weave-layer { animation: weave-drift 3s linear infinite; will-change: transform; }
         @keyframes weave-drift {
-          0%   { background-position: 0 0, 0 0; }
-          100% { background-position: 200px 200px, -200px 200px; }
+          0%   { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(14px, 14px, 0); }
         }
-        .glow-drift-1 { animation: float-a 22s ease-in-out infinite; }
+
+        .glow-drift-1 { animation: float-a 22s ease-in-out infinite; will-change: transform; }
+        .glow-drift-2 { animation: float-b 28s ease-in-out infinite; will-change: transform; }
         @keyframes float-a {
           0%, 100% { transform: translate(0, 0) scale(1); }
           50%      { transform: translate(-20px, 20px) scale(1.06); }
         }
+        @keyframes float-b {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50%      { transform: translate(20px, -20px) scale(1.05); }
+        }
+
+        /* one page-load reveal for the content column */
+        .pd-rise {
+          opacity: 0;
+          animation: pd-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes pd-rise {
+          from { opacity: 0; transform: translate3d(0, 20px, 0); }
+          to   { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .weave-layer, .glow-drift-1 { animation: none !important; }
+          .weave-layer, .glow-drift-1, .glow-drift-2 { animation: none !important; }
+          .pd-rise { animation: none !important; opacity: 1; }
         }
       `}</style>
     </section>

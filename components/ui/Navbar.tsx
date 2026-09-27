@@ -2,130 +2,314 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, Box } from "lucide-react";
-import { Bebas_Neue, Inter } from "next/font/google";
-import ContactSection from "../contact";
-// Display face for the logo wordmark — bold, condensed, stamped —
-// fits an industrial packaging brand far better than a generic sans.
-const bebasNeue = Bebas_Neue({
-  subsets: ["latin"],
-  weight: "400",
-});
-
-// Body face for nav links — clean and highly legible at small sizes.
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
+import Image from "next/image"; // Next.js Image import
+import { usePathname } from "next/navigation";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { Bebas_Neue, Inter, IBM_Plex_Mono } from "next/font/google";
+import { motion, AnimatePresence } from "framer-motion";
+import GoogleTranslator from "../GoogleTranslator";
+// Fonts
+const bebasNeue = Bebas_Neue({ subsets: ["latin"], weight: "400" });
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"] });
+const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Products", href: "/allProducts" },
-
   { name: "Quality", href: "/quality" },
+  { name: "Team", href: "/Team" },
   { name: "Contact", href: "/contact" },
 ];
+
+const mobileMenuVariants = {
+  hidden: {
+    opacity: 0,
+    height: 0,
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+  },
+  visible: {
+    opacity: 1,
+    height: "auto",
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const mobileLinkVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: i * 0.06,
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    const onScroll = () => setIsScrolled(window.scrollY > 10);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-[#0B0C10]/90 backdrop-blur-xl border-white/10 shadow-lg shadow-black/20"
-          : "bg-white/[0.03] backdrop-blur-lg border-white/[0.08] shadow-lg shadow-black/5"
+          ? "border-b border-white/10 bg-[#0A0A0B]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          : "border-b border-white/[0.06] bg-[#0A0A0B]/60 backdrop-blur-md"
       } ${inter.className} text-white`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* --- LEFT: LOGO + COMPANY NAME --- */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/20 to-blue-500/20 border border-white/30 text-white group-hover:border-blue-400 transition-all duration-300 shadow-lg shadow-blue-500/20">
-              <Box className="h-5 w-5" />
-              <span className="absolute inset-0 rounded-xl border border-blue-400/0 group-hover:border-blue-400/60 group-hover:animate-ping" />
-            </div>
-            <span
-              className={`${bebasNeue.className} text-3xl tracking-[0.08em] text-white group-hover:text-blue-400 transition-colors duration-300`}
+        <div className="flex h-14 sm:h-16 items-center justify-between">
+          {/* --- LOGO --- */}
+          <Link
+            href="/"
+            className="group flex items-center gap-2 sm:gap-3 relative"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <motion.div
+              className="relative flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-md border border-white/15 bg-white/[0.03] text-white/80 transition-colors duration-300 group-hover:border-[#6E8CAE]/60 group-hover:text-white"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
             >
-              VIONA
+              {/* <div className="relative h-6 w-6 sm:h-8 sm:w-8"> */}
+              <Image
+                src="/Images/logo/navbar-logo.png"
+                alt="VIONA Logo"
+                fill
+                sizes="36px"
+                className="object-contain"
+                priority
+              />
+              {/* </div> */}
+
+              <motion.div
+                className="absolute inset-0 rounded-md bg-[#6E8CAE]/10 blur-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isHovered ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.div>
+
+            <span className="flex flex-col leading-none">
+              <motion.span
+                className={`${bebasNeue.className} text-2xl sm:text-3xl tracking-[0.06em] sm:tracking-[0.08em] text-white transition-colors duration-300 group-hover:text-[#8FA8C4]`}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                VIONA
+              </motion.span>
+              <span
+                className={`${plexMono.className} hidden sm:block text-[0.45rem] sm:text-[0.55rem] tracking-[0.2em] sm:tracking-[0.3em] text-white/35`}
+              >
+                {/* FIBC PACKAGING */}
+                VIONA FIBC PVT LTD
+              </span>
             </span>
           </Link>
 
-          {/* --- RIGHT: DESKTOP MENU --- */}
-          <div className="hidden md:flex items-center space-x-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="relative text-sm font-medium tracking-wide text-white/80 hover:text-blue-400 transition-colors duration-200 group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-blue-400 transition-all duration-300 group-hover:w-full" />
-              </Link>
-            ))}
+          {/* --- DESKTOP MENU --- */}
+          <div className="hidden items-center gap-6 lg:gap-9 md:flex">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`group relative text-sm font-medium tracking-wide transition-colors duration-200 ${
+                    isActive ? "text-white" : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  <span className="relative z-10">{link.name}</span>
 
-            <Link
-              href="/contact"
-              className="rounded-full border border-white/30 bg-white/5 px-5 py-2.5 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-blue-500 hover:border-blue-500 hover:text-white hover:shadow-blue-500/40"
-            >
-              Get a Quote
-            </Link>
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNav"
+                      className="absolute -bottom-1.5 left-0 h-px bg-gradient-to-r from-[#6E8CAE] to-[#8FA8C4]"
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+
+                  <span
+                    className={`absolute -bottom-1.5 left-0 h-px bg-gradient-to-r from-[#6E8CAE] to-[#8FA8C4] transition-all duration-300 ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+
+                  <span className="absolute inset-0 -z-10 rounded-lg bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </Link>
+              );
+            })}
+
+            <div className="relative z-50">
+              <GoogleTranslator />
+            </div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/contact"
+                className="relative overflow-hidden rounded-full border border-white/20 px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:border-[#6E8CAE] hover:shadow-[0_0_30px_rgba(110,140,174,0.15)] group"
+              >
+                <span className="relative z-10">Get a quote</span>
+                <span className="absolute inset-0 -z-0 bg-gradient-to-r from-[#6E8CAE]/0 via-[#6E8CAE]/10 to-[#6E8CAE]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              </Link>
+            </motion.div>
           </div>
 
           {/* --- MOBILE HAMBURGER BUTTON --- */}
-          <button
+          <motion.button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-white transition-colors hover:bg-white/10 active:bg-blue-500/20"
+            whileTap={{ scale: 0.9 }}
+            className="inline-flex items-center justify-center rounded-md p-1.5 sm:p-2 text-white/80 transition-colors hover:bg-white/[0.06] active:bg-white/10 md:hidden relative"
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
+            <div className="relative h-5 w-5 sm:h-6 sm:w-6">
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center"
+                animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
+                ) : (
+                  <Menu className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
+                )}
+              </motion.div>
+            </div>
+
+            {!isMobileMenuOpen && (
+              <motion.span
+                className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#6E8CAE]"
+                animate={{ scale: [1, 1.5, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
-      {/* --- MOBILE DROPDOWN MENU --- */}
-      <div
-        className={`md:hidden fixed left-0 right-0 top-16 overflow-hidden bg-[#0B0C10]/90 backdrop-blur-xl border-b border-white/10 transition-all duration-300 ${
-          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="flex flex-col space-y-3 px-4 py-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="relative text-base font-medium text-white/80 hover:text-blue-400 transition-colors duration-200 active:bg-white/5 active:px-3 active:py-2 active:-mx-3 active:rounded-lg w-fit group"
-            >
-              {link.name}
-              <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-blue-400 transition-all duration-300 group-hover:w-full active:w-full" />
-            </Link>
-          ))}
-          <div className="pt-4 border-t border-white/10">
-            <Link
-              href="/contact"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="inline-block w-full rounded-full border border-white/30 bg-white/5 px-5 py-3 text-center text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-blue-500 hover:border-blue-500 hover:text-white active:scale-95"
-            >
-              Get a Quote
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* --- MOBILE MENU --- */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            variants={mobileMenuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="fixed left-0 right-0 top-[56px] sm:top-[64px] h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] overflow-y-auto border-t border-white/10 bg-[#0A0A0B]/98 backdrop-blur-2xl md:hidden shadow-2xl"
+          >
+            <div className="flex flex-col px-4 py-4 sm:py-6">
+              {navLinks.map((link, index) => {
+                const isActive = pathname === link.href;
+                return (
+                  <motion.div
+                    key={link.name}
+                    custom={index}
+                    variants={mobileLinkVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`relative flex items-center justify-between w-full rounded-lg px-3 py-3 sm:py-3.5 text-base font-medium transition-all duration-200 active:scale-[0.98] ${
+                        isActive
+                          ? "text-white bg-white/5"
+                          : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <span>{link.name}</span>
+                      {isActive && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="h-1.5 w-1.5 rounded-full bg-[#6E8CAE]"
+                        />
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ delay: 0.3 }}
+                className="my-2 border-t border-white/10"
+              />
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mb-4 flex justify-center relative z-[9999]"
+              >
+                <GoogleTranslator />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-1 px-1"
+              >
+                <Link
+                  href="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="relative overflow-hidden flex w-full items-center justify-center rounded-full border border-white/20 px-5 py-3.5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:border-[#6E8CAE] hover:bg-[#6E8CAE]/10 active:scale-[0.97] group"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Get a quote
+                    <ChevronDown className="h-4 w-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <span className="absolute inset-0 -z-0 bg-gradient-to-r from-[#6E8CAE]/0 via-[#6E8CAE]/5 to-[#6E8CAE]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                </Link>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className={`${plexMono.className} mt-4 text-center text-[0.5rem] tracking-[0.25em] text-white/20`}
+              >
+                ENGINEERED FOR HEAVY LOADS
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
