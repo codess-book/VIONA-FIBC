@@ -1,30 +1,27 @@
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
-import IndustriesSection from "@/components/industryServed";
 import AboutSection from "@/components/About";
-import Testimonials from "@/components/testimonial";
-// import { GlobeDemo } from "@/components/globe";
-import ContactSection from "@/components/contact";
 import ProductsSection from "@/components/product-card";
-import Navbar from "@/components/ui/Navbar";
-import CompanyProfilePage from "./whoweare/page";
+import IndustriesSection from "@/components/industryServed";
 import TeamAndCertificatesPage from "@/components/ourTeam";
 import GlobalPresence from "@/components/GlobalPresence";
-export default function Home() {
-  return (
-    <>
-      {/* <Navbar /> */}
-      <main className="pt-16">
-        <Hero />
-        <AboutSection />
-        <ProductsSection />
-        <IndustriesSection />
-        <TeamAndCertificatesPage />
-        <GlobalPresence />
-        {/* <Testimonials /> */}
-        {/* <GlobeDemo /> */}
+import ContactSection from "@/components/contact";
 
-        <ContactSection />
-      </main>
-    </>
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+export default function Home() {
+  // NOTE: layout.tsx already renders <main>. Never nest another <main> here.
+  return (
+    <div className="pt-16">
+      <Hero />
+      <AboutSection />
+      <ProductsSection />
+      <IndustriesSection />
+      <TeamAndCertificatesPage />
+      <GlobalPresence />
+      <ContactSection />
+    </div>
   );
 }

@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import WhatsAppFloat from "@/components/watsappfloating";
-import InstagramFloat from "@/components/instagramfloats";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
 import FloatingContact from "@/components/floatingContacts";
-// ---------- Fonts ----------
+import { siteConfig } from "@/lib/Site";
+// ---------- Fonts (self-hosted by next/font, no preconnect needed) ----------
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
   weight: "400",
@@ -28,33 +27,53 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-// ---------- Basic Metadata ----------
+// ---------- Viewport / theme color ----------
+export const viewport: Viewport = {
+  themeColor: "#0A0A0B",
+  width: "device-width",
+  initialScale: 1,
+};
+
+// ---------- Metadata ----------
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: "VIONA FIBC | Premium Bulk Packaging Solutions",
-    template: "%s | VIONA FIBC",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    "Viona Flexible Packaging Pvt. Ltd. manufactures premium FIBC bulk bags, woven PP bags, and industrial packaging solutions. ISO certified, trusted worldwide.",
-  keywords:
-    "FIBC bags, bulk bags, flexible packaging, woven PP bags, industrial packaging, VIONA FIBC",
-  authors: [{ name: "VIONA FIBC" }],
-  creator: "VIONA Flexible Packaging Pvt. Ltd.",
-  publisher: "VIONA Flexible Packaging Pvt. Ltd.",
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.legalName,
+  publisher: siteConfig.legalName,
+  category: "Packaging",
+  alternates: {
+    canonical: "/",
+    languages: { "en-IN": "/", "x-default": "/" },
+  },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-icon.png",
-  },
+  // Icons: app/favicon.ico, app/icon.png, app/apple-icon.png are picked up
+  // automatically by Next.js. Do NOT also add manual <link rel="icon"> tags.
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { title: siteConfig.name, capable: true },
+  formatDetection: { telephone: true, email: true, address: true },
   openGraph: {
-    title: "VIONA FIBC | Premium Bulk Packaging Solutions",
+    title: siteConfig.title,
     description:
       "Premium FIBC bulk bags and industrial packaging solutions by Viona Flexible Packaging Pvt. Ltd.",
-    url: "https://vionafibc.com",
-    siteName: "VIONA FIBC",
+    url: siteConfig.url,
+    siteName: siteConfig.name,
     type: "website",
     locale: "en_IN",
     images: [
@@ -68,96 +87,86 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "VIONA FIBC | Premium Bulk Packaging Solutions",
+    title: siteConfig.title,
     description:
       "Premium FIBC bulk bags and industrial packaging solutions by Viona Flexible Packaging Pvt. Ltd.",
     images: ["/og-image.jpg"],
+  },
+  verification: {
+    // Google Search Console -> HTML tag method: paste only the content value
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : undefined,
+  },
+  other: {
+    "geo.region": "IN-MP",
+    "geo.placename": "Ujjain",
+    "geo.position": `${siteConfig.geo.latitude};${siteConfig.geo.longitude}`,
+    ICBM: `${siteConfig.geo.latitude}, ${siteConfig.geo.longitude}`,
   },
 };
 
 // ---------- JSON-LD Schema ----------
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Corporation",
-  name: "VIONA Flexible Packaging Pvt. Ltd.",
-  description:
-    "Premium FIBC bulk bags, woven PP bags, and industrial packaging solutions manufacturer.",
-  url: "https://vionafibc.com",
-  telephone: "+91-7992392070",
-  email: "info@vionafibc.com",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "15/2 Tatya Tope Marg, Freeganj",
-    addressLocality: "Ujjain",
-    addressRegion: "Madhya Pradesh",
-    postalCode: "456010",
-    addressCountry: "IN",
-  },
-  sameAs: [
-    "https://linkedin.com/company/vionafibc",
-    "https://instagram.com/vionafibc",
-    "https://facebook.com/vionafibc",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteConfig.url}/#organization`,
+      name: siteConfig.legalName,
+      alternateName: siteConfig.name,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}/icon.png`,
+      image: `${siteConfig.url}/og-image.jpg`,
+      description:
+        "Manufacturer of premium FIBC bulk bags, woven PP bags, and industrial packaging solutions.",
+      telephone: siteConfig.phone,
+      email: siteConfig.email,
+      address: { "@type": "PostalAddress", ...siteConfig.address },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: siteConfig.phone,
+          email: siteConfig.email,
+          contactType: "sales",
+          areaServed: "Worldwide",
+          availableLanguage: ["English", "Hindi"],
+        },
+      ],
+      sameAs: siteConfig.social,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteConfig.url}/#website`,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      publisher: { "@id": `${siteConfig.url}/#organization` },
+      inLanguage: "en-IN",
+    },
   ],
-  areaServed: "Worldwide",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="en"
+      lang="en-IN"
       suppressHydrationWarning
       className={`${bebasNeue.variable} ${inter.variable} ${plexMono.variable} h-full antialiased bg-[#0A0A0B]`}
     >
-      <head>
-        {/* JSON-LD Schema */}
+      <body className="min-h-full flex flex-col relative font-inter text-white/90">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
         />
-
-        {/* Preconnect for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Favicon */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#0A0A0B" />
-        
-        {/* Basic Meta Tags */}
-        <meta name="application-name" content="VIONA FIBC" />
-        <meta name="apple-mobile-web-app-title" content="VIONA FIBC" />
-        <meta name="format-detection" content="telephone=yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        
-        {/* Geo Tags */}
-        <meta name="geo.region" content="IN-MP" />
-        <meta name="geo.placename" content="Ujjain" />
-        <meta name="geo.position" content="23.1793;75.7849" />
-        <meta name="ICBM" content="23.1793, 75.7849" />
-        
-        {/* hreflang for international SEO */}
-        <link rel="alternate" hrefLang="en" href="https://vionafibc.com" />
-        <link rel="alternate" hrefLang="x-default" href="https://vionafibc.com" />
-      </head>
-      <body className="min-h-full flex flex-col relative font-inter text-white/90">
         <Navbar />
-
-        <main className="relative z-10 flex flex-col flex-1">
-          {children}
-        </main>
-
+        <main className="relative z-10 flex flex-col flex-1">{children}</main>
         <Footer />
         <FloatingContact />
-{/* 
-        <WhatsAppFloat />
-        <InstagramFloat /> */}
       </body>
     </html>
   );
