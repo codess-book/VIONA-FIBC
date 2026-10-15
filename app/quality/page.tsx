@@ -59,7 +59,7 @@ const stages = [
   {
     label: "Final Delivery",
     icon: Truck,
-    image: "/Images/quality/finaldelivery.png",
+    image: "/Images/quality/finaldelivery.jpeg",
     blurb:
       "From our floor to your door, every bag carries our uncompromising commitment to quality and customer satisfaction.",
   },
@@ -168,7 +168,12 @@ function StageRow({
         className={`${isEven ? "md:order-1" : "md:order-2"}`}
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-blue-200/50 bg-blue-50/30 shadow-sm">
-          <Image src={stage.image} alt={stage.label} fill className="object-cover" />
+          <Image
+            src={stage.image}
+            alt={stage.label}
+            fill
+            className="object-cover"
+          />
         </div>
       </motion.div>
 
@@ -179,7 +184,9 @@ function StageRow({
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
         className={`${isEven ? "md:order-2 md:pl-4" : "md:order-1 md:pr-4 md:text-right"}`}
       >
-        <div className={`inline-flex items-center gap-2 ${!isEven ? "md:flex-row-reverse" : ""}`}>
+        <div
+          className={`inline-flex items-center gap-2 ${!isEven ? "md:flex-row-reverse" : ""}`}
+        >
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/10 border border-blue-300/50">
             <Icon className="h-4 w-4 text-blue-700" />
           </span>
@@ -188,7 +195,9 @@ function StageRow({
           </span>
         </div>
         <h3 className="mt-2 text-xl font-bold text-slate-900">{stage.label}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">{stage.blurb}</p>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+          {stage.blurb}
+        </p>
       </motion.div>
     </div>
   );
@@ -247,14 +256,17 @@ export default function QualityContent() {
             className="mt-8 space-y-4 text-sm leading-relaxed text-slate-600 max-w-2xl mx-auto text-left md:text-center"
           >
             <p>
-              Quality is first and foremost in our mind. When you deal with Viona-FIBC Pvt Ltd, you are
-              guaranteed a higher level of quality and customer satisfaction &mdash; maintained right from
-              the selection of raw material to the final delivery.
+              Quality is first and foremost in our mind. When you deal with
+              Viona-FIBC Pvt Ltd, you are guaranteed a higher level of quality
+              and customer satisfaction &mdash; maintained right from the
+              selection of raw material to the final delivery.
             </p>
             <p>
-              Our Quality Assurance team ensures the product meets all required standards at every single
-              stage, backed by rigorous testing so we deliver a premium product at the best value. Through
-              continuous R&amp;D, Viona-FIBC keeps raising the standards of FIBC manufacturing.
+              Our Quality Assurance team ensures the product meets all required
+              standards at every single stage, backed by rigorous testing so we
+              deliver a premium product at the best value. Through continuous
+              R&amp;D, Viona-FIBC keeps raising the standards of FIBC
+              manufacturing.
             </p>
           </motion.div>
 
@@ -262,8 +274,8 @@ export default function QualityContent() {
             variants={heroItem}
             className="mt-6 mx-auto max-w-xl text-sm font-medium text-blue-800 italic"
           >
-            &ldquo;Uncompromising attitude towards quality and customer satisfaction has made us world
-            leaders in FIBC.&rdquo;
+            &ldquo;Uncompromising attitude towards quality and customer
+            satisfaction has made us world leaders in FIBC.&rdquo;
           </motion.p>
         </motion.div>
 
@@ -296,7 +308,8 @@ export default function QualityContent() {
 
       <style jsx>{`
         .weave-layer {
-          background-image: repeating-linear-gradient(
+          background-image:
+            repeating-linear-gradient(
               45deg,
               rgba(30, 64, 175, 0.9) 0px,
               rgba(30, 64, 175, 0.9) 1px,
@@ -315,10 +328,14 @@ export default function QualityContent() {
         }
         @keyframes weave-drift {
           0% {
-            background-position: 0 0, 0 0;
+            background-position:
+              0 0,
+              0 0;
           }
           100% {
-            background-position: 200px 200px, -200px 200px;
+            background-position:
+              200px 200px,
+              -200px 200px;
           }
         }
 
