@@ -26,7 +26,7 @@ export const siteConfig = {
   },
   geo: { latitude: 23.1793, longitude: 75.7849 },
   social: [
-    "https://linkedin.com/company/vionafibc",
+     "https://www.linkedin.com/company/viona-fibc-private-limited/",
     "https://instagram.com/vionafibc",
     "https://facebook.com/vionafibc",
   ],

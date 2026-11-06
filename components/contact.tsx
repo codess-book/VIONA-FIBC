@@ -429,15 +429,15 @@ export default function ContactSection() {
                   </p>
                   <p className="mt-1 text-xs text-slate-600">
                     <a
-                      href="mailto:export@vionafibc.com"
+                      href="mailto:marketing@vionafibc.com"
                       className="hover:text-blue-700 transition-colors"
                     >
-                      Marketing@vionafibc.com
+                      marketing@vionafibc.com
                     </a>
                   </p>
                   <p className="mt-1 text-xs text-slate-600">
                     <a
-                      href="mailto:Marketing@vionafibc.com"
+                      href="mailto:export@vionafibc.com"
                       className="hover:text-blue-700 transition-colors"
                     >
                       export@vionafibc.com

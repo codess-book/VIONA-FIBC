@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: "Our Team",
   description:
     "Meet the leadership and management team of VIONA FIBC, Ujjain: manufacturing, export marketing, logistics and documentation experts for FIBC bulk bags.",
-  alternates: { canonical: "/team" },
+  alternates: { canonical: "/Team" },
 };
 
 export default function TeamLayout({
