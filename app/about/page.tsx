@@ -16,9 +16,10 @@ import {
 import { AboutClientWrapper } from "@/components/AboutClinetwrapper";
 import GlobalPresence from "./gloabalpresenve";
 export const metadata: Metadata = {
-  title: "About Us | VIONA-FIBC Private Limited",
+  title: "About Us",
   description:
-    "VIONA-FIBC is a premier manufacturer of FIBC bulk bags in India, serving Agro, Infrastructure, and Chemical industries — our vision, mission, values, global reach, and certifications.",
+    "VIONA FIBC is a manufacturer of FIBC bulk bags in India, serving Agro, Infrastructure, Minerals and Chemical industries. Our vision, mission, values, global reach and certifications.",
+  alternates: { canonical: "/about" },
 };
 
 // ---------- Values Data ----------
@@ -50,6 +51,7 @@ const certificates = [
   { name: "ISO 14001:2015", logo: "/Images/certificates/certi3.png" },
   { name: "ISO 22000:2018", logo: "/Images/certificates/certi1.png" },
 ];
+
 
 // ---------- Stitched Seam Divider ----------
 function StitchDivider() {

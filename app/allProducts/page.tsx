@@ -1,8 +1,16 @@
+import { Metadata } from "next";
 import { PRODUCTS } from "@/lib/data/product";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
+
+export const metadata: Metadata = {
+  title: "All Products",
+  description:
+    "Explore the full range of FIBC bulk bags, jumbo bags, woven PP bags and industrial packaging solutions by VIONA FIBC, Ujjain.",
+  alternates: { canonical: "/allProducts" },
+};
 export default function AllProductsPage() {
   return (
     <section className="relative min-h-screen bg-white py-12 md:py-20 overflow-hidden">

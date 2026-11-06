@@ -48,10 +48,7 @@ export const metadata: Metadata = {
   creator: siteConfig.legalName,
   publisher: siteConfig.legalName,
   category: "Packaging",
-  alternates: {
-    canonical: "/",
-    languages: { "en-IN": "/", "x-default": "/" },
-  },
+
   robots: {
     index: true,
     follow: true,
@@ -117,7 +114,7 @@ const jsonLd = {
       name: siteConfig.legalName,
       alternateName: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}/icon.png`,
+      logo: `${siteConfig.url}/Images/logo/logo-new.png`,
       image: `${siteConfig.url}/og-image.jpg`,
       description:
         "Manufacturer of premium FIBC bulk bags, woven PP bags, and industrial packaging solutions.",
@@ -140,7 +137,8 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${siteConfig.url}/#website`,
       url: siteConfig.url,
-      name: siteConfig.name,
+      name: "VIONA FIBC",
+      alternateName: [siteConfig.legalName, "Viona FIBC"],
       publisher: { "@id": `${siteConfig.url}/#organization` },
       inLanguage: "en-IN",
     },

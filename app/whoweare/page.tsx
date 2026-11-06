@@ -14,9 +14,10 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vision, Mission & Values | VIONA-FIBC Private Limited",
+  title: "Vision, Mission & Values",
   description:
-    "Our vision, mission, core values, global footprint across 43 countries, and corporate social responsibility commitments at VIONA-FIBC.",
+    "Our vision, mission, core values and corporate social responsibility commitments at VIONA FIBC.",
+  alternates: { canonical: "/about" },
 };
 
 // ---------- Values Data ----------
