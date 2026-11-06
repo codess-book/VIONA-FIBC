@@ -31,7 +31,7 @@ const WEB3FORMS_ACCESS_KEY =
   "2733f8fd-61a0-49d5-b571-276cf8289bc4";
 
 // WhatsApp number submissions get forwarded to (E.164 without the +)
-const WHATSAPP_NUMBER = "917992392070";
+const WHATSAPP_NUMBER = "919009177118";
 
 type FormState = {
   name: string;
@@ -444,12 +444,12 @@ export default function ContactSection() {
                     </a>
                   </p>
 
-                   <p className="mt-1 text-xs text-slate-600">
+                  <p className="mt-1 text-xs text-slate-600">
                     <a
                       href="mailto:harshad@vionafibc.com"
                       className="hover:text-blue-700 transition-colors"
                     >
-                   harshad@vionafibc.com
+                      harshad@vionafibc.com
                     </a>
                   </p>
                 </div>

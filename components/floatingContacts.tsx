@@ -18,8 +18,8 @@ export default function FloatingContact() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   // Replace with your actual numbers
-  const phone = "+917992392070";
-  const whatsappNumber = "917992392070";
+  const phone = "+919009177118";
+  const whatsappNumber = "919009177118";
   const whatsappMessage =
     "Hi! I found VIONA FIBC on your website and would like to know more about your bulk packaging solutions.";
 
