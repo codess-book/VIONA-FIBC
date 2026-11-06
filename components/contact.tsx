@@ -443,6 +443,15 @@ export default function ContactSection() {
                       export@vionafibc.com
                     </a>
                   </p>
+
+                   <p className="mt-1 text-xs text-slate-600">
+                    <a
+                      href="mailto:harshad@vionafibc.com"
+                      className="hover:text-blue-700 transition-colors"
+                    >
+                   harshad@vionafibc.com
+                    </a>
+                  </p>
                 </div>
               </div>
 
