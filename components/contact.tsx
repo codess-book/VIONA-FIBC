@@ -375,7 +375,7 @@ export default function ContactSection() {
 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <a
-                    href="tel:+917992392070"
+                    href="tel:+919009177118"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-slate-900 hover:bg-blue-50 transition-colors"
                   >
                     <Phone className="h-3.5 w-3.5 text-blue-600" /> Call Now
